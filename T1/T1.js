@@ -115,6 +115,13 @@ cilinder.add(capsule);
 
 createTree();
 
+let cameraHolder = new THREE.Object3D();
+cameraHolder.rotateX(THREE.MathUtils.degToRad(110));
+
+cameraHolder.add(camera);
+
+cilinder.add(cameraHolder);
+
 // Use this to show information onscreen
 let controls = new InfoBox();
 controls.add("Basic Scene");
@@ -141,8 +148,8 @@ function render() {
 }
 
 function mouseRotation() {
-  targetX = mouseX * -0.001;
-  targetY = mouseY * -0.001;
+  targetX = mouseX * -0.003;
+  targetY = mouseY * -0.003;
   if (aviaoInteiro) {
     aviaoInteiro.rotation.y += 0.05 * (targetX - aviaoInteiro.rotation.y);
     aviaoInteiro.rotation.x += 0.05 * (targetY - aviaoInteiro.rotation.x);
