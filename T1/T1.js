@@ -7,7 +7,8 @@ import {initRenderer,
         setDefaultMaterial,
         InfoBox,
         onWindowResize,
-        createGroundPlaneXZ} from "../libs/util/util.js";
+        createGroundPlaneXZ,
+        createGroundPlaneWired} from "../libs/util/util.js";
 
 let scene, renderer, camera, material, light, orbit; // Initial variables
 scene = new THREE.Scene();    // Create main scene
@@ -17,6 +18,15 @@ material = setDefaultMaterial(); // create a basic material
 light = initDefaultBasicLight(scene); // Create a basic light to illuminate the scene
 orbit = new OrbitControls( camera, renderer.domElement ); // Enable mouse rotation, pan, zoom etc.
 
+// Mouse variables
+let mouseX = 0;
+let mouseY = 0;
+let targetX = 0;
+let targetY = 0;
+const windowHalfX = window.innerWidth / 2;
+const windowHalfY = window.innerHeight / 2;
+document.addEventListener('mousemove', onDocumentMouseMove);
+
 // Listen window size changes
 window.addEventListener( 'resize', function(){onWindowResize(camera, renderer)}, false );
 
@@ -24,29 +34,20 @@ window.addEventListener( 'resize', function(){onWindowResize(camera, renderer)},
 let axesHelper = new THREE.AxesHelper( 12 );
 scene.add( axesHelper );
 
-// create the ground plane
-let plane = createGroundPlaneXZ(20, 20)
+//create wiredframe groud
+let plane = createGroundPlaneWired(500,500);
 scene.add(plane);
 
-// // create a cube
-// let cubeGeometry = new THREE.BoxGeometry(4, 4, 4);
-// let cube = new THREE.Mesh(cubeGeometry, material);
-// // position the cube
-// cube.position.set(0.0, 2.0, 0.0);
-// // add the cube to the sceneW
-// scene.add(cube);
-
-//base do avião
+//base cilindrica do avião
+let materialCorpo = setDefaultMaterial('Indigo');
 let cilinderGeometry = new THREE.CylinderGeometry(2, 1, 15,20);
-let cilinder = new THREE.Mesh(cilinderGeometry, material);
+let cilinder = new THREE.Mesh(cilinderGeometry, materialCorpo);
 cilinder.position.set(0.0, 5.0, 0.0);
 cilinder.rotateX(THREE.MathUtils.degToRad(-90)); 
 scene.add(cilinder);
 
 //asa
-
 const length = 12, width = 8;
-
 const shape = new THREE.Shape();
 shape.moveTo( 0,0 );
 shape.lineTo( 0, width );
@@ -63,10 +64,9 @@ const extrudeSettings = {
 	bevelOffset: -4,
 	bevelSegments: 5
 };
-
-//asa
+let materialAsa = setDefaultMaterial('Orange');
 let asaGeometry = new THREE.ExtrudeGeometry(shape, extrudeSettings );
-let asa = new THREE.Mesh(asaGeometry, material);
+let asa = new THREE.Mesh(asaGeometry, materialAsa);
 cilinder.add(asa);
 asa.rotateZ(THREE.MathUtils.degToRad(0))
 asa.rotateX(THREE.MathUtils.degToRad(-90))
@@ -74,15 +74,38 @@ asa.rotateY(THREE.MathUtils.degToRad(-90))
 asa.position.set(5, -6, 4);
 
 //frente
+let materialFrente = setDefaultMaterial('Goldenrod');
 let frenteGeometry = new THREE.TorusGeometry( 2, 0.3, 30, 100 );
-let frente = new THREE.Mesh(frenteGeometry, material);
-frente.position.set(0,7.85,0)
+let frente = new THREE.Mesh(frenteGeometry, materialFrente);
+frente.position.set(0,7.5,0)
 frente.rotateX(THREE.MathUtils.degToRad(90));
-
 cilinder.add(frente);
 
-//frente.position.set(5, -6, 4);
+let materialFrente2 = setDefaultMaterial('grey');
+let frenteGeometry2 = new THREE.CylinderGeometry( 2, 2, 0.5, 32 );
+let frente2 = new THREE.Mesh(frenteGeometry2, materialFrente2);
+frente2.material.opacity = 0;
+frente2.position.set(0,0,0.1)
+frente2.rotateX(THREE.MathUtils.degToRad(90));
+frente.add(frente2);
 
+
+//cabine do piloto
+let materialCabine = setDefaultMaterial('lightgrey');
+let cabine = new THREE.CapsuleGeometry( 1, 2.5, 10, 20 );
+let capsule = new THREE.Mesh(cabine, materialCabine);
+capsule.position.set(0.0,0.0,1.0);
+cilinder.add( capsule );
+
+//parte de trás
+let ellipsoidGeometry = new THREE.SphereGeometry(0.5, 32, 16);
+ellipsoidGeometry.rotateZ(Math.PI/2);
+ellipsoidGeometry.scale(2.5, 0.25, 0.5);
+let ellipsoidMesh = new THREE.Mesh(ellipsoidGeometry, material);
+cilinder.add(ellipsoidMesh);
+ellipsoidMesh.translateZ(5);
+
+createTree();
 
 
 // Use this to show information onscreen
@@ -96,9 +119,54 @@ let controls = new InfoBox();
   controls.show();
 
 render();
+
+
+
+/*
+**********************************************************************
+A partir daqui, tem definição das funções e metodos chamados no começo
+**********************************************************************
+*/
+
 function render()
 {
+  //descomente para testar camera do aviao
+  //mouseRotation();
   requestAnimationFrame(render);
   renderer.render(scene, camera) // Render scene
 }
+
+function mouseRotation() {
+    targetX = mouseX * .001;
+    targetY = mouseY * .001;
+    if (cilinder) {
+       cilinder.rotation.y += 0.05 * (targetX - cilinder.rotation.y);
+       cilinder.rotation.x += 0.05 * (targetY - cilinder.rotation.x);
+       cilinder.translateZ(0.1);
+    }
+ }
+ 
+ function onDocumentMouseMove(event) {
+    mouseX = (event.clientX - windowHalfX);
+    mouseY = (event.clientY - windowHalfY);
+ }
+
+function createTree()
+{
+//tronco da árvore
+let materialTronco = setDefaultMaterial('rgb(150,75,0)');
+let troncoGeometry = new THREE.CylinderGeometry(2, 2, 15,20);
+let tronco = new THREE.Mesh(troncoGeometry, materialTronco);
+tronco.position.set(7.0, 7.5, 15.0);
+scene.add(tronco);
+
+//copa da árovore
+let materialArvore = setDefaultMaterial('rgb(0,128,0)');
+let arvoreGeometry = new THREE.ConeGeometry( 5, 20, 32 );
+let arvore = new THREE.Mesh( arvoreGeometry,materialArvore);
+arvore.position.set(0.0, 7.5, 0);
+tronco.add(arvore);
+}
+
+
 
