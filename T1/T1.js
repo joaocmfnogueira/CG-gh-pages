@@ -47,31 +47,27 @@ cilinder.rotateX(THREE.MathUtils.degToRad(-90));
 scene.add(cilinder);
 
 //asa
-const length = 12, width = 8;
-const shape = new THREE.Shape();
-shape.moveTo( 0,0 );
-shape.lineTo( 0, width );
-shape.lineTo( length, width );
-shape.lineTo( length, 0 );
-shape.lineTo( 0, 0 );
+let ellipsoidGeometry = new THREE.SphereGeometry(0.5, 32, 16);
+ellipsoidGeometry.rotateZ(Math.PI/2);
+ellipsoidGeometry.scale(22, 3.5, 0.75);
+let ellipsoidMesh = new THREE.Mesh(ellipsoidGeometry, material);
+cilinder.add(ellipsoidMesh);
 
-const extrudeSettings = {
-	steps: 10,
-	depth: 10,
-	bevelEnabled: true,
-	bevelThickness: 5,
-	bevelSize: 0.5,
-	bevelOffset: -4,
-	bevelSegments: 5
-};
-let materialAsa = setDefaultMaterial('Orange');
-let asaGeometry = new THREE.ExtrudeGeometry(shape, extrudeSettings );
-let asa = new THREE.Mesh(asaGeometry, materialAsa);
-cilinder.add(asa);
-asa.rotateZ(THREE.MathUtils.degToRad(0))
-asa.rotateX(THREE.MathUtils.degToRad(-90))
-asa.rotateY(THREE.MathUtils.degToRad(-90))
-asa.position.set(5, -6, 4);
+//asaTras
+let ellipsoidGeometry2 = new THREE.SphereGeometry(0.5, 32, 16);
+ellipsoidGeometry2.rotateZ(Math.PI/2);
+ellipsoidGeometry2.scale(6, 3.5, 0.75);
+let ellipsoidMesh2 = new THREE.Mesh(ellipsoidGeometry2, material);
+ellipsoidMesh2.position.set(0.0,-6.0,0.0);
+cilinder.add(ellipsoidMesh2);
+
+let ellipsoidGeometry3 = new THREE.SphereGeometry(0.5, 32, 16);
+ellipsoidGeometry3.rotateZ(Math.PI/2);
+ellipsoidGeometry3.scale(6, 3.5, 0.75);
+let ellipsoidMesh3 = new THREE.Mesh(ellipsoidGeometry3, material);
+ellipsoidMesh3.position.set(0.0,-6.0,0.0);
+ellipsoidGeometry3.rotateY(THREE.MathUtils.degToRad(90));
+cilinder.add(ellipsoidMesh3);
 
 //frente
 let materialFrente = setDefaultMaterial('Goldenrod');
@@ -97,13 +93,8 @@ let capsule = new THREE.Mesh(cabine, materialCabine);
 capsule.position.set(0.0,0.0,1.0);
 cilinder.add( capsule );
 
-//parte de trás
-let ellipsoidGeometry = new THREE.SphereGeometry(0.5, 32, 16);
-ellipsoidGeometry.rotateZ(Math.PI/2);
-ellipsoidGeometry.scale(2.5, 0.25, 0.5);
-let ellipsoidMesh = new THREE.Mesh(ellipsoidGeometry, material);
-cilinder.add(ellipsoidMesh);
-ellipsoidMesh.translateZ(5);
+
+
 
 createTree();
 
