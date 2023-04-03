@@ -131,7 +131,7 @@ controls.add("* Left button to rotate");
 controls.add("* Right button to translate (pan)");
 controls.add("* Scroll to zoom in/out.");
 controls.show();
-
+let time = 0;
 render();
 
 /*
@@ -143,8 +143,20 @@ A partir daqui, tem definição das funções e metodos chamados no começo
 function render() {
   //descomente para testar camera do aviao
   mouseRotation();
+  time +=1;
+  if(time%450 == 0){
+    gerarPlano()
+    time = 0;
+  }
+    
   requestAnimationFrame(render);
   renderer.render(scene, camera); // Render scene
+}
+
+function gerarPlano(){
+//create wiredframe groud
+let plane = createGroundPlaneWired(500, 500);
+scene.add(plane);
 }
 
 function mouseRotation() {
@@ -153,8 +165,9 @@ function mouseRotation() {
   if (aviaoInteiro) {
     aviaoInteiro.rotation.y += 0.05 * (targetX - aviaoInteiro.rotation.y);
     aviaoInteiro.rotation.x += 0.05 * (targetY - aviaoInteiro.rotation.x);
-    aviaoInteiro.translateZ(-0.1);
+   // aviaoInteiro.position.z += -0.5;
   }
+  plane.position.z += 0.5;
 }
 
 function onDocumentMouseMove(event) {
@@ -168,7 +181,7 @@ function createTree() {
   let troncoGeometry = new THREE.CylinderGeometry(2, 2, 15, 20);
   let tronco = new THREE.Mesh(troncoGeometry, materialTronco);
   tronco.position.set(7.0, 7.5, 15.0);
-  scene.add(tronco);
+  plane.add(tronco);
 
   //copa da árovore
   let materialArvore = setDefaultMaterial("rgb(0,128,0)");
