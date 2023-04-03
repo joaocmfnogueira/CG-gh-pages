@@ -51,11 +51,11 @@ let aviaoInteiro = new THREE.Object3D();
 scene.add(aviaoInteiro);
 
 //base cilindrica do avião
-let materialCorpo = setDefaultMaterial('Indigo');
-let cilinderGeometry = new THREE.CylinderGeometry(2, 1, 15,20);
+let materialCorpo = setDefaultMaterial("Indigo");
+let cilinderGeometry = new THREE.CylinderGeometry(2, 1, 15, 20);
 let cilinder = new THREE.Mesh(cilinderGeometry, materialCorpo);
 cilinder.position.set(0.0, 5.0, 0.0);
-cilinder.rotateX(THREE.MathUtils.degToRad(-90)); 
+cilinder.rotateX(THREE.MathUtils.degToRad(-90));
 aviaoInteiro.add(cilinder);
 
 //asa
@@ -141,14 +141,14 @@ function render() {
 }
 
 function mouseRotation() {
-    targetX = mouseX * .001;
-    targetY = mouseY * .001;
-    if (aviaoInteiro) {
-       aviaoInteiro.rotation.y += 0.05 * (targetX - aviaoInteiro.rotation.y);
-       aviaoInteiro.rotation.x += 0.05 * (targetY - aviaoInteiro.rotation.x);
-       aviaoInteiro.translateZ(0.1);
-    }
- }
+  targetX = mouseX * -0.001;
+  targetY = mouseY * -0.001;
+  if (aviaoInteiro) {
+    aviaoInteiro.rotation.y += 0.05 * (targetX - aviaoInteiro.rotation.y);
+    aviaoInteiro.rotation.x += 0.05 * (targetY - aviaoInteiro.rotation.x);
+    aviaoInteiro.translateZ(-0.1);
+  }
+}
 
 function onDocumentMouseMove(event) {
   mouseX = event.clientX - windowHalfX;
