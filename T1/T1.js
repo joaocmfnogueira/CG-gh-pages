@@ -146,23 +146,17 @@ function render() {
   mouseRotation();
  
   if(aviaoInteiro.position.z%250 == 0){
-    scene.remove(plane);
-    plane.geometry.dispose();
-    plane.material.dispose();
-    //plane = undefined; //clear any reference for it to be able to garbage collected
-    gerarPlano();
+    gerarPlano(plane);
   }
     
   requestAnimationFrame(render);
   renderer.render(scene, camera); // Render scene
 }
 
-function gerarPlano(){
+function gerarPlano(plane){
 //create wiredframe groud
-let plane = createGroundPlaneWired(500, 500);
-scene.add(plane);
 plane.position.z = aviaoInteiro.position.z - 250;
-createTree(plane);
+//createTree(plane);
 }
 
 function mouseRotation() {
@@ -173,7 +167,7 @@ function mouseRotation() {
     aviaoInteiro.rotation.x += 0.05 * (targetY - aviaoInteiro.rotation.x);
    // aviaoInteiro.position.z += -0.5;
   }
-  aviaoInteiro.position.z -= 0.5;
+  aviaoInteiro.position.z -= 2;
 }
 
 function onDocumentMouseMove(event) {
@@ -195,4 +189,6 @@ function createTree(plane) {
   let arvore = new THREE.Mesh(arvoreGeometry, materialArvore);
   arvore.position.set(0.0, 7.5, 0);
   tronco.add(arvore);
+
+  tronco.rotateX(THREE.MathUtils.degToRad(90));
 }
