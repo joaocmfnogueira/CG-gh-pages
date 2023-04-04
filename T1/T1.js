@@ -49,6 +49,7 @@ scene.add(plane);
 //objeto aviao
 let aviaoInteiro = new THREE.Object3D();
 scene.add(aviaoInteiro);
+aviaoInteiro.position.set(0,0,250);
 
 //base cilindrica do avião
 let materialCorpo = setDefaultMaterial("Indigo");
@@ -113,7 +114,7 @@ let capsule = new THREE.Mesh(cabine, materialCabine);
 capsule.position.set(0.0, 0.0, 1.0);
 cilinder.add(capsule);
 
-createTree();
+//createTree();
 
 let cameraHolder = new THREE.Object3D();
 cameraHolder.rotateX(THREE.MathUtils.degToRad(110));
@@ -131,7 +132,7 @@ controls.add("* Left button to rotate");
 controls.add("* Right button to translate (pan)");
 controls.add("* Scroll to zoom in/out.");
 controls.show();
-let time = 0;
+let time = 1;
 render();
 
 /*
@@ -143,10 +144,13 @@ A partir daqui, tem definição das funções e metodos chamados no começo
 function render() {
   //descomente para testar camera do aviao
   mouseRotation();
-  time +=1;
-  if(time%450 == 0){
-    gerarPlano()
-    time = 0;
+ 
+  if(aviaoInteiro.position.z%250 == 0){
+    scene.remove(plane);
+    plane.geometry.dispose();
+    plane.material.dispose();
+    //plane = undefined; //clear any reference for it to be able to garbage collected
+    gerarPlano();
   }
     
   requestAnimationFrame(render);
@@ -157,6 +161,8 @@ function gerarPlano(){
 //create wiredframe groud
 let plane = createGroundPlaneWired(500, 500);
 scene.add(plane);
+plane.position.z = aviaoInteiro.position.z - 250;
+createTree(plane);
 }
 
 function mouseRotation() {
@@ -167,7 +173,7 @@ function mouseRotation() {
     aviaoInteiro.rotation.x += 0.05 * (targetY - aviaoInteiro.rotation.x);
    // aviaoInteiro.position.z += -0.5;
   }
-  plane.position.z += 0.5;
+  aviaoInteiro.position.z -= 0.5;
 }
 
 function onDocumentMouseMove(event) {
@@ -175,7 +181,7 @@ function onDocumentMouseMove(event) {
   mouseY = event.clientY - windowHalfY;
 }
 
-function createTree() {
+function createTree(plane) {
   //tronco da árvore
   let materialTronco = setDefaultMaterial("rgb(150,75,0)");
   let troncoGeometry = new THREE.CylinderGeometry(2, 2, 15, 20);
