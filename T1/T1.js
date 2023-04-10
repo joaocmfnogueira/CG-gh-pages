@@ -161,13 +161,13 @@ plane = createGroundPlaneWired(500, 500);
 plane.name = 'plano';
 scene.add(plane);
 plane.position.z = aviaoInteiro.position.z - 250;
-createTree(plane);
-//createTree(plane);
-}
 
-function removeEntity(object){
-  var selectObject = scene.getObjectByName(object);
-  scene.remove(selectObject);
+//criar quantidade aleatoria de árvores
+var contidade = 1 + Math.floor(Math.random()*10);
+for (let index = 0; index < contidade; index++) {
+  createTree(plane);
+}
+//createTree(plane);
 }
 
 function mouseRotation() {
