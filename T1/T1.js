@@ -36,6 +36,16 @@ let materialArvore = setDefaultMaterial("rgb(0,128,0)");
   materialArvore.transparent = true;
   materialArvore.opacity = 0.1;
 
+
+//material do tronco do plano 2
+let materialTronco2 = setDefaultMaterial("rgb(150,75,0)");
+  materialTronco2.transparent = true;
+  materialTronco2.opacity = 0.1;
+//material da copa do plano 2
+let materialArvore2 = setDefaultMaterial("rgb(0,128,0)");
+  materialArvore2.transparent = true;
+  materialArvore2.opacity = 0.1;
+
 const windowHalfX = window.innerWidth / 2;
 const windowHalfY = window.innerHeight / 2;
 
@@ -168,17 +178,28 @@ A partir daqui, tem definição das funções e metodos chamados no começo
 function render() {
   //descomente para testar camera do aviao
   mouseRotation();
-  materialTronco.opacity += 0.005;
-  materialArvore.opacity += 0.005;
+  if(contador == 1){
+    materialTronco.opacity += 0.003;
+    materialArvore.opacity += 0.005;
+  }
+  else{
+    materialTronco2.opacity += 0.003;
+    materialArvore2.opacity += 0.005;
+  }
+  
   if(aviaoInteiro.position.z%500 == 0){
     if(contador == 0){
       scene.getObjectByName('plano').removeFromParent();
+      materialTronco.opacity = 0.05;
+      materialArvore.opacity = 0.1;
       gerarPlano(plane);
       contador = 1;
     }
     else if(contador == 1){
       scene.getObjectByName('plano2').removeFromParent();
-      gerarPlano(plane2);
+      materialTronco2.opacity = 0.05;
+      materialArvore2.opacity = 0.1;
+      gerarPlano2(plane2);
       contador = 0;
     }
     
@@ -189,8 +210,7 @@ function render() {
 
 function gerarPlano(plane){
 scene.add(plane);
-materialTronco.opacity = 0.1;
-materialArvore.opacity = 0.1;
+
 plane.position.z = aviaoInteiro.position.z - 750;
 
 
@@ -201,6 +221,20 @@ for (let index = 0; index < quantidade; index++) {
 }
 //createTree(plane);
 }
+
+function gerarPlano2(plane){
+  scene.add(plane);
+  
+  plane.position.z = aviaoInteiro.position.z - 750;
+  
+  
+  //criar quantidade aleatoria de árvores
+  var quantidade = 1 + Math.floor(Math.random()*100);
+  for (let index = 0; index < quantidade; index++) {
+    createTree2(plane);
+  }
+  //createTree(plane);
+  }
 
 function mouseRotation() {
   targetX = mouseX * -0.003;
@@ -243,6 +277,26 @@ function createTree(plane) {
 
   let arvoreGeometry = new THREE.ConeGeometry(5, 20, 32);
   let arvore = new THREE.Mesh(arvoreGeometry, materialArvore);
+  arvore.position.set(0.0, 7.5, 0);
+  tronco.add(arvore);
+  tronco.rotateX(THREE.MathUtils.degToRad(90));
+
+  plane.add(aviaoInteiro);
+}
+
+function createTree2(plane) {
+  //tronco da árvore
+  let aviaoInteiro = new THREE.Object3D();
+  let troncoGeometry = new THREE.CylinderGeometry(2, 2, 15, 20);
+  let tronco = new THREE.Mesh(troncoGeometry, materialTronco);
+  tronco.position.set(-250 + Math.random()*500.0,-125 + Math.random()*375.0, 7.5);
+
+  aviaoInteiro.add(tronco);
+
+  //copa da árovore
+
+  let arvoreGeometry = new THREE.ConeGeometry(5, 20, 32);
+  let arvore = new THREE.Mesh(arvoreGeometry, materialArvore2);
   arvore.position.set(0.0, 7.5, 0);
   tronco.add(arvore);
   tronco.rotateX(THREE.MathUtils.degToRad(90));
