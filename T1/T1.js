@@ -18,7 +18,7 @@ renderer = initRenderer(); // Init a basic renderer
 camera = initCamera(new THREE.Vector3(0, 30, 30)); // Init camera in this position
 material = setDefaultMaterial(); // create a basic material
 light = initDefaultBasicLight(scene); // Create a basic light to illuminate the scene
-//orbit = new OrbitControls(camera, renderer.domElement); // Enable mouse rotation, pan, zoom etc.
+orbit = new OrbitControls(camera, renderer.domElement); // Enable mouse rotation, pan, zoom etc.
 
 // Mouse variables
 let mouseX = 0;
@@ -26,6 +26,15 @@ let mouseY = 0;
 
 let targetX = 0;
 let targetY = 0;
+
+//material do tronco
+let materialTronco = setDefaultMaterial("rgb(150,75,0)");
+  materialTronco.transparent = true;
+  materialTronco.opacity = 0.1;
+//material da copa
+let materialArvore = setDefaultMaterial("rgb(0,128,0)");
+  materialArvore.transparent = true;
+  materialArvore.opacity = 0.1;
 
 const windowHalfX = window.innerWidth / 2;
 const windowHalfY = window.innerHeight / 2;
@@ -49,11 +58,18 @@ scene.add(axesHelper);
 let plane = createGroundPlaneWired(500, 500);
 plane.name = 'plano';
 scene.add(plane);
+plane.position.z = -250;
+
+let plane2 = createGroundPlaneWired(500, 500);
+plane2.name = 'plano2';
+plane2.position.z = -750;
+scene.add(plane2);
+
 
 //objeto aviao
 let aviaoInteiro = new THREE.Object3D();
 scene.add(aviaoInteiro);
-aviaoInteiro.position.set(0,0,250);
+aviaoInteiro.position.set(0,0,0);
 
 //base cilindrica do avião
 let materialCorpo = setDefaultMaterial("Indigo");
@@ -126,7 +142,7 @@ cameraHolder.rotateZ(THREE.MathUtils.degToRad(0));
 
 cameraHolder.add(camera);
 scene.add(cameraHolder);
-cameraHolder.position.set(0,20,290);
+cameraHolder.position.set(0,20,40);
 //cilinder.add(cameraHolder);
 
 // Use this to show information onscreen
@@ -140,7 +156,7 @@ controls.add("* Scroll to zoom in/out.");
 controls.show();
 
 
-
+let contador = 0;
 render();
 
 /*
@@ -152,23 +168,34 @@ A partir daqui, tem definição das funções e metodos chamados no começo
 function render() {
   //descomente para testar camera do aviao
   mouseRotation();
-  
-  if(aviaoInteiro.position.z%250 == 0){
-    scene.getObjectByName('plano').removeFromParent();
-    gerarPlano(plane);
+  materialTronco.opacity += 0.005;
+  materialArvore.opacity += 0.005;
+  if(aviaoInteiro.position.z%500 == 0){
+    if(contador == 0){
+      scene.getObjectByName('plano').removeFromParent();
+      gerarPlano(plane);
+      contador = 1;
+    }
+    else if(contador == 1){
+      scene.getObjectByName('plano2').removeFromParent();
+      gerarPlano(plane2);
+      contador = 0;
+    }
+    
   }
   requestAnimationFrame(render);
   renderer.render(scene, camera); // Render scene
 }
 
 function gerarPlano(plane){
-plane = createGroundPlaneWired(500, 500);
-plane.name = 'plano';
 scene.add(plane);
-plane.position.z = aviaoInteiro.position.z - 250;
+materialTronco.opacity = 0.1;
+materialArvore.opacity = 0.1;
+plane.position.z = aviaoInteiro.position.z - 750;
+
 
 //criar quantidade aleatoria de árvores
-var quantidade = 1 + Math.floor(Math.random()*10);
+var quantidade = 1 + Math.floor(Math.random()*100);
 for (let index = 0; index < quantidade; index++) {
   createTree(plane);
 }
@@ -193,8 +220,8 @@ function mouseRotation() {
      aviaoInteiro.position.x = 0.1*mouseX;
 
   }
-  aviaoInteiro.position.z -= 1;
-  cameraHolder.position.z -= 1;
+  aviaoInteiro.position.z -= 5;
+  cameraHolder.position.z -= 5;
 }
 
 function onDocumentMouseMove(event) {
@@ -206,19 +233,14 @@ function onDocumentMouseMove(event) {
 function createTree(plane) {
   //tronco da árvore
   let aviaoInteiro = new THREE.Object3D();
-  let materialTronco = setDefaultMaterial("rgb(150,75,0)");
-  materialTronco.transparent = true;
-  materialTronco.opacity = 0.3;
   let troncoGeometry = new THREE.CylinderGeometry(2, 2, 15, 20);
   let tronco = new THREE.Mesh(troncoGeometry, materialTronco);
-  tronco.position.set(Math.random()*70.0, Math.random()*70.5, 7.5);
+  tronco.position.set(-250 + Math.random()*500.0,-125 + Math.random()*375.0, 7.5);
 
   aviaoInteiro.add(tronco);
 
   //copa da árovore
-  let materialArvore = setDefaultMaterial("rgb(0,128,0)");
-  materialArvore.transparent = true;
-  materialArvore.opacity = 0.3;
+
   let arvoreGeometry = new THREE.ConeGeometry(5, 20, 32);
   let arvore = new THREE.Mesh(arvoreGeometry, materialArvore);
   arvore.position.set(0.0, 7.5, 0);
