@@ -23,10 +23,13 @@ orbit = new OrbitControls(camera, renderer.domElement); // Enable mouse rotation
 // Mouse variables
 let mouseX = 0;
 let mouseY = 0;
+
 let targetX = 0;
 let targetY = 0;
+
 const windowHalfX = window.innerWidth / 2;
 const windowHalfY = window.innerHeight / 2;
+
 document.addEventListener("mousemove", onDocumentMouseMove);
 
 // Listen window size changes
@@ -116,7 +119,6 @@ capsule.position.set(0.0, 0.0, 1.0);
 cilinder.add(capsule);
 
 //createTree();
-
 let cameraHolder = new THREE.Object3D();
 cameraHolder.rotateX(THREE.MathUtils.degToRad(110));
 
@@ -163,8 +165,8 @@ scene.add(plane);
 plane.position.z = aviaoInteiro.position.z - 250;
 
 //criar quantidade aleatoria de árvores
-var contidade = 1 + Math.floor(Math.random()*10);
-for (let index = 0; index < contidade; index++) {
+var quantidade = 1 + Math.floor(Math.random()*10);
+for (let index = 0; index < quantidade; index++) {
   createTree(plane);
 }
 //createTree(plane);
@@ -173,26 +175,36 @@ for (let index = 0; index < contidade; index++) {
 function mouseRotation() {
   targetX = mouseX * -0.003;
   targetY = mouseY * -0.003;
+
   if (aviaoInteiro) {
     aviaoInteiro.rotation.y += 0.05 * (targetX - aviaoInteiro.rotation.y);
     aviaoInteiro.rotation.x += 0.05 * (targetY - aviaoInteiro.rotation.x);
-   // aviaoInteiro.position.z += -0.5;
+    // if(2*aviaoInteiro.rotation.y >= 0){
+    //   aviaoInteiro.rotation.z += 0.02 ;
+    // }
+    // else if(2*aviaoInteiro.rotation.y < 0){
+    //   aviaoInteiro.rotation.z -= 0.02 ;
+    // }
+    
+
   }
-  aviaoInteiro.position.z -= 2;
+  aviaoInteiro.position.z -= 1;
 }
 
 function onDocumentMouseMove(event) {
   mouseX = event.clientX - windowHalfX;
   mouseY = event.clientY - windowHalfY;
+
 }
 
 function createTree(plane) {
   //tronco da árvore
+  let aviaoInteiro = new THREE.Object3D();
   let materialTronco = setDefaultMaterial("rgb(150,75,0)");
   let troncoGeometry = new THREE.CylinderGeometry(2, 2, 15, 20);
   let tronco = new THREE.Mesh(troncoGeometry, materialTronco);
   tronco.position.set(Math.random()*70.0, Math.random()*70.5, 7.5);
-  plane.add(tronco);
+  aviaoInteiro.add(tronco);
 
   //copa da árovore
   let materialArvore = setDefaultMaterial("rgb(0,128,0)");
@@ -200,6 +212,7 @@ function createTree(plane) {
   let arvore = new THREE.Mesh(arvoreGeometry, materialArvore);
   arvore.position.set(0.0, 7.5, 0);
   tronco.add(arvore);
-
   tronco.rotateX(THREE.MathUtils.degToRad(90));
+
+  plane.add(aviaoInteiro);
 }
