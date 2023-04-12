@@ -1,5 +1,4 @@
 import * as THREE from "three";
-import { MathUtils } from "three";
 import { OrbitControls } from "../build/jsm/controls/OrbitControls.js";
 import {
   initRenderer,
@@ -8,166 +7,153 @@ import {
   setDefaultMaterial,
   InfoBox,
   onWindowResize,
-  createGroundPlaneXZ,
   createGroundPlaneWired,
 } from "../libs/util/util.js";
 import Grid from "../libs/util/grid.js";
-
-let scene, renderer, camera, material, light, orbit; // Initial variables
-scene = new THREE.Scene(); // Create main scene
-scene.background = new THREE.Color(0x87ceeb);
-renderer = initRenderer(); // Init a basic renderer
-camera = initCamera(new THREE.Vector3(0, 30, 20)); // Init camera in this position
-material = setDefaultMaterial(); // create a basic material
-light = initDefaultBasicLight(scene); // Create a basic light to illuminate the scene
-orbit = new OrbitControls(camera, renderer.domElement); // Enable mouse rotation, pan, zoom etc.
-
-// Mouse variables
-let mouseX = 0;
-let mouseY = 0;
-
-let targetX = 0;
-let targetY = 0;
-
-//material do tronco
-let materialTronco = setDefaultMaterial("rgb(150,75,0)");
-materialTronco.transparent = true;
-materialTronco.opacity = 0.1;
-//material da copa
-let materialArvore = setDefaultMaterial("rgb(0,128,0)");
-materialArvore.transparent = true;
-materialArvore.opacity = 0.1;
-
-//material do tronco do plano 2
-let materialTronco2 = setDefaultMaterial("rgb(150,75,0)");
-materialTronco2.transparent = true;
-materialTronco2.opacity = 0.1;
-//material da copa do plano 2
-let materialArvore2 = setDefaultMaterial("rgb(0,128,0)");
-materialArvore2.transparent = true;
-materialArvore2.opacity = 0.1;
 
 const windowHalfX = window.innerWidth / 2;
 const windowHalfY = window.innerHeight / 2;
 
 document.addEventListener("mousemove", onDocumentMouseMove);
-
-// Listen window size changes
 window.addEventListener(
   "resize",
   function () {
     onWindowResize(camera, renderer);
   },
   false
-);
+); // Listen window size changes
 
-// Show axes (parameter is size of each axis)
-let axesHelper = new THREE.AxesHelper(12);
-scene.add(axesHelper);
+// Variáveis do mouse
+let mouseX = 0;
+let mouseY = 0;
+let targetX = 0;
+let targetY = 0;
 
-//create wiredframe groud
+let scene, renderer, camera, defaultMaterial, light; // Inicialização das variáveis globais
+renderer = initRenderer(); // Inicialização do renderizador
+camera = initCamera(new THREE.Vector3(0, 30, 20)); // Inicialização da câmera
+defaultMaterial = setDefaultMaterial(); // Inicialização do material
+scene = new THREE.Scene(); // Criação da cena
+scene.background = new THREE.Color(0x87ceeb); // Cor de fundo da cena
+light = initDefaultBasicLight(scene); // Inicialização da luz
+
+// Material do tronco
+let materialTronco = setDefaultMaterial("rgb(150,75,0)");
+let materialTronco2 = setDefaultMaterial("rgb(150,75,0)");
+materialTronco.transparent = true;
+materialTronco2.transparent = true;
+materialTronco.opacity = 0.1;
+materialTronco2.opacity = 0.1;
+
+// Material da copa
+let materialArvore = setDefaultMaterial("rgb(0,128,0)");
+let materialArvore2 = setDefaultMaterial("rgb(0,128,0)");
+materialArvore.transparent = true;
+materialArvore2.transparent = true;
+materialArvore.opacity = 0.1;
+materialArvore2.opacity = 0.1;
+
+// Criação de planos
 let plane = createGroundPlaneWired(2000, 1000);
-plane.name = "plano";
-plane.material.color.setStyle("#9e6406");
-scene.add(plane);
-plane.position.z = 0;
-
 let plane2 = createGroundPlaneWired(2000, 1000);
+plane.name = "plano";
 plane2.name = "plano2";
-plane2.material.color.setStyle("#9e6406");
+plane.material.color.setStyle("#9e7a5a");
+plane2.material.color.setStyle("#9e7a5a");
+
+// Posicionamento dos planos
+plane.position.z = 0;
 plane2.position.z = -1000;
+scene.add(plane);
 scene.add(plane2);
 
-//objeto aviao
+// Criação do avião
 let aviaoInteiro = new THREE.Object3D();
-scene.add(aviaoInteiro);
 aviaoInteiro.position.set(0, 60, 0);
+scene.add(aviaoInteiro);
 
-//base cilindrica do avião
-let materialCorpo = setDefaultMaterial("Indigo");
-let cilinderGeometry = new THREE.CylinderGeometry(2, 1, 15, 20);
-let cilinder = new THREE.Mesh(cilinderGeometry, materialCorpo);
-cilinder.position.set(0.0, 5.0, 0.0);
-cilinder.rotateX(THREE.MathUtils.degToRad(-90));
-aviaoInteiro.add(cilinder);
+// Base cilindrica do avião
+let geometriaCilindro = new THREE.CylinderGeometry(2, 1, 15, 20);
+let materialCilindro = setDefaultMaterial("Indigo");
+let cilindro = new THREE.Mesh(geometriaCilindro, materialCilindro);
+cilindro.position.set(0.0, 5.0, 0.0);
+cilindro.rotateX(THREE.MathUtils.degToRad(-90));
+aviaoInteiro.add(cilindro);
 
-//asa
-let ellipsoidGeometry = new THREE.SphereGeometry(0.5, 32, 16);
-ellipsoidGeometry.rotateZ(Math.PI / 2);
-ellipsoidGeometry.scale(22, 3.5, 0.75);
-let ellipsoidMesh = new THREE.Mesh(ellipsoidGeometry, material);
-cilinder.add(ellipsoidMesh);
+// Asa principal
+let geometriaAsaPrincipal = new THREE.SphereGeometry(0.5, 32, 16);
+geometriaAsaPrincipal.rotateZ(Math.PI / 2);
+geometriaAsaPrincipal.scale(22, 3.5, 0.75);
+let asaPrincipal = new THREE.Mesh(geometriaAsaPrincipal, defaultMaterial);
+cilindro.add(asaPrincipal);
 
-//asaTrasDireita
-let ellipsoidGeometry2 = new THREE.SphereGeometry(0.5, 32, 16);
-ellipsoidGeometry2.rotateZ(Math.PI / 2);
-ellipsoidGeometry2.scale(3, 1, 0.75);
-let ellipsoidMesh2 = new THREE.Mesh(ellipsoidGeometry2, material);
-ellipsoidMesh2.position.set(1.5, -7, 0.0);
-cilinder.add(ellipsoidMesh2);
+// Asa traseira direita
+let geometriaAsaTraseiraDireita = new THREE.SphereGeometry(0.5, 32, 16);
+geometriaAsaTraseiraDireita.rotateZ(Math.PI / 2);
+geometriaAsaTraseiraDireita.scale(3, 1, 0.75);
+let asaTraseiraDireita = new THREE.Mesh(
+  geometriaAsaTraseiraDireita,
+  defaultMaterial
+);
+asaTraseiraDireita.position.set(1.5, -7, 0.0);
+cilindro.add(asaTraseiraDireita);
 
-//asaTrasSuperior
-let ellipsoidGeometry3 = new THREE.SphereGeometry(0.5, 32, 16);
-ellipsoidGeometry3.rotateZ(Math.PI / 2);
-ellipsoidGeometry3.scale(3, 1, 0.75);
-let ellipsoidMesh3 = new THREE.Mesh(ellipsoidGeometry3, material);
-ellipsoidMesh3.position.set(0.0, -7, 1);
-ellipsoidGeometry3.rotateY(THREE.MathUtils.degToRad(90));
-cilinder.add(ellipsoidMesh3);
+// Asa traseira superior
+let geometriaAsaTraseiraSuperior = new THREE.SphereGeometry(0.5, 32, 16);
+geometriaAsaTraseiraSuperior.rotateZ(Math.PI / 2);
+geometriaAsaTraseiraSuperior.scale(3, 1, 0.75);
+let asaTraseiraSuperior = new THREE.Mesh(
+  geometriaAsaTraseiraSuperior,
+  defaultMaterial
+);
+asaTraseiraSuperior.position.set(0.0, -7, 1);
+asaTraseiraSuperior.rotateY(THREE.MathUtils.degToRad(90));
+cilindro.add(asaTraseiraSuperior);
 
-//asaTrasEsquerda
-let ellipsoidGeometry4 = new THREE.SphereGeometry(0.5, 32, 16);
-ellipsoidGeometry4.rotateZ(Math.PI / 2);
-ellipsoidGeometry4.scale(3, 1, 0.75);
-let ellipsoidMesh4 = new THREE.Mesh(ellipsoidGeometry4, material);
-ellipsoidMesh4.position.set(-1.5, -7, 0.0);
-cilinder.add(ellipsoidMesh4);
+// Asa traseira esquerda
+let geometriaAsaTraseiraEsquerda = new THREE.SphereGeometry(0.5, 32, 16);
+geometriaAsaTraseiraEsquerda.rotateZ(Math.PI / 2);
+geometriaAsaTraseiraEsquerda.scale(3, 1, 0.75);
+let asaTraseiraEsquerda = new THREE.Mesh(
+  geometriaAsaTraseiraEsquerda,
+  defaultMaterial
+);
+asaTraseiraEsquerda.position.set(-1.5, -7, 0.0);
+cilindro.add(asaTraseiraEsquerda);
 
-//frente
-let materialFrente = setDefaultMaterial("Goldenrod");
-let frenteGeometry = new THREE.TorusGeometry(2, 0.3, 30, 100);
-let frente = new THREE.Mesh(frenteGeometry, materialFrente);
-frente.position.set(0, 7.5, 0);
-frente.rotateX(THREE.MathUtils.degToRad(90));
-cilinder.add(frente);
+// Hélice
+let materialAroHelice = setDefaultMaterial("Goldenrod");
+let geometriaAroHelice = new THREE.TorusGeometry(2, 0.3, 30, 100);
+let aroHelice = new THREE.Mesh(geometriaAroHelice, materialAroHelice);
+aroHelice.position.set(0, 7.5, 0);
+aroHelice.rotateX(THREE.MathUtils.degToRad(90));
+cilindro.add(aroHelice);
 
-let materialFrente2 = setDefaultMaterial("grey");
-let frenteGeometry2 = new THREE.CylinderGeometry(2, 2, 0.5, 32);
-let frente2 = new THREE.Mesh(frenteGeometry2, materialFrente2);
-frente2.material.opacity = 0;
-frente2.position.set(0, 0, 0.1);
-frente2.rotateX(THREE.MathUtils.degToRad(90));
-frente.add(frente2);
+// Pá da hélice
+let materialPaHelice = setDefaultMaterial("grey");
+let geometriaPaHelice = new THREE.CylinderGeometry(2, 2, 0.5, 32);
+let paHelice = new THREE.Mesh(geometriaPaHelice, materialPaHelice);
+paHelice.material.opacity = 0;
+paHelice.position.set(0, 0, 0.1);
+paHelice.rotateX(THREE.MathUtils.degToRad(90));
+aroHelice.add(paHelice);
 
-//cabine do piloto
+// Cabine do piloto
 let materialCabine = setDefaultMaterial("lightgrey");
-let cabine = new THREE.CapsuleGeometry(1, 2.5, 10, 20);
-let capsule = new THREE.Mesh(cabine, materialCabine);
-capsule.position.set(0.0, 0.0, 1.0);
-cilinder.add(capsule);
+let geometriaCabine = new THREE.CapsuleGeometry(1, 2.5, 10, 20);
+let cabine = new THREE.Mesh(geometriaCabine, materialCabine);
+cabine.position.set(0.0, 0.0, 1.0);
+cilindro.add(cabine);
 
-//createTree();
+// Câmera holder
 let cameraHolder = new THREE.Object3D();
 cameraHolder.rotateX(THREE.MathUtils.degToRad(45));
-cameraHolder.rotateY(THREE.MathUtils.degToRad(0));
-cameraHolder.rotateZ(THREE.MathUtils.degToRad(0));
-
+cameraHolder.position.set(0, 20, 30);
 cameraHolder.add(camera);
 scene.add(cameraHolder);
-cameraHolder.position.set(0, 20, 30);
-//cilinder.add(cameraHolder);
-
-// Use this to show information onscreen
-let controls = new InfoBox();
-controls.add("Basic Scene");
-controls.addParagraph();
-controls.add("Use mouse to interact:");
-controls.add("* Left button to rotate");
-controls.add("* Right button to translate (pan)");
-controls.add("* Scroll to zoom in/out.");
-controls.show();
 
 let contador = 0;
+
 render();
 
 /*
@@ -176,9 +162,9 @@ A partir daqui, tem definição das funções e metodos chamados no começo
 **********************************************************************
 */
 
-function render() {
-  //descomente para testar camera do aviao
-  mouseRotation();
+// Atualização dos materiais e planos
+function atualizarObjetos() {
+  // Dinâmica do ambiente - fade in
   if (contador == 1) {
     materialTronco.opacity += 0.003;
     materialArvore.opacity += 0.005;
@@ -187,118 +173,71 @@ function render() {
     materialArvore2.opacity += 0.005;
   }
 
-  if (aviaoInteiro.position.z % 500 == 0) {
+  // Atualização dos planos
+  if (aviaoInteiro.position.z % 500 === 0 && aviaoInteiro.position.z !== 0) {
     if (contador == 0) {
       scene.getObjectByName("plano").removeFromParent();
       materialTronco.opacity = 0.05;
       materialArvore.opacity = 0.1;
-      gerarPlano(plane);
+      gerarPlano(plane); // Geração de planos
       contador = 1;
     } else if (contador == 1) {
       scene.getObjectByName("plano2").removeFromParent();
       materialTronco2.opacity = 0.05;
       materialArvore2.opacity = 0.1;
-      gerarPlano2(plane2);
+      gerarPlano2(plane2); // Geração de planos
       contador = 0;
     }
   }
-  requestAnimationFrame(render);
-  renderer.render(scene, camera); // Render scene
 }
 
-function gerarPlano(plane){
-plane.clear();
-let wcolor = "rgb(150, 150, 150)";
+function gerarPlano(plane) {
+  // Geração de planos ímpares
+  let planeGrid = new Grid(2000, 1000, 10, 10, "#969696", 3);
 
-var planeGeometry = new THREE.PlaneGeometry(500, 500, 10, 10);
-   planeGeometry.translate(0.0, 0.0, -0.02); // To avoid conflict with the axeshelper
+  plane.clear();
+  plane.add(planeGrid);
+  plane.position.z = aviaoInteiro.position.z - 750;
+  scene.add(plane);
 
-   // Create the grid object
-let grid = new Grid(500, 500, 10, 10, wcolor, 3);
-
-plane.add(grid); // Add the grid to the plane
-scene.add(plane);
-plane.position.z = aviaoInteiro.position.z - 750;
-
-
-//criar quantidade aleatoria de árvores
-var quantidade = 1 + Math.floor(Math.random()*5);
-for (let index = 0; index < quantidade; index++) {
-  createTree(plane);
-  //createTree(plane);
-}
-}
-function gerarPlano2(plane){
-plane.clear();
-
-let wcolor = "rgb(150, 150, 150)";
-
-var planeGeometry = new THREE.PlaneGeometry(500, 500, 10, 10);
-   planeGeometry.translate(0.0, 0.0, -0.02); // To avoid conflict with the axeshelper
-   // Create the grid object
-let grid = new Grid(500, 500, 10, 10, wcolor, 3);
-
-plane.add(grid); // Add the grid to the plane
-
-scene.add(plane);
-plane.position.z = aviaoInteiro.position.z - 750;
-  
-  
-  //criar quantidade aleatoria de árvores
-  var quantidade = 1 + Math.floor(Math.random()*5);
+  let quantidade = 1 + Math.floor(Math.random() * 100);
   for (let index = 0; index < quantidade; index++) {
+    // Geração de árvores dos planos
+    createTree(plane);
+  }
+}
+
+function gerarPlano2(plane) {
+  // Geração de planos pares
+  let planeGrid = new Grid(2000, 1000, 10, 10, "#969696", 3);
+
+  plane.clear();
+  plane.add(planeGrid);
+  plane.position.z = aviaoInteiro.position.z - 750;
+  scene.add(plane);
+
+  let quantidade = 1 + Math.floor(Math.random() * 100);
+  for (let index = 0; index < quantidade; index++) {
+    // Geração de árvores dos planos
     createTree2(plane2);
   }
-  //createTree(plane);
 }
 
-// function onDocumentMouseMove(event) {
-//   // Obtenha a posição do mouse em relação à janela
-//   var mouseX = (event.clientX / window.innerWidth) * 2 - 1;
-//   var mouseY = (event.clientY / window.innerHeight) * 2 + 1;
-
-//   // Rotacione o objeto com base na posição do mouse
-//   aviaoInteiro.rotation.x = mouseY * 0.5;
-//   aviaoInteiro.rotation.y = mouseX * 0.5;
-// }
-
-function mouseRotation() {
+function rotacaoMouse() {
+  // Interação via mouse
   targetX = mouseX * -0.003;
   targetY = mouseY * -0.003;
 
-  if (aviaoInteiro) {
-    //  aviaoInteiro.rotation.y += 0.05 * (targetX - aviaoInteiro.rotation.y);
-    //  aviaoInteiro.rotation.x += 0.05 * (targetY - aviaoInteiro.rotation.x);
-
-    // if(2*aviaoInteiro.rotation.y >= 0){
-    //   aviaoInteiro.rotation.z += 0.02 ;
-    // }
-    // else if(2*aviaoInteiro.rotation.y < 0){
-    //   aviaoInteiro.rotation.z -= 0.02 ;
-    // }
-    aviaoInteiro.position.y = -0.1 * mouseY;
-    aviaoInteiro.position.x = 0.1 * mouseX;
-  }
+  aviaoInteiro.position.x = 0.1 * mouseX;
+  aviaoInteiro.position.y = -0.1 * mouseY;
   aviaoInteiro.position.z -= 5;
+
+  aviaoInteiro.rotation.z = targetX * 0.75; // Rotação do avião no eixo z
   cameraHolder.position.z -= 5;
-
-  aviaoInteiro.rotation.z = targetX * 0.75;
-}
-
-function onDocumentMouseMove(event) {
-  mouseX = event.clientX - windowHalfX;
-  mouseY = event.clientY - windowHalfY;
-
-  // var mouseX = (event.clientX / window.innerWidth) * 2 - 1;
-  // var mouseY = (event.clientY / window.innerHeight) * 2 + 1;
-
-  // // Rotacione o objeto com base na posição do mouse
-  // aviaoInteiro.rotation.x = -mouseY * 0.5;
-  // aviaoInteiro.rotation.y = -mouseX * 0.5;
 }
 
 function createTree(plane) {
-  //tronco da árvore
+  // Tronco da árvore
   let aviaoInteiro = new THREE.Object3D();
   let troncoGeometry = new THREE.CylinderGeometry(2, 2, 15, 20);
   let tronco = new THREE.Mesh(troncoGeometry, materialTronco);
@@ -310,8 +249,7 @@ function createTree(plane) {
 
   aviaoInteiro.add(tronco);
 
-  //copa da árovore
-
+  // Copa da árovore
   let arvoreGeometry = new THREE.ConeGeometry(5, 20, 32);
   let arvore = new THREE.Mesh(arvoreGeometry, materialArvore);
   arvore.position.set(0.0, 7.5, 0);
@@ -322,7 +260,7 @@ function createTree(plane) {
 }
 
 function createTree2(plane) {
-  //tronco da árvore
+  // Tronco da árvore
   let aviaoInteiro = new THREE.Object3D();
   let troncoGeometry = new THREE.CylinderGeometry(2, 2, 15, 20);
   let tronco = new THREE.Mesh(troncoGeometry, materialTronco);
@@ -334,8 +272,7 @@ function createTree2(plane) {
 
   aviaoInteiro.add(tronco);
 
-  //copa da árovore
-
+  // Copa da árovore
   let arvoreGeometry = new THREE.ConeGeometry(5, 20, 32);
   let arvore = new THREE.Mesh(arvoreGeometry, materialArvore2);
   arvore.position.set(0.0, 7.5, 0);
@@ -345,5 +282,17 @@ function createTree2(plane) {
   plane.add(aviaoInteiro);
 }
 
+function onDocumentMouseMove(event) {
+  mouseX = event.clientX - windowHalfX;
+  mouseY = event.clientY - windowHalfY;
+}
+
 let canvas = document.querySelector("canvas");
-canvas.style.cursor = "none";
+canvas.style.cursor = "none"; // Ocultar cursor do mouse
+
+function render() {
+  rotacaoMouse();
+  atualizarObjetos();
+  requestAnimationFrame(render);
+  renderer.render(scene, camera);
+}
