@@ -227,7 +227,7 @@ for (let index = 0; index < quantidade; index++) {
   createTree(plane);
   //createTree(plane);
 }
-
+}
 function gerarPlano2(plane){
 plane.clear();
 
