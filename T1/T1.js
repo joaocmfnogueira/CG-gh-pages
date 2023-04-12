@@ -11,6 +11,7 @@ import {
   createGroundPlaneXZ,
   createGroundPlaneWired,
 } from "../libs/util/util.js";
+import Grid from "../libs/util/grid.js";
 
 let scene, renderer, camera, material, light, orbit; // Initial variables
 scene = new THREE.Scene(); // Create main scene
@@ -205,25 +206,49 @@ function render() {
   renderer.render(scene, camera); // Render scene
 }
 
-function gerarPlano(plane) {
-  scene.add(plane);
+function gerarPlano(plane){
+plane.clear();
+let wcolor = "rgb(150, 150, 150)";
 
-  plane.position.z = aviaoInteiro.position.z - 750;
+var planeGeometry = new THREE.PlaneGeometry(500, 500, 10, 10);
+   planeGeometry.translate(0.0, 0.0, -0.02); // To avoid conflict with the axeshelper
 
-  //criar quantidade aleatoria de árvores
-  // let quantidade = Math.floor(Math.random() * 100);
+   // Create the grid object
+let grid = new Grid(500, 500, 10, 10, wcolor, 3);
+
+plane.add(grid); // Add the grid to the plane
+scene.add(plane);
+plane.position.z = aviaoInteiro.position.z - 750;
+
+
+//criar quantidade aleatoria de árvores
+var quantidade = 1 + Math.floor(Math.random()*5);
+for (let index = 0; index < quantidade; index++) {
   createTree(plane);
   //createTree(plane);
 }
 
-function gerarPlano2(plane) {
-  scene.add(plane);
+function gerarPlano2(plane){
+plane.clear();
 
-  plane.position.z = aviaoInteiro.position.z - 750;
+let wcolor = "rgb(150, 150, 150)";
 
+var planeGeometry = new THREE.PlaneGeometry(500, 500, 10, 10);
+   planeGeometry.translate(0.0, 0.0, -0.02); // To avoid conflict with the axeshelper
+   // Create the grid object
+let grid = new Grid(500, 500, 10, 10, wcolor, 3);
+
+plane.add(grid); // Add the grid to the plane
+
+scene.add(plane);
+plane.position.z = aviaoInteiro.position.z - 750;
+  
+  
   //criar quantidade aleatoria de árvores
-  var quantidade = 1 + Math.floor(Math.random() * 100);
-  createTree2(plane);
+  var quantidade = 1 + Math.floor(Math.random()*5);
+  for (let index = 0; index < quantidade; index++) {
+    createTree2(plane2);
+  }
   //createTree(plane);
 }
 
