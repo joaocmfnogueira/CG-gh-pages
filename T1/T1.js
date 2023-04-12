@@ -11,6 +11,7 @@ import {
   createGroundPlaneXZ,
   createGroundPlaneWired,
 } from "../libs/util/util.js";
+import Grid from "../libs/util/grid.js";
 
 let scene, renderer, camera, material, light, orbit; // Initial variables
 scene = new THREE.Scene(); // Create main scene
@@ -209,13 +210,22 @@ function render() {
 }
 
 function gerarPlano(plane){
-scene.add(plane);
+plane.clear();
+let wcolor = "rgb(150, 150, 150)";
 
+var planeGeometry = new THREE.PlaneGeometry(500, 500, 10, 10);
+   planeGeometry.translate(0.0, 0.0, -0.02); // To avoid conflict with the axeshelper
+
+   // Create the grid object
+let grid = new Grid(500, 500, 10, 10, wcolor, 3);
+
+plane.add(grid); // Add the grid to the plane
+scene.add(plane);
 plane.position.z = aviaoInteiro.position.z - 750;
 
 
 //criar quantidade aleatoria de árvores
-var quantidade = 1 + Math.floor(Math.random()*100);
+var quantidade = 1 + Math.floor(Math.random()*5);
 for (let index = 0; index < quantidade; index++) {
   createTree(plane);
 }
@@ -223,15 +233,25 @@ for (let index = 0; index < quantidade; index++) {
 }
 
 function gerarPlano2(plane){
-  scene.add(plane);
-  
-  plane.position.z = aviaoInteiro.position.z - 750;
+plane.clear();
+
+let wcolor = "rgb(150, 150, 150)";
+
+var planeGeometry = new THREE.PlaneGeometry(500, 500, 10, 10);
+   planeGeometry.translate(0.0, 0.0, -0.02); // To avoid conflict with the axeshelper
+   // Create the grid object
+let grid = new Grid(500, 500, 10, 10, wcolor, 3);
+
+plane.add(grid); // Add the grid to the plane
+
+scene.add(plane);
+plane.position.z = aviaoInteiro.position.z - 750;
   
   
   //criar quantidade aleatoria de árvores
-  var quantidade = 1 + Math.floor(Math.random()*100);
+  var quantidade = 1 + Math.floor(Math.random()*5);
   for (let index = 0; index < quantidade; index++) {
-    createTree2(plane);
+    createTree2(plane2);
   }
   //createTree(plane);
   }
