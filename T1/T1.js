@@ -14,8 +14,9 @@ import {
 
 let scene, renderer, camera, material, light, orbit; // Initial variables
 scene = new THREE.Scene(); // Create main scene
+scene.background = new THREE.Color(0x87ceeb);
 renderer = initRenderer(); // Init a basic renderer
-camera = initCamera(new THREE.Vector3(0, 30, 30)); // Init camera in this position
+camera = initCamera(new THREE.Vector3(0, 30, 20)); // Init camera in this position
 material = setDefaultMaterial(); // create a basic material
 light = initDefaultBasicLight(scene); // Create a basic light to illuminate the scene
 orbit = new OrbitControls(camera, renderer.domElement); // Enable mouse rotation, pan, zoom etc.
@@ -29,22 +30,21 @@ let targetY = 0;
 
 //material do tronco
 let materialTronco = setDefaultMaterial("rgb(150,75,0)");
-  materialTronco.transparent = true;
-  materialTronco.opacity = 0.1;
+materialTronco.transparent = true;
+materialTronco.opacity = 0.1;
 //material da copa
 let materialArvore = setDefaultMaterial("rgb(0,128,0)");
-  materialArvore.transparent = true;
-  materialArvore.opacity = 0.1;
-
+materialArvore.transparent = true;
+materialArvore.opacity = 0.1;
 
 //material do tronco do plano 2
 let materialTronco2 = setDefaultMaterial("rgb(150,75,0)");
-  materialTronco2.transparent = true;
-  materialTronco2.opacity = 0.1;
+materialTronco2.transparent = true;
+materialTronco2.opacity = 0.1;
 //material da copa do plano 2
 let materialArvore2 = setDefaultMaterial("rgb(0,128,0)");
-  materialArvore2.transparent = true;
-  materialArvore2.opacity = 0.1;
+materialArvore2.transparent = true;
+materialArvore2.opacity = 0.1;
 
 const windowHalfX = window.innerWidth / 2;
 const windowHalfY = window.innerHeight / 2;
@@ -65,21 +65,22 @@ let axesHelper = new THREE.AxesHelper(12);
 scene.add(axesHelper);
 
 //create wiredframe groud
-let plane = createGroundPlaneWired(500, 500);
-plane.name = 'plano';
+let plane = createGroundPlaneWired(2000, 1000);
+plane.name = "plano";
+plane.material.color.setStyle("#9e6406");
 scene.add(plane);
-plane.position.z = -250;
+plane.position.z = 0;
 
-let plane2 = createGroundPlaneWired(500, 500);
-plane2.name = 'plano2';
-plane2.position.z = -750;
+let plane2 = createGroundPlaneWired(2000, 1000);
+plane2.name = "plano2";
+plane2.material.color.setStyle("#9e6406");
+plane2.position.z = -1000;
 scene.add(plane2);
-
 
 //objeto aviao
 let aviaoInteiro = new THREE.Object3D();
 scene.add(aviaoInteiro);
-aviaoInteiro.position.set(0,0,0);
+aviaoInteiro.position.set(0, 60, 0);
 
 //base cilindrica do avião
 let materialCorpo = setDefaultMaterial("Indigo");
@@ -152,7 +153,7 @@ cameraHolder.rotateZ(THREE.MathUtils.degToRad(0));
 
 cameraHolder.add(camera);
 scene.add(cameraHolder);
-cameraHolder.position.set(0,20,40);
+cameraHolder.position.set(0, 20, 30);
 //cilinder.add(cameraHolder);
 
 // Use this to show information onscreen
@@ -164,7 +165,6 @@ controls.add("* Left button to rotate");
 controls.add("* Right button to translate (pan)");
 controls.add("* Scroll to zoom in/out.");
 controls.show();
-
 
 let contador = 0;
 render();
@@ -178,63 +178,64 @@ A partir daqui, tem definição das funções e metodos chamados no começo
 function render() {
   //descomente para testar camera do aviao
   mouseRotation();
-  if(contador == 1){
+  if (contador == 1) {
     materialTronco.opacity += 0.003;
     materialArvore.opacity += 0.005;
-  }
-  else{
+  } else {
     materialTronco2.opacity += 0.003;
     materialArvore2.opacity += 0.005;
   }
-  
-  if(aviaoInteiro.position.z%500 == 0){
-    if(contador == 0){
-      scene.getObjectByName('plano').removeFromParent();
+
+  if (aviaoInteiro.position.z % 500 == 0) {
+    if (contador == 0) {
+      scene.getObjectByName("plano").removeFromParent();
       materialTronco.opacity = 0.05;
       materialArvore.opacity = 0.1;
       gerarPlano(plane);
       contador = 1;
-    }
-    else if(contador == 1){
-      scene.getObjectByName('plano2').removeFromParent();
+    } else if (contador == 1) {
+      scene.getObjectByName("plano2").removeFromParent();
       materialTronco2.opacity = 0.05;
       materialArvore2.opacity = 0.1;
       gerarPlano2(plane2);
       contador = 0;
     }
-    
   }
   requestAnimationFrame(render);
   renderer.render(scene, camera); // Render scene
 }
 
-function gerarPlano(plane){
-scene.add(plane);
-
-plane.position.z = aviaoInteiro.position.z - 750;
-
-
-//criar quantidade aleatoria de árvores
-var quantidade = 1 + Math.floor(Math.random()*100);
-for (let index = 0; index < quantidade; index++) {
-  createTree(plane);
-}
-//createTree(plane);
-}
-
-function gerarPlano2(plane){
+function gerarPlano(plane) {
   scene.add(plane);
-  
+
   plane.position.z = aviaoInteiro.position.z - 750;
-  
-  
+
   //criar quantidade aleatoria de árvores
-  var quantidade = 1 + Math.floor(Math.random()*100);
-  for (let index = 0; index < quantidade; index++) {
-    createTree2(plane);
-  }
+  // let quantidade = Math.floor(Math.random() * 100);
+  createTree(plane);
   //createTree(plane);
-  }
+}
+
+function gerarPlano2(plane) {
+  scene.add(plane);
+
+  plane.position.z = aviaoInteiro.position.z - 750;
+
+  //criar quantidade aleatoria de árvores
+  var quantidade = 1 + Math.floor(Math.random() * 100);
+  createTree2(plane);
+  //createTree(plane);
+}
+
+// function onDocumentMouseMove(event) {
+//   // Obtenha a posição do mouse em relação à janela
+//   var mouseX = (event.clientX / window.innerWidth) * 2 - 1;
+//   var mouseY = (event.clientY / window.innerHeight) * 2 + 1;
+
+//   // Rotacione o objeto com base na posição do mouse
+//   aviaoInteiro.rotation.x = mouseY * 0.5;
+//   aviaoInteiro.rotation.y = mouseX * 0.5;
+// }
 
 function mouseRotation() {
   targetX = mouseX * -0.003;
@@ -250,18 +251,25 @@ function mouseRotation() {
     // else if(2*aviaoInteiro.rotation.y < 0){
     //   aviaoInteiro.rotation.z -= 0.02 ;
     // }
-     aviaoInteiro.position.y = -0.1*mouseY;
-     aviaoInteiro.position.x = 0.1*mouseX;
-
+    aviaoInteiro.position.y = -0.1 * mouseY;
+    aviaoInteiro.position.x = 0.1 * mouseX;
   }
   aviaoInteiro.position.z -= 5;
   cameraHolder.position.z -= 5;
+
+  aviaoInteiro.rotation.z = targetX * 0.75;
 }
 
 function onDocumentMouseMove(event) {
   mouseX = event.clientX - windowHalfX;
   mouseY = event.clientY - windowHalfY;
 
+  // var mouseX = (event.clientX / window.innerWidth) * 2 - 1;
+  // var mouseY = (event.clientY / window.innerHeight) * 2 + 1;
+
+  // // Rotacione o objeto com base na posição do mouse
+  // aviaoInteiro.rotation.x = -mouseY * 0.5;
+  // aviaoInteiro.rotation.y = -mouseX * 0.5;
 }
 
 function createTree(plane) {
@@ -269,7 +277,11 @@ function createTree(plane) {
   let aviaoInteiro = new THREE.Object3D();
   let troncoGeometry = new THREE.CylinderGeometry(2, 2, 15, 20);
   let tronco = new THREE.Mesh(troncoGeometry, materialTronco);
-  tronco.position.set(-250 + Math.random()*500.0,-125 + Math.random()*375.0, 7.5);
+  tronco.position.set(
+    -250 + Math.random() * 500.0,
+    -125 + Math.random() * 375.0,
+    7.5
+  );
 
   aviaoInteiro.add(tronco);
 
@@ -289,7 +301,11 @@ function createTree2(plane) {
   let aviaoInteiro = new THREE.Object3D();
   let troncoGeometry = new THREE.CylinderGeometry(2, 2, 15, 20);
   let tronco = new THREE.Mesh(troncoGeometry, materialTronco);
-  tronco.position.set(-250 + Math.random()*500.0,-125 + Math.random()*375.0, 7.5);
+  tronco.position.set(
+    -250 + Math.random() * 500.0,
+    -125 + Math.random() * 375.0,
+    7.5
+  );
 
   aviaoInteiro.add(tronco);
 
@@ -303,3 +319,6 @@ function createTree2(plane) {
 
   plane.add(aviaoInteiro);
 }
+
+let canvas = document.querySelector("canvas");
+canvas.style.cursor = "none";
