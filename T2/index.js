@@ -17,7 +17,7 @@ const windowHalfY = window.innerHeight / 2;
 document.addEventListener("mousemove", onDocumentMouseMove);
 window.addEventListener(
   "resize",
-  function () {
+  () => {
     onWindowResize(camera, renderer);
   },
   false
@@ -67,83 +67,83 @@ plane2.position.z = -1000;
 scene.add(plane);
 scene.add(plane2);
 
-// Criação do avião
-let aviaoInteiro = new THREE.Object3D();
-aviaoInteiro.position.set(0, 60, 0);
-scene.add(aviaoInteiro);
+// // Criação do avião
+// let aviaoInteiro = new THREE.Object3D();
+// aviaoInteiro.position.set(0, 60, 0);
+// scene.add(aviaoInteiro);
 
-// Base cilindrica do avião
-let geometriaCilindro = new THREE.CylinderGeometry(2, 1, 15, 20);
-let materialCilindro = setDefaultMaterial("Indigo");
-let cilindro = new THREE.Mesh(geometriaCilindro, materialCilindro);
-cilindro.position.set(0.0, 5.0, 0.0);
-cilindro.rotateX(THREE.MathUtils.degToRad(-90));
-aviaoInteiro.add(cilindro);
+// // Base cilindrica do avião
+// let geometriaCilindro = new THREE.CylinderGeometry(2, 1, 15, 20);
+// let materialCilindro = setDefaultMaterial("Indigo");
+// let cilindro = new THREE.Mesh(geometriaCilindro, materialCilindro);
+// cilindro.position.set(0.0, 5.0, 0.0);
+// cilindro.rotateX(THREE.MathUtils.degToRad(-90));
+// aviaoInteiro.add(cilindro);
 
-// Asa principal
-let geometriaAsaPrincipal = new THREE.SphereGeometry(0.5, 32, 16);
-geometriaAsaPrincipal.rotateZ(Math.PI / 2);
-geometriaAsaPrincipal.scale(22, 3.5, 0.75);
-let asaPrincipal = new THREE.Mesh(geometriaAsaPrincipal, defaultMaterial);
-cilindro.add(asaPrincipal);
+// // Asa principal
+// let geometriaAsaPrincipal = new THREE.SphereGeometry(0.5, 32, 16);
+// geometriaAsaPrincipal.rotateZ(Math.PI / 2);
+// geometriaAsaPrincipal.scale(22, 3.5, 0.75);
+// let asaPrincipal = new THREE.Mesh(geometriaAsaPrincipal, defaultMaterial);
+// cilindro.add(asaPrincipal);
 
-// Asa traseira direita
-let geometriaAsaTraseiraDireita = new THREE.SphereGeometry(0.5, 32, 16);
-geometriaAsaTraseiraDireita.rotateZ(Math.PI / 2);
-geometriaAsaTraseiraDireita.scale(3, 1, 0.75);
-let asaTraseiraDireita = new THREE.Mesh(
-  geometriaAsaTraseiraDireita,
-  defaultMaterial
-);
-asaTraseiraDireita.position.set(1.5, -7, 0.0);
-cilindro.add(asaTraseiraDireita);
+// // Asa traseira direita
+// let geometriaAsaTraseiraDireita = new THREE.SphereGeometry(0.5, 32, 16);
+// geometriaAsaTraseiraDireita.rotateZ(Math.PI / 2);
+// geometriaAsaTraseiraDireita.scale(3, 1, 0.75);
+// let asaTraseiraDireita = new THREE.Mesh(
+//   geometriaAsaTraseiraDireita,
+//   defaultMaterial
+// );
+// asaTraseiraDireita.position.set(1.5, -7, 0.0);
+// cilindro.add(asaTraseiraDireita);
 
-// Asa traseira superior
-let geometriaAsaTraseiraSuperior = new THREE.SphereGeometry(0.5, 32, 16);
-geometriaAsaTraseiraSuperior.rotateZ(Math.PI / 2);
-geometriaAsaTraseiraSuperior.scale(3, 1, 0.75);
-let asaTraseiraSuperior = new THREE.Mesh(
-  geometriaAsaTraseiraSuperior,
-  defaultMaterial
-);
-asaTraseiraSuperior.position.set(0.0, -7, 1);
-asaTraseiraSuperior.rotateY(THREE.MathUtils.degToRad(90));
-cilindro.add(asaTraseiraSuperior);
+// // Asa traseira superior
+// let geometriaAsaTraseiraSuperior = new THREE.SphereGeometry(0.5, 32, 16);
+// geometriaAsaTraseiraSuperior.rotateZ(Math.PI / 2);
+// geometriaAsaTraseiraSuperior.scale(3, 1, 0.75);
+// let asaTraseiraSuperior = new THREE.Mesh(
+//   geometriaAsaTraseiraSuperior,
+//   defaultMaterial
+// );
+// asaTraseiraSuperior.position.set(0.0, -7, 1);
+// asaTraseiraSuperior.rotateY(THREE.MathUtils.degToRad(90));
+// cilindro.add(asaTraseiraSuperior);
 
-// Asa traseira esquerda
-let geometriaAsaTraseiraEsquerda = new THREE.SphereGeometry(0.5, 32, 16);
-geometriaAsaTraseiraEsquerda.rotateZ(Math.PI / 2);
-geometriaAsaTraseiraEsquerda.scale(3, 1, 0.75);
-let asaTraseiraEsquerda = new THREE.Mesh(
-  geometriaAsaTraseiraEsquerda,
-  defaultMaterial
-);
-asaTraseiraEsquerda.position.set(-1.5, -7, 0.0);
-cilindro.add(asaTraseiraEsquerda);
+// // Asa traseira esquerda
+// let geometriaAsaTraseiraEsquerda = new THREE.SphereGeometry(0.5, 32, 16);
+// geometriaAsaTraseiraEsquerda.rotateZ(Math.PI / 2);
+// geometriaAsaTraseiraEsquerda.scale(3, 1, 0.75);
+// let asaTraseiraEsquerda = new THREE.Mesh(
+//   geometriaAsaTraseiraEsquerda,
+//   defaultMaterial
+// );
+// asaTraseiraEsquerda.position.set(-1.5, -7, 0.0);
+// cilindro.add(asaTraseiraEsquerda);
 
-// Hélice
-let materialAroHelice = setDefaultMaterial("Goldenrod");
-let geometriaAroHelice = new THREE.TorusGeometry(2, 0.3, 30, 100);
-let aroHelice = new THREE.Mesh(geometriaAroHelice, materialAroHelice);
-aroHelice.position.set(0, 7.5, 0);
-aroHelice.rotateX(THREE.MathUtils.degToRad(90));
-cilindro.add(aroHelice);
+// // Hélice
+// let materialAroHelice = setDefaultMaterial("Goldenrod");
+// let geometriaAroHelice = new THREE.TorusGeometry(2, 0.3, 30, 100);
+// let aroHelice = new THREE.Mesh(geometriaAroHelice, materialAroHelice);
+// aroHelice.position.set(0, 7.5, 0);
+// aroHelice.rotateX(THREE.MathUtils.degToRad(90));
+// cilindro.add(aroHelice);
 
-// Pá da hélice
-let materialPaHelice = setDefaultMaterial("grey");
-let geometriaPaHelice = new THREE.CylinderGeometry(2, 2, 0.5, 32);
-let paHelice = new THREE.Mesh(geometriaPaHelice, materialPaHelice);
-paHelice.material.opacity = 0;
-paHelice.position.set(0, 0, 0.1);
-paHelice.rotateX(THREE.MathUtils.degToRad(90));
-aroHelice.add(paHelice);
+// // Pá da hélice
+// let materialPaHelice = setDefaultMaterial("grey");
+// let geometriaPaHelice = new THREE.CylinderGeometry(2, 2, 0.5, 32);
+// let paHelice = new THREE.Mesh(geometriaPaHelice, materialPaHelice);
+// paHelice.material.opacity = 0;
+// paHelice.position.set(0, 0, 0.1);
+// paHelice.rotateX(THREE.MathUtils.degToRad(90));
+// aroHelice.add(paHelice);
 
-// Cabine do piloto
-let materialCabine = setDefaultMaterial("lightgrey");
-let geometriaCabine = new THREE.CapsuleGeometry(1, 2.5, 10, 20);
-let cabine = new THREE.Mesh(geometriaCabine, materialCabine);
-cabine.position.set(0.0, 0.0, 1.0);
-cilindro.add(cabine);
+// // Cabine do piloto
+// let materialCabine = setDefaultMaterial("lightgrey");
+// let geometriaCabine = new THREE.CapsuleGeometry(1, 2.5, 10, 20);
+// let cabine = new THREE.Mesh(geometriaCabine, materialCabine);
+// cabine.position.set(0.0, 0.0, 1.0);
+// cilindro.add(cabine);
 
 // Câmera holder
 let cameraHolder = new THREE.Object3D();
