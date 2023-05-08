@@ -8,8 +8,13 @@ import {
   InfoBox,
   onWindowResize,
   createGroundPlaneWired,
+  getMaxSize
 } from "../libs/util/util.js";
 import Grid from "../libs/util/grid.js";
+import {GLTFLoader} from '../build/jsm/loaders/GLTFLoader.js';
+import {OBJLoader} from '../build/jsm/loaders/OBJLoader.js';
+import {PLYLoader} from '../build/jsm/loaders/PLYLoader.js';
+import {MTLLoader} from '../build/jsm/loaders/MTLLoader.js';
 
 const windowHalfX = window.innerWidth / 2;
 const windowHalfY = window.innerHeight / 2;
@@ -67,10 +72,28 @@ plane2.position.z = -1000;
 scene.add(plane);
 scene.add(plane2);
 
-// // Criação do avião
-// let aviaoInteiro = new THREE.Object3D();
-// aviaoInteiro.position.set(0, 60, 0);
-// scene.add(aviaoInteiro);
+
+// Criação do avião
+let aviaoInteiro = new THREE.Object3D();
+aviaoInteiro.position.set(0, 60, 0);
+scene.add(aviaoInteiro);
+loadGLBFile();
+
+
+// let aviaoInteiro2;
+// let loader = new GLTFLoader();
+// loader.load("aviao.blend",function(gltf){
+// aviaoInteiro2 = gltf.scene;
+// aviaoInteiro2.traverse(function(child){
+// if(child){
+//   child.castShadow = true;
+// }
+// })
+
+// aviaoInteiro.add(aviaoInteiro2);
+// }, null, null);
+
+
 
 // // Base cilindrica do avião
 // let geometriaCilindro = new THREE.CylinderGeometry(2, 1, 15, 20);
@@ -295,4 +318,48 @@ function render() {
   atualizarObjetos();
   requestAnimationFrame(render);
   renderer.render(scene, camera);
+}
+
+function loadGLBFile(desiredScale = 0.5)
+{
+   var loader = new GLTFLoader( );
+   loader.load('aviao.glb', function ( gltf ) {
+      var obj = gltf.scene;
+      obj.name = 'aviao';
+
+      obj.traverse( function ( child ) {
+         if ( child ) {
+            child.castShadow = true;
+         }
+      });
+      obj.traverse( function( node )
+      {
+         if( node.material ) node.material.side = THREE.DoubleSide;
+      });
+
+      //var obj = normalizeAndRescale(obj, desiredScale);
+      //var obj = fixPosition(obj);
+      obj.scale.set(100);
+      aviaoInteiro.add ( obj );        
+    });
+}
+
+function normalizeAndRescale(obj, newScale)
+{
+  var scale = getMaxSize(obj); 
+  obj.scale.set(newScale * (1.0/scale),
+                newScale * (1.0/scale),
+                newScale * (1.0/scale));
+  return obj;
+}
+
+function fixPosition(obj)
+{
+  // Fix position of the object over the ground plane
+  var box = new THREE.Box3().setFromObject( obj );
+  if(box.min.y > 0)
+    obj.translateY(-box.min.y);
+  else
+    obj.translateY(-1*box.min.y);
+  return obj;
 }
