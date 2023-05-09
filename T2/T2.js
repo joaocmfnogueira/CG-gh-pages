@@ -76,22 +76,15 @@ scene.add(plane2);
 // Criação do avião
 let aviaoInteiro = new THREE.Object3D();
 aviaoInteiro.position.set(0, 60, 0);
-scene.add(aviaoInteiro);
+
+
 loadGLBFile();
+aviaoInteiro.scale.set(2,2,2);
+// aviaoInteiro.rotateY(THREE.MathUtils.degToRad(90));
+aviaoInteiro.rotateZ(THREE.MathUtils.degToRad(180));
 
+scene.add(aviaoInteiro);
 
-// let aviaoInteiro2;
-// let loader = new GLTFLoader();
-// loader.load("aviao.blend",function(gltf){
-// aviaoInteiro2 = gltf.scene;
-// aviaoInteiro2.traverse(function(child){
-// if(child){
-//   child.castShadow = true;
-// }
-// })
-
-// aviaoInteiro.add(aviaoInteiro2);
-// }, null, null);
 
 
 
@@ -320,7 +313,7 @@ function render() {
   renderer.render(scene, camera);
 }
 
-function loadGLBFile(desiredScale = 0.5)
+function loadGLBFile()
 {
    var loader = new GLTFLoader( );
    loader.load('aviao.glb', function ( gltf ) {
@@ -336,30 +329,8 @@ function loadGLBFile(desiredScale = 0.5)
       {
          if( node.material ) node.material.side = THREE.DoubleSide;
       });
-
-      //var obj = normalizeAndRescale(obj, desiredScale);
-      //var obj = fixPosition(obj);
-      obj.scale.set(100);
+       //obj.rotateZ(THREE.MathUtils.degToRad(0));
+       obj.rotateY(THREE.MathUtils.degToRad(180));
       aviaoInteiro.add ( obj );        
     });
-}
-
-function normalizeAndRescale(obj, newScale)
-{
-  var scale = getMaxSize(obj); 
-  obj.scale.set(newScale * (1.0/scale),
-                newScale * (1.0/scale),
-                newScale * (1.0/scale));
-  return obj;
-}
-
-function fixPosition(obj)
-{
-  // Fix position of the object over the ground plane
-  var box = new THREE.Box3().setFromObject( obj );
-  if(box.min.y > 0)
-    obj.translateY(-box.min.y);
-  else
-    obj.translateY(-1*box.min.y);
-  return obj;
 }
