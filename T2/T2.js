@@ -221,6 +221,7 @@ function gerarPlano(plane) {
     // Geração de árvores dos planos
     createTree(plane);
   }
+  loadGLBFile2(plane);
 }
 
 function gerarPlano2(plane) {
@@ -237,6 +238,7 @@ function gerarPlano2(plane) {
     // Geração de árvores dos planos
     createTree2(plane2);
   }
+  loadGLBFile2(plane2);
 }
 
 function rotacaoMouse() {
@@ -332,5 +334,33 @@ function loadGLBFile()
        //obj.rotateZ(THREE.MathUtils.degToRad(0));
        obj.rotateY(THREE.MathUtils.degToRad(180));
       aviaoInteiro.add ( obj );        
+    });
+}
+
+function loadGLBFile2(plane)
+{
+   var loader = new GLTFLoader( );
+   loader.load('torreta.glb', function ( gltf ) {
+      var obj = gltf.scene;
+      obj.name = 'torreta';
+
+      obj.traverse( function ( child ) {
+         if ( child ) {
+            child.castShadow = true;
+         }
+      });
+      obj.traverse( function( node )
+      {
+         if( node.material ) node.material.side = THREE.DoubleSide;
+      });
+       //obj.rotateZ(THREE.MathUtils.degToRad(0));
+       obj.rotateY(THREE.MathUtils.degToRad(0));
+       plane.add ( obj );        
+       obj.scale.set(10,10,10); 
+       obj.position.set(-250 + Math.random() * 500.0,
+       -125 + Math.random() * 375.0,
+       1.5)
+       obj.rotateX(THREE.MathUtils.degToRad(90));
+       obj.rotateY(THREE.MathUtils.degToRad(270));
     });
 }
