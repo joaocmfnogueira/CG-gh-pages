@@ -8,7 +8,8 @@ import {
   InfoBox,
   onWindowResize,
   createGroundPlaneWired,
-  getMaxSize
+  getMaxSize,
+  createLightSphere
 } from "../libs/util/util.js";
 import Grid from "../libs/util/grid.js";
 import {GLTFLoader} from '../build/jsm/loaders/GLTFLoader.js';
@@ -34,13 +35,17 @@ let mouseY = 0;
 let targetX = 0;
 let targetY = 0;
 
-let scene, renderer, camera, defaultMaterial, light; // Inicialização das variáveis globais
+let scene, renderer, camera, defaultMaterial; // Inicialização das variáveis globais
 renderer = initRenderer(); // Inicialização do renderizador
+
 camera = initCamera(new THREE.Vector3(0, 30, 20)); // Inicialização da câmera
 defaultMaterial = setDefaultMaterial(); // Inicialização do material
 scene = new THREE.Scene(); // Criação da cena
 scene.background = new THREE.Color(0x87ceeb); // Cor de fundo da cena
-light = initDefaultBasicLight(scene); // Inicialização da luz
+// light = initDefaultBasicLight(scene); // Inicialização da luz
+let lightPosition = new THREE.Vector3(7, 20, 10);
+let lightSphere = createLightSphere(scene, 0.03, 10, 10, lightPosition);
+let light = initLight(lightPosition); // local function
 
 // Material do tronco
 let materialTronco = setDefaultMaterial("rgb(150,75,0)");
@@ -63,8 +68,8 @@ let plane = createGroundPlaneWired(2000, 1000);
 let plane2 = createGroundPlaneWired(2000, 1000);
 plane.name = "plano";
 plane2.name = "plano2";
-plane.material.color.setStyle("#9e7a5a");
-plane2.material.color.setStyle("#9e7a5a");
+plane.receiveShadow = true;
+plane2.receiveShadow = true;
 
 // Posicionamento dos planos
 plane.position.z = 0;
@@ -82,7 +87,7 @@ loadGLBFile();
 aviaoInteiro.scale.set(2,2,2);
 // aviaoInteiro.rotateY(THREE.MathUtils.degToRad(90));
 aviaoInteiro.rotateZ(THREE.MathUtils.degToRad(180));
-
+aviaoInteiro.castShadow = true;
 scene.add(aviaoInteiro);
 
 
@@ -210,7 +215,7 @@ function atualizarObjetos() {
 function gerarPlano(plane) {
   // Geração de planos ímpares
   let planeGrid = new Grid(2000, 1000, 10, 10, "#969696", 3);
-
+  plane.receiveShadow = true;
   plane.clear();
   plane.add(planeGrid);
   plane.position.z = aviaoInteiro.position.z - 750;
@@ -227,7 +232,7 @@ function gerarPlano(plane) {
 function gerarPlano2(plane) {
   // Geração de planos pares
   let planeGrid = new Grid(2000, 1000, 10, 10, "#969696", 3);
-
+  plane.receiveShadow = true;
   plane.clear();
   plane.add(planeGrid);
   plane.position.z = aviaoInteiro.position.z - 750;
@@ -248,10 +253,11 @@ function rotacaoMouse() {
 
   aviaoInteiro.position.x = 0.1 * mouseX;
   aviaoInteiro.position.y = -0.1 * mouseY;
-  aviaoInteiro.position.z -= 5;
+  aviaoInteiro.position.z -= 0;
 
   aviaoInteiro.rotation.z = targetX * 0.75; // Rotação do avião no eixo z
-  cameraHolder.position.z -= 5;
+  cameraHolder.position.z -= 0;
+  //light.position.copy(7,20,aviaoInteiro.position.z);
 }
 
 function createTree(plane) {
@@ -273,13 +279,14 @@ function createTree(plane) {
   arvore.position.set(0.0, 7.5, 0);
   tronco.add(arvore);
   tronco.rotateX(THREE.MathUtils.degToRad(90));
-
+  aviaoInteiro.castShadow = true;
   plane.add(aviaoInteiro);
 }
 
 function createTree2(plane) {
   // Tronco da árvore
   let aviaoInteiro = new THREE.Object3D();
+
   let troncoGeometry = new THREE.CylinderGeometry(2, 2, 15, 20);
   let tronco = new THREE.Mesh(troncoGeometry, materialTronco);
   tronco.position.set(
@@ -296,7 +303,7 @@ function createTree2(plane) {
   arvore.position.set(0.0, 7.5, 0);
   tronco.add(arvore);
   tronco.rotateX(THREE.MathUtils.degToRad(90));
-
+  aviaoInteiro.castShadow = true;
   plane.add(aviaoInteiro);
 }
 
@@ -333,7 +340,8 @@ function loadGLBFile()
       });
        //obj.rotateZ(THREE.MathUtils.degToRad(0));
        obj.rotateY(THREE.MathUtils.degToRad(180));
-      aviaoInteiro.add ( obj );        
+      aviaoInteiro.add ( obj ); 
+      obj.castShadow = true;       
     });
 }
 
@@ -362,5 +370,34 @@ function loadGLBFile2(plane)
        1.5)
        obj.rotateX(THREE.MathUtils.degToRad(90));
        obj.rotateY(THREE.MathUtils.degToRad(270));
+       obj.castShadow = true;
     });
+}
+
+export function initLight(position) 
+{
+  const ambientLight = new THREE.HemisphereLight(
+    'white', // bright sky color
+    'darkslategrey', // dim ground color
+    0.5, // intensity
+  );
+
+  const mainLight = new THREE.DirectionalLight('white', 0.7);
+    mainLight.position.copy(position);
+    mainLight.castShadow = true;
+   
+  const shadow = mainLight.shadow;
+    shadow.mapSize.width  =  512; 
+    shadow.mapSize.height =  512; 
+    shadow.camera.near    =  0.1; 
+    shadow.camera.far     =  300; 
+    shadow.camera.left    = -120.0; 
+    shadow.camera.right   =  120.0; 
+    shadow.camera.bottom  = -120.0; 
+    shadow.camera.top     =  120.0; 
+
+  scene.add(ambientLight);
+  scene.add(mainLight);
+
+  return mainLight;
 }

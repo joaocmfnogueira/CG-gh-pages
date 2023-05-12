@@ -6,14 +6,17 @@ import {initRenderer,
         setDefaultMaterial,
         InfoBox,
         onWindowResize,
-        createGroundPlaneXZ} from "../libs/util/util.js";
+        createGroundPlaneXZ,
+        createGroundPlaneWired} from "../libs/util/util.js";
 
-let scene, renderer, camera, material, light, orbit;; // Initial variables
+let scene, renderer, camera, material, orbit;; // Initial variables
 scene = new THREE.Scene();    // Create main scene
 renderer = initRenderer();    // Init a basic renderer
 camera = initCamera(new THREE.Vector3(0, 15, 30)); // Init camera in this position
 material = setDefaultMaterial(); // create a basic material
-light = initDefaultBasicLight(scene); // Create a basic light to illuminate the scene
+let lightPosition = new THREE.Vector3(0, 4, 2);
+let light = initLight(lightPosition);
+//light = initDefaultBasicLight(scene); // Create a basic light to illuminate the scene
 orbit = new OrbitControls( camera, renderer.domElement ); // Enable mouse rotation, pan, zoom etc.
 
 // Listen window size changes
@@ -24,7 +27,8 @@ let axesHelper = new THREE.AxesHelper( 12 );
 scene.add( axesHelper );
 
 // create the ground plane
-let plane = createGroundPlaneXZ(20, 20)
+let plane = createGroundPlaneWired(20, 20)
+plane.receiveShadow = true;
 scene.add(plane);
 
 // create a cube
@@ -40,6 +44,11 @@ cube.position.set(0.0, 2.0, 0.0);
 cube2.position.set(0.0, 2.0, 6.0);
 
 cube3.position.set(6.0, 2.0, 6.0);
+
+cube.castShadow = true;
+cube2.castShadow = true;
+cube3.castShadow = true;
+
 // add the cube to the scene
 scene.add(cube);
 scene.add(cube2);
@@ -60,4 +69,32 @@ function render()
 {
   requestAnimationFrame(render);
   renderer.render(scene, camera) // Render scene
+}
+
+export function initLight(position) 
+{
+  const ambientLight = new THREE.HemisphereLight(
+    'white', // bright sky color
+    'darkslategrey', // dim ground color
+    0.5, // intensity
+  );
+
+  const mainLight = new THREE.DirectionalLight('white', 0.7);
+    mainLight.position.copy(position);
+    mainLight.castShadow = true;
+   
+  const shadow = mainLight.shadow;
+    shadow.mapSize.width  =  512; 
+    shadow.mapSize.height =  512; 
+    shadow.camera.near    =  0.1; 
+    shadow.camera.far     =  50; 
+    shadow.camera.left    = -8.0; 
+    shadow.camera.right   =  8.0; 
+    shadow.camera.bottom  = -8.0; 
+    shadow.camera.top     =  8.0; 
+
+  scene.add(ambientLight);
+  scene.add(mainLight);
+
+  return mainLight;
 }
