@@ -103,7 +103,7 @@ let contador = 0;
 let targetObject = new THREE.Object3D(); 
 scene.add(targetObject);
 light.target = targetObject;
-
+createTree(plane);
 render();
 
 /*
@@ -178,7 +178,7 @@ function rotacaoMouse() {
   targetX = mouseX * -0.003;
   targetY = mouseY * -0.003;
 
-  const velocidade = 10;
+  const velocidade = 0;
 
   aviaoInteiro.position.x = 0.1 * mouseX;
   aviaoInteiro.position.y = -0.1 * mouseY;
@@ -220,6 +220,7 @@ function createTree2(plane) {
 
   let troncoGeometry = new THREE.CylinderGeometry(2, 2, 15, 20);
   let tronco = new THREE.Mesh(troncoGeometry, materialTronco);
+  tronco.castShadow = true;
   tronco.position.set(
     -250 + Math.random() * 500.0,
     -125 + Math.random() * 375.0,
@@ -234,6 +235,7 @@ function createTree2(plane) {
   arvore.position.set(0.0, 7.5, 0);
   tronco.add(arvore);
   tronco.rotateX(THREE.MathUtils.degToRad(90));
+  arvore.castShadow = true;
   aviaoInteiro.castShadow = true;
   plane.add(aviaoInteiro);
 }
@@ -332,8 +334,4 @@ export function initLight(position)
  // scene.add(mainLight);
 
   return mainLight;
-}
-function light_update()
-{
-    light.position.copy( cameraHolder.position );
 }
