@@ -53,12 +53,11 @@ camera = initCamera(new THREE.Vector3(0, 30, 20)); // Inicialização da câmera
 defaultMaterial = setDefaultMaterial(); // Inicialização do material
 scene = new THREE.Scene(); // Criação da cena
 scene.background = new THREE.Color(0x87ceeb); // Cor de fundo da cena
-// light = initDefaultBasicLight(scene); // Inicialização da luz
-let lightPosition = new THREE.Vector3(10, 30, -20);
 
+//adicionando luz direcional e horizontal
+let lightPosition = new THREE.Vector3(10, 30, -20);
 let light = initLight(lightPosition, scene); // local function
 scene.add(light);
-
 
 // Materiais da Árvore
 // Material do tronco
@@ -67,7 +66,6 @@ let materialTronco2 = createTroncoMaterial();
 // Material da copa
 let materialArvore = createCopaMaterial();;
 let materialArvore2 = createCopaMaterial();
-
 
 // Criação de planos
 let plane = createGroundPlaneWired(2000, 1000);
@@ -157,9 +155,7 @@ function rotacaoMouse() {
   cameraHolder.position.z -= velocidade;
   targetObject.position.z -= velocidade;
   light.position.z -= velocidade;
-
 }
-
 
 function onDocumentMouseMove(event) {
   mouseX = event.clientX - windowHalfX;
