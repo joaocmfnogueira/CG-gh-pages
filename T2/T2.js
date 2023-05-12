@@ -43,9 +43,10 @@ defaultMaterial = setDefaultMaterial(); // Inicialização do material
 scene = new THREE.Scene(); // Criação da cena
 scene.background = new THREE.Color(0x87ceeb); // Cor de fundo da cena
 // light = initDefaultBasicLight(scene); // Inicialização da luz
-let lightPosition = new THREE.Vector3(7, 20, 10);
-let lightSphere = createLightSphere(scene, 0.03, 10, 10, lightPosition);
+let lightPosition = new THREE.Vector3(10, 30, -20);
+
 let light = initLight(lightPosition); // local function
+scene.add(light);
 
 // Material do tronco
 let materialTronco = setDefaultMaterial("rgb(150,75,0)");
@@ -90,82 +91,6 @@ aviaoInteiro.rotateZ(THREE.MathUtils.degToRad(180));
 aviaoInteiro.castShadow = true;
 scene.add(aviaoInteiro);
 
-
-
-
-// // Base cilindrica do avião
-// let geometriaCilindro = new THREE.CylinderGeometry(2, 1, 15, 20);
-// let materialCilindro = setDefaultMaterial("Indigo");
-// let cilindro = new THREE.Mesh(geometriaCilindro, materialCilindro);
-// cilindro.position.set(0.0, 5.0, 0.0);
-// cilindro.rotateX(THREE.MathUtils.degToRad(-90));
-// aviaoInteiro.add(cilindro);
-
-// // Asa principal
-// let geometriaAsaPrincipal = new THREE.SphereGeometry(0.5, 32, 16);
-// geometriaAsaPrincipal.rotateZ(Math.PI / 2);
-// geometriaAsaPrincipal.scale(22, 3.5, 0.75);
-// let asaPrincipal = new THREE.Mesh(geometriaAsaPrincipal, defaultMaterial);
-// cilindro.add(asaPrincipal);
-
-// // Asa traseira direita
-// let geometriaAsaTraseiraDireita = new THREE.SphereGeometry(0.5, 32, 16);
-// geometriaAsaTraseiraDireita.rotateZ(Math.PI / 2);
-// geometriaAsaTraseiraDireita.scale(3, 1, 0.75);
-// let asaTraseiraDireita = new THREE.Mesh(
-//   geometriaAsaTraseiraDireita,
-//   defaultMaterial
-// );
-// asaTraseiraDireita.position.set(1.5, -7, 0.0);
-// cilindro.add(asaTraseiraDireita);
-
-// // Asa traseira superior
-// let geometriaAsaTraseiraSuperior = new THREE.SphereGeometry(0.5, 32, 16);
-// geometriaAsaTraseiraSuperior.rotateZ(Math.PI / 2);
-// geometriaAsaTraseiraSuperior.scale(3, 1, 0.75);
-// let asaTraseiraSuperior = new THREE.Mesh(
-//   geometriaAsaTraseiraSuperior,
-//   defaultMaterial
-// );
-// asaTraseiraSuperior.position.set(0.0, -7, 1);
-// asaTraseiraSuperior.rotateY(THREE.MathUtils.degToRad(90));
-// cilindro.add(asaTraseiraSuperior);
-
-// // Asa traseira esquerda
-// let geometriaAsaTraseiraEsquerda = new THREE.SphereGeometry(0.5, 32, 16);
-// geometriaAsaTraseiraEsquerda.rotateZ(Math.PI / 2);
-// geometriaAsaTraseiraEsquerda.scale(3, 1, 0.75);
-// let asaTraseiraEsquerda = new THREE.Mesh(
-//   geometriaAsaTraseiraEsquerda,
-//   defaultMaterial
-// );
-// asaTraseiraEsquerda.position.set(-1.5, -7, 0.0);
-// cilindro.add(asaTraseiraEsquerda);
-
-// // Hélice
-// let materialAroHelice = setDefaultMaterial("Goldenrod");
-// let geometriaAroHelice = new THREE.TorusGeometry(2, 0.3, 30, 100);
-// let aroHelice = new THREE.Mesh(geometriaAroHelice, materialAroHelice);
-// aroHelice.position.set(0, 7.5, 0);
-// aroHelice.rotateX(THREE.MathUtils.degToRad(90));
-// cilindro.add(aroHelice);
-
-// // Pá da hélice
-// let materialPaHelice = setDefaultMaterial("grey");
-// let geometriaPaHelice = new THREE.CylinderGeometry(2, 2, 0.5, 32);
-// let paHelice = new THREE.Mesh(geometriaPaHelice, materialPaHelice);
-// paHelice.material.opacity = 0;
-// paHelice.position.set(0, 0, 0.1);
-// paHelice.rotateX(THREE.MathUtils.degToRad(90));
-// aroHelice.add(paHelice);
-
-// // Cabine do piloto
-// let materialCabine = setDefaultMaterial("lightgrey");
-// let geometriaCabine = new THREE.CapsuleGeometry(1, 2.5, 10, 20);
-// let cabine = new THREE.Mesh(geometriaCabine, materialCabine);
-// cabine.position.set(0.0, 0.0, 1.0);
-// cilindro.add(cabine);
-
 // Câmera holder
 let cameraHolder = new THREE.Object3D();
 cameraHolder.rotateX(THREE.MathUtils.degToRad(45));
@@ -174,6 +99,10 @@ cameraHolder.add(camera);
 scene.add(cameraHolder);
 
 let contador = 0;
+
+let targetObject = new THREE.Object3D(); 
+scene.add(targetObject);
+light.target = targetObject;
 
 render();
 
@@ -187,25 +116,25 @@ A partir daqui, tem definição das funções e metodos chamados no começo
 function atualizarObjetos() {
   // Dinâmica do ambiente - fade in
   if (contador == 1) {
-    materialTronco.opacity += 0.003;
-    materialArvore.opacity += 0.005;
+    materialTronco.opacity += 0.016;
+    materialArvore.opacity += 0.019;
   } else {
-    materialTronco2.opacity += 0.003;
-    materialArvore2.opacity += 0.005;
+    materialTronco2.opacity += 0.016;
+    materialArvore2.opacity += 0.019;
   }
 
   // Atualização dos planos
   if (aviaoInteiro.position.z % 500 === 0 && aviaoInteiro.position.z !== 0) {
     if (contador == 0) {
       scene.getObjectByName("plano").removeFromParent();
-      materialTronco.opacity = 0.05;
-      materialArvore.opacity = 0.1;
+      materialTronco.opacity = 0.0001;
+      materialArvore.opacity = 0.3;
       gerarPlano(plane); // Geração de planos
       contador = 1;
     } else if (contador == 1) {
       scene.getObjectByName("plano2").removeFromParent();
       materialTronco2.opacity = 0.05;
-      materialArvore2.opacity = 0.1;
+      materialArvore2.opacity = 0.3;
       gerarPlano2(plane2); // Geração de planos
       contador = 0;
     }
@@ -215,13 +144,12 @@ function atualizarObjetos() {
 function gerarPlano(plane) {
   // Geração de planos ímpares
   let planeGrid = new Grid(2000, 1000, 10, 10, "#969696", 3);
-  plane.receiveShadow = true;
   plane.clear();
   plane.add(planeGrid);
   plane.position.z = aviaoInteiro.position.z - 750;
   scene.add(plane);
 
-  let quantidade = 1 + Math.floor(Math.random() * 100);
+  let quantidade = 1 + Math.floor(Math.random() * 10);
   for (let index = 0; index < quantidade; index++) {
     // Geração de árvores dos planos
     createTree(plane);
@@ -232,13 +160,12 @@ function gerarPlano(plane) {
 function gerarPlano2(plane) {
   // Geração de planos pares
   let planeGrid = new Grid(2000, 1000, 10, 10, "#969696", 3);
-  plane.receiveShadow = true;
   plane.clear();
   plane.add(planeGrid);
   plane.position.z = aviaoInteiro.position.z - 750;
   scene.add(plane);
 
-  let quantidade = 1 + Math.floor(Math.random() * 100);
+  let quantidade = 1 + Math.floor(Math.random() * 10);
   for (let index = 0; index < quantidade; index++) {
     // Geração de árvores dos planos
     createTree2(plane2);
@@ -251,13 +178,17 @@ function rotacaoMouse() {
   targetX = mouseX * -0.003;
   targetY = mouseY * -0.003;
 
+  const velocidade = 10;
+
   aviaoInteiro.position.x = 0.1 * mouseX;
   aviaoInteiro.position.y = -0.1 * mouseY;
-  aviaoInteiro.position.z -= 0;
+  aviaoInteiro.position.z -= velocidade;
 
   aviaoInteiro.rotation.z = targetX * 0.75; // Rotação do avião no eixo z
-  cameraHolder.position.z -= 0;
-  //light.position.copy(7,20,aviaoInteiro.position.z);
+  cameraHolder.position.z -= velocidade;
+  targetObject.position.z -= velocidade;
+  light.position.z -= velocidade;
+
 }
 
 function createTree(plane) {
@@ -342,6 +273,7 @@ function loadGLBFile()
        obj.rotateY(THREE.MathUtils.degToRad(180));
       aviaoInteiro.add ( obj ); 
       obj.castShadow = true;       
+      obj.position.y = 5;
     });
 }
 
@@ -379,7 +311,7 @@ export function initLight(position)
   const ambientLight = new THREE.HemisphereLight(
     'white', // bright sky color
     'darkslategrey', // dim ground color
-    0.5, // intensity
+    0.4, // intensity
   );
 
   const mainLight = new THREE.DirectionalLight('white', 0.7);
@@ -395,9 +327,13 @@ export function initLight(position)
     shadow.camera.right   =  120.0; 
     shadow.camera.bottom  = -120.0; 
     shadow.camera.top     =  120.0; 
-
+    
   scene.add(ambientLight);
-  scene.add(mainLight);
+ // scene.add(mainLight);
 
   return mainLight;
+}
+function light_update()
+{
+    light.position.copy( cameraHolder.position );
 }
