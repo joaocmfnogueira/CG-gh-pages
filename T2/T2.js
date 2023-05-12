@@ -22,6 +22,8 @@ import {
   createTree,
   gerarPlano,
   loadGLBFileAviao,
+  createTroncoMaterial,
+  createCopaMaterial,
 
 } from './construtores.js';
 
@@ -57,21 +59,15 @@ let lightPosition = new THREE.Vector3(10, 30, -20);
 let light = initLight(lightPosition, scene); // local function
 scene.add(light);
 
-// Material do tronco
-let materialTronco = setDefaultMaterial("rgb(150,75,0)");
-let materialTronco2 = setDefaultMaterial("rgb(150,75,0)");
-materialTronco.transparent = true;
-materialTronco2.transparent = true;
-materialTronco.opacity = 0.1;
-materialTronco2.opacity = 0.1;
 
+// Materiais da Árvore
+// Material do tronco
+let materialTronco = createTroncoMaterial();
+let materialTronco2 = createTroncoMaterial();
 // Material da copa
-let materialArvore = setDefaultMaterial("rgb(0,128,0)");
-let materialArvore2 = setDefaultMaterial("rgb(0,128,0)");
-materialArvore.transparent = true;
-materialArvore2.transparent = true;
-materialArvore.opacity = 0.1;
-materialArvore2.opacity = 0.1;
+let materialArvore = createCopaMaterial();;
+let materialArvore2 = createCopaMaterial();
+
 
 // Criação de planos
 let plane = createGroundPlaneWired(2000, 1000);
@@ -80,19 +76,15 @@ plane.name = "plano";
 plane2.name = "plano2";
 plane.receiveShadow = true;
 plane2.receiveShadow = true;
-
 // Posicionamento dos planos
 plane.position.z = 0;
 plane2.position.z = -1000;
 scene.add(plane);
 scene.add(plane2);
 
-
 // Criação do avião
 let aviaoInteiro = new THREE.Object3D();
 aviaoInteiro.position.set(0, 60, 0);
-
-
 loadGLBFileAviao(aviaoInteiro);
 aviaoInteiro.scale.set(2,2,2);
 // aviaoInteiro.rotateY(THREE.MathUtils.degToRad(90));
@@ -109,6 +101,7 @@ scene.add(cameraHolder);
 
 let contador = 0;
 
+//definição do target para o funcionamento da sombra acompanhando o avião
 let targetObject = new THREE.Object3D(); 
 scene.add(targetObject);
 light.target = targetObject;

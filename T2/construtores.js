@@ -133,3 +133,19 @@ function loadGLBFileTorreta(plane)
        obj.castShadow = true;
     });
 }
+
+export function createTroncoMaterial(){
+    let materialTronco = setDefaultMaterial("rgb(150,75,0)");
+    materialTronco.transparent = true;
+    materialTronco.opacity = 0.1;
+    return materialTronco;
+}
+
+export function createCopaMaterial(){
+    let materialCopa = setDefaultMaterial("rgb(0,128,0)");
+    materialCopa.transparent = true;
+    materialCopa.opacity = 0.1;
+    return materialCopa;
+}
+
+
