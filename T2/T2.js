@@ -16,6 +16,15 @@ import {GLTFLoader} from '../build/jsm/loaders/GLTFLoader.js';
 import {OBJLoader} from '../build/jsm/loaders/OBJLoader.js';
 import {PLYLoader} from '../build/jsm/loaders/PLYLoader.js';
 import {MTLLoader} from '../build/jsm/loaders/MTLLoader.js';
+//metodos definidos no construtores
+import {
+  initLight,
+  createTree,
+  gerarPlano,
+  loadGLBFileAviao,
+
+} from './construtores.js';
+
 
 const windowHalfX = window.innerWidth / 2;
 const windowHalfY = window.innerHeight / 2;
@@ -45,7 +54,7 @@ scene.background = new THREE.Color(0x87ceeb); // Cor de fundo da cena
 // light = initDefaultBasicLight(scene); // Inicialização da luz
 let lightPosition = new THREE.Vector3(10, 30, -20);
 
-let light = initLight(lightPosition); // local function
+let light = initLight(lightPosition, scene); // local function
 scene.add(light);
 
 // Material do tronco
@@ -84,7 +93,7 @@ let aviaoInteiro = new THREE.Object3D();
 aviaoInteiro.position.set(0, 60, 0);
 
 
-loadGLBFile();
+loadGLBFileAviao(aviaoInteiro);
 aviaoInteiro.scale.set(2,2,2);
 // aviaoInteiro.rotateY(THREE.MathUtils.degToRad(90));
 aviaoInteiro.rotateZ(THREE.MathUtils.degToRad(180));
@@ -103,7 +112,6 @@ let contador = 0;
 let targetObject = new THREE.Object3D(); 
 scene.add(targetObject);
 light.target = targetObject;
-createTree(plane);
 render();
 
 /*
@@ -129,48 +137,16 @@ function atualizarObjetos() {
       scene.getObjectByName("plano").removeFromParent();
       materialTronco.opacity = 0.0001;
       materialArvore.opacity = 0.3;
-      gerarPlano(plane); // Geração de planos
+      gerarPlano(plane, scene, aviaoInteiro, materialTronco, materialArvore); // Geração de planos
       contador = 1;
     } else if (contador == 1) {
       scene.getObjectByName("plano2").removeFromParent();
-      materialTronco2.opacity = 0.05;
+      materialTronco2.opacity = 0.0001;
       materialArvore2.opacity = 0.3;
-      gerarPlano2(plane2); // Geração de planos
+      gerarPlano(plane2, scene, aviaoInteiro, materialTronco2, materialArvore2); // Geração de planos
       contador = 0;
     }
   }
-}
-
-function gerarPlano(plane) {
-  // Geração de planos ímpares
-  let planeGrid = new Grid(2000, 1000, 10, 10, "#969696", 3);
-  plane.clear();
-  plane.add(planeGrid);
-  plane.position.z = aviaoInteiro.position.z - 750;
-  scene.add(plane);
-
-  let quantidade = 1 + Math.floor(Math.random() * 10);
-  for (let index = 0; index < quantidade; index++) {
-    // Geração de árvores dos planos
-    createTree(plane);
-  }
-  loadGLBFile2(plane);
-}
-
-function gerarPlano2(plane) {
-  // Geração de planos pares
-  let planeGrid = new Grid(2000, 1000, 10, 10, "#969696", 3);
-  plane.clear();
-  plane.add(planeGrid);
-  plane.position.z = aviaoInteiro.position.z - 750;
-  scene.add(plane);
-
-  let quantidade = 1 + Math.floor(Math.random() * 10);
-  for (let index = 0; index < quantidade; index++) {
-    // Geração de árvores dos planos
-    createTree2(plane2);
-  }
-  loadGLBFile2(plane2);
 }
 
 function rotacaoMouse() {
@@ -178,7 +154,7 @@ function rotacaoMouse() {
   targetX = mouseX * -0.003;
   targetY = mouseY * -0.003;
 
-  const velocidade = 0;
+  const velocidade = 10;
 
   aviaoInteiro.position.x = 0.1 * mouseX;
   aviaoInteiro.position.y = -0.1 * mouseY;
@@ -191,54 +167,6 @@ function rotacaoMouse() {
 
 }
 
-function createTree(plane) {
-  // Tronco da árvore
-  let aviaoInteiro = new THREE.Object3D();
-  let troncoGeometry = new THREE.CylinderGeometry(2, 2, 15, 20);
-  let tronco = new THREE.Mesh(troncoGeometry, materialTronco);
-  tronco.position.set(
-    -250 + Math.random() * 500.0,
-    -125 + Math.random() * 375.0,
-    7.5
-  );
-
-  aviaoInteiro.add(tronco);
-
-  // Copa da árovore
-  let arvoreGeometry = new THREE.ConeGeometry(5, 20, 32);
-  let arvore = new THREE.Mesh(arvoreGeometry, materialArvore);
-  arvore.position.set(0.0, 7.5, 0);
-  tronco.add(arvore);
-  tronco.rotateX(THREE.MathUtils.degToRad(90));
-  aviaoInteiro.castShadow = true;
-  plane.add(aviaoInteiro);
-}
-
-function createTree2(plane) {
-  // Tronco da árvore
-  let aviaoInteiro = new THREE.Object3D();
-
-  let troncoGeometry = new THREE.CylinderGeometry(2, 2, 15, 20);
-  let tronco = new THREE.Mesh(troncoGeometry, materialTronco);
-  tronco.castShadow = true;
-  tronco.position.set(
-    -250 + Math.random() * 500.0,
-    -125 + Math.random() * 375.0,
-    7.5
-  );
-
-  aviaoInteiro.add(tronco);
-
-  // Copa da árovore
-  let arvoreGeometry = new THREE.ConeGeometry(5, 20, 32);
-  let arvore = new THREE.Mesh(arvoreGeometry, materialArvore2);
-  arvore.position.set(0.0, 7.5, 0);
-  tronco.add(arvore);
-  tronco.rotateX(THREE.MathUtils.degToRad(90));
-  arvore.castShadow = true;
-  aviaoInteiro.castShadow = true;
-  plane.add(aviaoInteiro);
-}
 
 function onDocumentMouseMove(event) {
   mouseX = event.clientX - windowHalfX;
@@ -255,83 +183,6 @@ function render() {
   renderer.render(scene, camera);
 }
 
-function loadGLBFile()
-{
-   var loader = new GLTFLoader( );
-   loader.load('aviao.glb', function ( gltf ) {
-      var obj = gltf.scene;
-      obj.name = 'aviao';
 
-      obj.traverse( function ( child ) {
-         if ( child ) {
-            child.castShadow = true;
-         }
-      });
-      obj.traverse( function( node )
-      {
-         if( node.material ) node.material.side = THREE.DoubleSide;
-      });
-       //obj.rotateZ(THREE.MathUtils.degToRad(0));
-       obj.rotateY(THREE.MathUtils.degToRad(180));
-      aviaoInteiro.add ( obj ); 
-      obj.castShadow = true;       
-      obj.position.y = 5;
-    });
-}
 
-function loadGLBFile2(plane)
-{
-   var loader = new GLTFLoader( );
-   loader.load('torreta.glb', function ( gltf ) {
-      var obj = gltf.scene;
-      obj.name = 'torreta';
 
-      obj.traverse( function ( child ) {
-         if ( child ) {
-            child.castShadow = true;
-         }
-      });
-      obj.traverse( function( node )
-      {
-         if( node.material ) node.material.side = THREE.DoubleSide;
-      });
-       //obj.rotateZ(THREE.MathUtils.degToRad(0));
-       obj.rotateY(THREE.MathUtils.degToRad(0));
-       plane.add ( obj );        
-       obj.scale.set(10,10,10); 
-       obj.position.set(-250 + Math.random() * 500.0,
-       -125 + Math.random() * 375.0,
-       1.5)
-       obj.rotateX(THREE.MathUtils.degToRad(90));
-       obj.rotateY(THREE.MathUtils.degToRad(270));
-       obj.castShadow = true;
-    });
-}
-
-export function initLight(position) 
-{
-  const ambientLight = new THREE.HemisphereLight(
-    'white', // bright sky color
-    'darkslategrey', // dim ground color
-    0.4, // intensity
-  );
-
-  const mainLight = new THREE.DirectionalLight('white', 0.7);
-    mainLight.position.copy(position);
-    mainLight.castShadow = true;
-   
-  const shadow = mainLight.shadow;
-    shadow.mapSize.width  =  512; 
-    shadow.mapSize.height =  512; 
-    shadow.camera.near    =  0.1; 
-    shadow.camera.far     =  300; 
-    shadow.camera.left    = -120.0; 
-    shadow.camera.right   =  120.0; 
-    shadow.camera.bottom  = -120.0; 
-    shadow.camera.top     =  120.0; 
-    
-  scene.add(ambientLight);
- // scene.add(mainLight);
-
-  return mainLight;
-}
