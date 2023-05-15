@@ -95,14 +95,25 @@ for (let i = 0; i < 6; i++) {
   plano.position.z = aviaoInteiro.position.z - i * 200;
   gerarPlano(plano, scene, aviaoInteiro, materialTronco, materialCopa); // Geração de planos
 
-  const geometry = new THREE.BoxGeometry(200, 200, 200, 10, 10, 10);
-  const material = new THREE.MeshBasicMaterial({ color: 0x3c1e96 });
+  const geometry = new THREE.BoxGeometry(200, 200, 300, 32, 32, 32);
+  const material = new THREE.MeshPhongMaterial({
+    color: 0x3c1e96,
+    polygonOffset: true,
+    polygonOffsetFactor: 1,
+    polygonOffsetUnits: 1,
+  });
 
   const cube = new THREE.Mesh(geometry, material);
-  // const grid = new Grid(10, 10, 10, 10, 0x969696);
-  // console.log(grid);
-  // cube.add(grid);
   const cube2 = new THREE.Mesh(geometry, material);
+
+  const geo = new THREE.EdgesGeometry(geometry, 1);
+  const mat = new THREE.LineBasicMaterial({ color: 0x969696 });
+
+  const wireframe = new THREE.LineSegments(geo, mat);
+  const wireframe2 = new THREE.LineSegments(geo, mat);
+
+  cube.add(wireframe);
+  cube2.add(wireframe2);
 
   plano.add(cube);
   plano.add(cube2);
