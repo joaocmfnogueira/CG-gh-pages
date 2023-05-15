@@ -55,7 +55,7 @@ scene = new THREE.Scene(); // Criação da cena
 scene.background = new THREE.Color(0x87ceeb); // Cor de fundo da cena
 
 //adicionando luz direcional e horizontal
-let lightPosition = new THREE.Vector3(100, 200, -200);
+let lightPosition = new THREE.Vector3(375, 750, -900);
 let light = initLight(lightPosition, scene); // local function
 scene.add(light);
 
