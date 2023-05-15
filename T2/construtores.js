@@ -32,11 +32,11 @@ export function initLight(position, scene) {
     shadow.mapSize.width = 512;
     shadow.mapSize.height = 512;
     shadow.camera.near = 0.1;
-    shadow.camera.far = 300;
-    shadow.camera.left = -120.0;
-    shadow.camera.right = 120.0;
-    shadow.camera.bottom = -120.0;
-    shadow.camera.top = 120.0;
+    shadow.camera.far = 1000;
+    shadow.camera.left = -240.0;
+    shadow.camera.right = 240.0;
+    shadow.camera.bottom = -240.0;
+    shadow.camera.top = 240.0;
 
     scene.add(ambientLight);
     // scene.add(mainLight);
@@ -44,7 +44,7 @@ export function initLight(position, scene) {
     return mainLight;
 }
 
-export function createTree(plane, materialTronco, materialArvore) {
+export function createTree(plane, materialTronco, materialCopa) {
     // Tronco da árvore
     let aviaoInteiro = new THREE.Object3D();
     let troncoGeometry = new THREE.CylinderGeometry(2, 2, 15, 20);
@@ -57,15 +57,33 @@ export function createTree(plane, materialTronco, materialArvore) {
     aviaoInteiro.add(tronco);
     // Copa da árovore
     let arvoreGeometry = new THREE.ConeGeometry(5, 20, 32);
-    let arvore = new THREE.Mesh(arvoreGeometry, materialArvore);
+    let arvore = new THREE.Mesh(arvoreGeometry, materialCopa);
     arvore.position.set(0.0, 7.5, 0);
     tronco.add(arvore);
     tronco.rotateX(THREE.MathUtils.degToRad(90));
-    aviaoInteiro.castShadow = true;
+    aviaoInteiro.traverse( o => {
+        if(o.isMesh){
+          o.castShadow = true;
+        }
+      })
     plane.add(aviaoInteiro);
 }
 
-export function gerarPlano(plane, scene, aviaoInteiro, materialTronco, materialArvore) {
+export function createTroncoMaterial(){
+    let materialTronco = setDefaultMaterial("rgb(150,75,0)");
+    materialTronco.transparent = true;
+    materialTronco.opacity = 0.1;
+    return materialTronco;
+}
+
+export function createCopaMaterial(){
+    let materialCopa = setDefaultMaterial("rgb(0,128,0)");
+    materialCopa.transparent = true;
+    materialCopa.opacity = 0.1;
+    return materialCopa;
+}
+
+export function gerarPlano(plane, scene, aviaoInteiro, materialTronco, materialCopa) {
     // Geração de planos ímpares
     let planeGrid = new Grid(2000, 1000, 10, 10, "#969696", 3);
     plane.clear();
@@ -76,7 +94,7 @@ export function gerarPlano(plane, scene, aviaoInteiro, materialTronco, materialA
     let quantidade = 1 + Math.floor(Math.random() * 10);
     for (let index = 0; index < quantidade; index++) {
       // Geração de árvores dos planos
-      createTree(plane, materialTronco, materialArvore);
+      createTree(plane, materialTronco, materialCopa);
     }
     loadGLBFileTorreta(plane);
   }
@@ -134,18 +152,6 @@ function loadGLBFileTorreta(plane)
     });
 }
 
-export function createTroncoMaterial(){
-    let materialTronco = setDefaultMaterial("rgb(150,75,0)");
-    materialTronco.transparent = true;
-    materialTronco.opacity = 0.1;
-    return materialTronco;
-}
 
-export function createCopaMaterial(){
-    let materialCopa = setDefaultMaterial("rgb(0,128,0)");
-    materialCopa.transparent = true;
-    materialCopa.opacity = 0.1;
-    return materialCopa;
-}
 
 

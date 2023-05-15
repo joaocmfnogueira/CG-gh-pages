@@ -9,6 +9,15 @@ import {initRenderer,
         createGroundPlaneXZ,
         createGroundPlaneWired} from "../libs/util/util.js";
 
+import {
+        createTree,
+        gerarPlano,
+        loadGLBFileAviao,
+        createTroncoMaterial,
+        createCopaMaterial,
+        
+        } from '../T2/construtores.js';
+
 let scene, renderer, camera, material, orbit;; // Initial variables
 scene = new THREE.Scene();    // Create main scene
 renderer = initRenderer();    // Init a basic renderer
@@ -48,6 +57,35 @@ cube3.position.set(6.0, 2.0, 6.0);
 cube.castShadow = true;
 cube2.castShadow = true;
 cube3.castShadow = true;
+
+
+let materialTronco = setDefaultMaterial("rgb(150,75,0)");
+    materialTronco.transparent = true;
+    materialTronco.opacity = 1.0;
+    material.castShadow = true;
+let materialCopa = setDefaultMaterial("rgb(0,128,0)");
+    materialCopa.transparent = true;
+    materialCopa.opacity = 1.0;
+    materialCopa.castShadow = true;
+let Arvore = new THREE.Object3D();
+let troncoGeometry = new THREE.CylinderGeometry(2, 2, 15, 20);
+let tronco = new THREE.Mesh(troncoGeometry, material);
+Arvore.add(tronco);
+let copaGeometry = new THREE.ConeGeometry(5, 20, 32);
+let copa = new THREE.Mesh(copaGeometry, material);
+copa.position.set(0.0, 7.5, 0);
+tronco.add(copa);
+tronco.rotateX(THREE.MathUtils.degToRad(0));
+Arvore.traverse( o => {
+  if(o.isMesh){
+    o.castShadow = true;
+  }
+})
+
+scene.add(Arvore);
+Arvore.position.set(5,7.5,-5);
+
+
 
 // add the cube to the scene
 scene.add(cube);

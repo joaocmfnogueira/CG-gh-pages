@@ -55,7 +55,7 @@ scene = new THREE.Scene(); // Criação da cena
 scene.background = new THREE.Color(0x87ceeb); // Cor de fundo da cena
 
 //adicionando luz direcional e horizontal
-let lightPosition = new THREE.Vector3(10, 30, -20);
+let lightPosition = new THREE.Vector3(100, 200, -200);
 let light = initLight(lightPosition, scene); // local function
 scene.add(light);
 
@@ -64,8 +64,8 @@ scene.add(light);
 let materialTronco = createTroncoMaterial();
 let materialTronco2 = createTroncoMaterial();
 // Material da copa
-let materialArvore = createCopaMaterial();;
-let materialArvore2 = createCopaMaterial();
+let materialCopa = createCopaMaterial();
+let materialCopa2 = createCopaMaterial();
 
 // Criação de planos
 let plane = createGroundPlaneWired(2000, 1000);
@@ -97,12 +97,12 @@ cameraHolder.position.set(0, 20, 30);
 cameraHolder.add(camera);
 scene.add(cameraHolder);
 
-let contador = 0;
-
-//definição do target para o funcionamento da sombra acompanhando o avião
+// Target, para auxiliar a sombra
 let targetObject = new THREE.Object3D(); 
 scene.add(targetObject);
 light.target = targetObject;
+
+let contador = 0;
 render();
 
 /*
@@ -116,10 +116,10 @@ function atualizarObjetos() {
   // Dinâmica do ambiente - fade in
   if (contador == 1) {
     materialTronco.opacity += 0.016;
-    materialArvore.opacity += 0.019;
+    materialCopa.opacity += 0.019;
   } else {
     materialTronco2.opacity += 0.016;
-    materialArvore2.opacity += 0.019;
+    materialCopa2.opacity += 0.019;
   }
 
   // Atualização dos planos
@@ -127,14 +127,14 @@ function atualizarObjetos() {
     if (contador == 0) {
       scene.getObjectByName("plano").removeFromParent();
       materialTronco.opacity = 0.0001;
-      materialArvore.opacity = 0.3;
-      gerarPlano(plane, scene, aviaoInteiro, materialTronco, materialArvore); // Geração de planos
+      materialCopa.opacity = 0.3;
+      gerarPlano(plane, scene, aviaoInteiro, materialTronco, materialCopa); // Geração de planos
       contador = 1;
     } else if (contador == 1) {
       scene.getObjectByName("plano2").removeFromParent();
       materialTronco2.opacity = 0.0001;
-      materialArvore2.opacity = 0.3;
-      gerarPlano(plane2, scene, aviaoInteiro, materialTronco2, materialArvore2); // Geração de planos
+      materialCopa2.opacity = 0.3;
+      gerarPlano(plane2, scene, aviaoInteiro, materialTronco2, materialCopa2); // Geração de planos
       contador = 0;
     }
   }
