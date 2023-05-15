@@ -51,7 +51,7 @@ let velocidade = 10;
 let scene, renderer, camera, defaultMaterial; // Inicialização das variáveis globais
 renderer = initRenderer(); // Inicialização do renderizador
 
-camera = initCamera(new THREE.Vector3(0, 30, 20)); // Inicialização da câmera
+camera = initCamera(new THREE.Vector3(0, 50, 40)); // Inicialização da câmera
 defaultMaterial = setDefaultMaterial(); // Inicialização do material
 scene = new THREE.Scene(); // Criação da cena
 scene.background = new THREE.Color(0x87ceeb); // Cor de fundo da cena
@@ -108,7 +108,7 @@ for (let i = 0; i < 6; i++) {
   plano.position.z = aviaoInteiro.position.z - i * 200;
   gerarPlano(plano, scene, aviaoInteiro, materialTronco, materialCopa); // Geração de planos
 
-  const geometry = new THREE.BoxGeometry(200, 200, 300, 32, 32, 32);
+  const geometry = new THREE.BoxGeometry(200, 200, 200, 32, 32, 32);
   const material = new THREE.MeshPhongMaterial({
     color: 0x3c1e96,
     polygonOffset: true,
@@ -132,11 +132,36 @@ for (let i = 0; i < 6; i++) {
   plano.add(cube2);
 
   cube.position.x = 300;
+  cube.position.z = 100;
+
   cube2.position.x = -300;
+  cube2.position.z = 100;
 
   scene.add(plano);
   planos.push(plano);
 }
+const geometry = new THREE.BoxGeometry(5, 5, 5, 32, 32, 32);
+const material = new THREE.MeshPhongMaterial({
+  color: 0x3c1e96,
+  polygonOffset: true,
+  polygonOffsetFactor: 1,
+  polygonOffsetUnits: 1,
+});
+
+const cube = new THREE.Mesh(geometry, material);
+
+const geo = new THREE.EdgesGeometry(geometry, 1);
+const mat = new THREE.LineBasicMaterial({ color: 0x969696 });
+
+const wireframe = new THREE.LineSegments(geo, mat);
+
+cube.add(wireframe);
+
+cube.position.x = 0;
+cube.position.y = 0;
+cube.position.z = -700;
+
+scene.add(cube);
 
 render();
 
@@ -234,7 +259,7 @@ function keyboardUpdate() {
   // Keyboard.down - execute only once per key pressed
   if (keyboard.down("1")) velocidade = 5;
   if (keyboard.down("2")) velocidade = 10;
-  if (keyboard.down("3")) velocidade = 15;
+  if (keyboard.down("3")) velocidade = 20;
 
   if (keyboard.pressed("esc")) {
     auxvelocidade = velocidade;

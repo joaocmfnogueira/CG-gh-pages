@@ -102,7 +102,7 @@ export function gerarPlano(
     planos.push(plano);
     scene.add(plano);
 
-    const geometry = new THREE.BoxGeometry(200, 200, 300, 32, 32, 32);
+    const geometry = new THREE.BoxGeometry(200, 200, 200, 32, 32, 32);
     const material = new THREE.MeshPhongMaterial({
       color: 0x3c1e96,
       polygonOffset: true,
@@ -126,7 +126,10 @@ export function gerarPlano(
     plano.add(cube2);
 
     cube.position.x = 300;
+    cube.position.z = 100;
+
     cube2.position.x = -300;
+    cube2.position.z = 100;
   }
 
   let quantidade = 1 + Math.floor(Math.random() * 10);
