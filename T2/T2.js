@@ -9,13 +9,13 @@ import {
   onWindowResize,
   createGroundPlaneWired,
   getMaxSize,
-  createLightSphere
+  createLightSphere,
 } from "../libs/util/util.js";
 import Grid from "../libs/util/grid.js";
-import {GLTFLoader} from '../build/jsm/loaders/GLTFLoader.js';
-import {OBJLoader} from '../build/jsm/loaders/OBJLoader.js';
-import {PLYLoader} from '../build/jsm/loaders/PLYLoader.js';
-import {MTLLoader} from '../build/jsm/loaders/MTLLoader.js';
+import { GLTFLoader } from "../build/jsm/loaders/GLTFLoader.js";
+import { OBJLoader } from "../build/jsm/loaders/OBJLoader.js";
+import { PLYLoader } from "../build/jsm/loaders/PLYLoader.js";
+import { MTLLoader } from "../build/jsm/loaders/MTLLoader.js";
 //metodos definidos no construtores
 import {
   initLight,
@@ -24,9 +24,7 @@ import {
   loadGLBFileAviao,
   createTroncoMaterial,
   createCopaMaterial,
-
-} from './construtores.js';
-
+} from "./construtores.js";
 
 const windowHalfX = window.innerWidth / 2;
 const windowHalfY = window.innerHeight / 2;
@@ -67,24 +65,11 @@ let materialTronco2 = createTroncoMaterial();
 let materialCopa = createCopaMaterial();
 let materialCopa2 = createCopaMaterial();
 
-// Criação de planos
-let plane = createGroundPlaneWired(2000, 1000);
-let plane2 = createGroundPlaneWired(2000, 1000);
-plane.name = "plano";
-plane2.name = "plano2";
-plane.receiveShadow = true;
-plane2.receiveShadow = true;
-// Posicionamento dos planos
-plane.position.z = 0;
-plane2.position.z = -1000;
-scene.add(plane);
-scene.add(plane2);
-
 // Criação do avião
 let aviaoInteiro = new THREE.Object3D();
 aviaoInteiro.position.set(0, 60, 0);
 loadGLBFileAviao(aviaoInteiro);
-aviaoInteiro.scale.set(2,2,2);
+aviaoInteiro.scale.set(2, 2, 2);
 // aviaoInteiro.rotateY(THREE.MathUtils.degToRad(90));
 aviaoInteiro.rotateZ(THREE.MathUtils.degToRad(180));
 aviaoInteiro.castShadow = true;
@@ -98,11 +83,37 @@ cameraHolder.add(camera);
 scene.add(cameraHolder);
 
 // Target, para auxiliar a sombra
-let targetObject = new THREE.Object3D(); 
+let targetObject = new THREE.Object3D();
 scene.add(targetObject);
 light.target = targetObject;
 
 let contador = 0;
+
+export const planos = [];
+for (let i = 0; i < 6; i++) {
+  const plano = createGroundPlaneWired(2000, 200, 15, 2);
+  plano.position.z = aviaoInteiro.position.z - i * 200;
+  gerarPlano(plano, scene, aviaoInteiro, materialTronco, materialCopa); // Geração de planos
+
+  const geometry = new THREE.BoxGeometry(200, 200, 200, 10, 10, 10);
+  const material = new THREE.MeshBasicMaterial({ color: 0x3c1e96 });
+
+  const cube = new THREE.Mesh(geometry, material);
+  // const grid = new Grid(10, 10, 10, 10, 0x969696);
+  // console.log(grid);
+  // cube.add(grid);
+  const cube2 = new THREE.Mesh(geometry, material);
+
+  plano.add(cube);
+  plano.add(cube2);
+
+  cube.position.x = 300;
+  cube2.position.x = -300;
+
+  scene.add(plano);
+  planos.push(plano);
+}
+
 render();
 
 /*
@@ -113,31 +124,51 @@ A partir daqui, tem definição das funções e metodos chamados no começo
 
 // Atualização dos materiais e planos
 function atualizarObjetos() {
+  materialTronco.opacity = 1;
+  materialCopa.opacity = 1;
+
   // Dinâmica do ambiente - fade in
-  if (contador == 1) {
-    materialTronco.opacity += 0.016;
-    materialCopa.opacity += 0.019;
-  } else {
-    materialTronco2.opacity += 0.016;
-    materialCopa2.opacity += 0.019;
+  // if (contador == 1) {
+  //   materialTronco.opacity += 0.016;
+  //   materialCopa.opacity += 0.019;
+  // } else {
+  //   materialTronco2.opacity += 0.016;
+  //   materialCopa2.opacity += 0.019;
+  // }
+
+  if (aviaoInteiro.position.z % 200 === 0) {
+    // materialTronco.opacity = 1;
+    // materialCopa.opacity = 1;
+    gerarPlano(planos, scene, aviaoInteiro, materialTronco, materialCopa); // Geração de planos
   }
 
+  // while (true) {
+  // if (aviaoInteiro.position.z % 500 === 0) {
+  //   const plano = createGroundPlaneWired(2000, 10000);
+  //   scene.add(plano);
+  // }
+  // }
+
   // Atualização dos planos
-  if (aviaoInteiro.position.z % 500 === 0 && aviaoInteiro.position.z !== 0) {
-    if (contador == 0) {
-      scene.getObjectByName("plano").removeFromParent();
-      materialTronco.opacity = 0.0001;
-      materialCopa.opacity = 0.3;
-      gerarPlano(plane, scene, aviaoInteiro, materialTronco, materialCopa); // Geração de planos
-      contador = 1;
-    } else if (contador == 1) {
-      scene.getObjectByName("plano2").removeFromParent();
-      materialTronco2.opacity = 0.0001;
-      materialCopa2.opacity = 0.3;
-      gerarPlano(plane2, scene, aviaoInteiro, materialTronco2, materialCopa2); // Geração de planos
-      contador = 0;
-    }
-  }
+  // if (aviaoInteiro.position.z % 500 === 0 && aviaoInteiro.position.z !== 0) {
+  //   materialTronco.opacity = 0.0001;
+  //   materialCopa.opacity = 0.3;
+  //   gerarPlano(plano, scene, aviaoInteiro, materialTronco, materialCopa); // Geração de planos
+
+  //   // if (contador == 0) {
+  //   //   // scene.getObjectByName("plano").removeFromParent();
+  //   //   materialTronco.opacity = 0.0001;
+  //   //   materialCopa.opacity = 0.3;
+  //   //   gerarPlano(plane, scene, aviaoInteiro, materialTronco, materialCopa); // Geração de planos
+  //   //   contador = 1;
+  //   // } else if (contador == 1) {
+  //   //   // scene.getObjectByName("plano2").removeFromParent();
+  //   //   // materialTronco2.opacity = 0.0001;
+  //   //   // materialCopa2.opacity = 0.3;
+  //   //   gerarPlano(plane2, scene, aviaoInteiro, materialTronco2, materialCopa2); // Geração de planos
+  //   //   contador = 0;
+  //   // }
+  // }
 }
 
 function rotacaoMouse() {
@@ -145,7 +176,7 @@ function rotacaoMouse() {
   targetX = mouseX * -0.003;
   targetY = mouseY * -0.003;
 
-  const velocidade = 10;
+  const velocidade = 1;
 
   aviaoInteiro.position.x = 0.1 * mouseX;
   aviaoInteiro.position.y = -0.1 * mouseY;
@@ -171,7 +202,3 @@ function render() {
   requestAnimationFrame(render);
   renderer.render(scene, camera);
 }
-
-
-
-
