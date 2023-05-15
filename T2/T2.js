@@ -16,6 +16,7 @@ import {GLTFLoader} from '../build/jsm/loaders/GLTFLoader.js';
 import {OBJLoader} from '../build/jsm/loaders/OBJLoader.js';
 import {PLYLoader} from '../build/jsm/loaders/PLYLoader.js';
 import {MTLLoader} from '../build/jsm/loaders/MTLLoader.js';
+import KeyboardState from '../libs/util/KeyboardState.js'
 //metodos definidos no construtores
 import {
   initLight,
@@ -30,7 +31,10 @@ import {
 
 const windowHalfX = window.innerWidth / 2;
 const windowHalfY = window.innerHeight / 2;
-
+let clock = new THREE.Clock();
+let pauseAnimacao = false;
+let keyboard = new KeyboardState();
+let auxvelocidade;
 document.addEventListener("mousemove", onDocumentMouseMove);
 window.addEventListener(
   "resize",
@@ -45,7 +49,7 @@ let mouseX = 0;
 let mouseY = 0;
 let targetX = 0;
 let targetY = 0;
-
+let velocidade = 10;
 let scene, renderer, camera, defaultMaterial; // Inicialização das variáveis globais
 renderer = initRenderer(); // Inicialização do renderizador
 
@@ -103,6 +107,17 @@ scene.add(targetObject);
 light.target = targetObject;
 
 let contador = 0;
+document.addEventListener('click', function(event) {
+  // Check if the primary button is pressed
+  if (event.buttons === 0) {
+    pauseAnimacao = false;
+    velocidade = 10;
+    canvas.style.cursor = "none";
+    console.log("aaajajjajjjaaaaaaaaaa");
+  }
+});
+
+
 render();
 
 /*
@@ -142,10 +157,9 @@ function atualizarObjetos() {
 
 function rotacaoMouse() {
   // Interação via mouse
+  if(!pauseAnimacao){
   targetX = mouseX * -0.003;
   targetY = mouseY * -0.003;
-
-  const velocidade = 10;
 
   aviaoInteiro.position.x = 0.1 * mouseX;
   aviaoInteiro.position.y = -0.1 * mouseY;
@@ -155,6 +169,7 @@ function rotacaoMouse() {
   cameraHolder.position.z -= velocidade;
   targetObject.position.z -= velocidade;
   light.position.z -= velocidade;
+  }
 }
 
 function onDocumentMouseMove(event) {
@@ -169,7 +184,28 @@ function render() {
   rotacaoMouse();
   atualizarObjetos();
   requestAnimationFrame(render);
+  keyboardUpdate();
+ 
   renderer.render(scene, camera);
+}
+
+function keyboardUpdate() {
+
+  keyboard.update(); 
+  // Keyboard.down - execute only once per key pressed
+  if ( keyboard.down("1") )   velocidade = 5;
+  if ( keyboard.down("2") )   velocidade = 10;
+  if ( keyboard.down("3") )   velocidade = 15;
+
+  if ( keyboard.pressed("esc") ){
+    auxvelocidade = velocidade;
+    console.log(auxvelocidade);
+    velocidade = 0;
+    pauseAnimacao = true;
+    canvas.style.cursor = "pointer";
+  }
+
+  
 }
 
 
