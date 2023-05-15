@@ -12,11 +12,11 @@ import {
   createLightSphere,
 } from "../libs/util/util.js";
 import Grid from "../libs/util/grid.js";
-import {GLTFLoader} from '../build/jsm/loaders/GLTFLoader.js';
-import {OBJLoader} from '../build/jsm/loaders/OBJLoader.js';
-import {PLYLoader} from '../build/jsm/loaders/PLYLoader.js';
-import {MTLLoader} from '../build/jsm/loaders/MTLLoader.js';
-import KeyboardState from '../libs/util/KeyboardState.js'
+import { GLTFLoader } from "../build/jsm/loaders/GLTFLoader.js";
+import { OBJLoader } from "../build/jsm/loaders/OBJLoader.js";
+import { PLYLoader } from "../build/jsm/loaders/PLYLoader.js";
+import { MTLLoader } from "../build/jsm/loaders/MTLLoader.js";
+import KeyboardState from "../libs/util/KeyboardState.js";
 //metodos definidos no construtores
 import {
   initLight,
@@ -92,7 +92,7 @@ scene.add(targetObject);
 light.target = targetObject;
 
 let contador = 0;
-document.addEventListener('click', function(event) {
+document.addEventListener("click", function (event) {
   // Check if the primary button is pressed
   if (event.buttons === 0) {
     pauseAnimacao = false;
@@ -101,7 +101,6 @@ document.addEventListener('click', function(event) {
     console.log("aaajajjajjjaaaaaaaaaa");
   }
 });
-
 
 export const planos = [];
 for (let i = 0; i < 6; i++) {
@@ -198,20 +197,18 @@ function atualizarObjetos() {
 
 function rotacaoMouse() {
   // Interação via mouse
-  if(!pauseAnimacao){
-  targetX = mouseX * -0.003;
-  targetY = mouseY * -0.003;
+  if (!pauseAnimacao) {
+    targetX = mouseX * -0.003;
+    targetY = mouseY * -0.003;
 
-  const velocidade = 1;
+    aviaoInteiro.position.x = 0.1 * mouseX;
+    aviaoInteiro.position.y = -0.1 * mouseY;
+    aviaoInteiro.position.z -= velocidade;
 
-  aviaoInteiro.position.x = 0.1 * mouseX;
-  aviaoInteiro.position.y = -0.1 * mouseY;
-  aviaoInteiro.position.z -= velocidade;
-
-  aviaoInteiro.rotation.z = targetX * 0.75; // Rotação do avião no eixo z
-  cameraHolder.position.z -= velocidade;
-  targetObject.position.z -= velocidade;
-  light.position.z -= velocidade;
+    aviaoInteiro.rotation.z = targetX * 0.75; // Rotação do avião no eixo z
+    cameraHolder.position.z -= velocidade;
+    targetObject.position.z -= velocidade;
+    light.position.z -= velocidade;
   }
 }
 
@@ -228,29 +225,22 @@ function render() {
   atualizarObjetos();
   requestAnimationFrame(render);
   keyboardUpdate();
- 
+
   renderer.render(scene, camera);
 }
 
 function keyboardUpdate() {
-
-  keyboard.update(); 
+  keyboard.update();
   // Keyboard.down - execute only once per key pressed
-  if ( keyboard.down("1") )   velocidade = 5;
-  if ( keyboard.down("2") )   velocidade = 10;
-  if ( keyboard.down("3") )   velocidade = 15;
+  if (keyboard.down("1")) velocidade = 5;
+  if (keyboard.down("2")) velocidade = 10;
+  if (keyboard.down("3")) velocidade = 15;
 
-  if ( keyboard.pressed("esc") ){
+  if (keyboard.pressed("esc")) {
     auxvelocidade = velocidade;
     console.log(auxvelocidade);
     velocidade = 0;
     pauseAnimacao = true;
     canvas.style.cursor = "pointer";
   }
-
-  
 }
-
-
-
-
