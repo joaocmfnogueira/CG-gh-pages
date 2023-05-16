@@ -223,3 +223,30 @@ function loadGLBFileTorreta(plane) {
     obj.castShadow = true;
   });
 }
+
+export function rayCaster(scene, camera){
+// -- Create raycaster
+let raycaster = new THREE.Raycaster();
+
+// Enable layers to raycaster and camera (layer 0 is enabled by default)
+raycaster.layers.enable( 0 );
+camera.layers.enable( 0 );
+
+// Create list of plane objects 
+let plane, planeGeometry, planeMaterial;
+   planeGeometry = new THREE.PlaneGeometry(200, 200, 20, 20);
+   planeMaterial = new THREE.MeshLambertMaterial();
+   planeMaterial.side = THREE.DoubleSide;
+   planeMaterial.transparent = true;
+   planeMaterial.opacity = 0.8;
+   plane = new THREE.Mesh(planeGeometry, planeMaterial);
+   plane.position.set(0,-50,-100);
+   camera.add(plane);
+
+
+// Object to represent the intersection point
+let intersectionSphere = new THREE.Mesh(
+   new THREE.SphereGeometry(10.2, 30, 30, 0, Math.PI * 2, 0, Math.PI),
+   new THREE.MeshPhongMaterial({color:"orange", shininess:"200"}));
+scene.add(intersectionSphere);
+}
