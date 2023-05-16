@@ -85,6 +85,17 @@ export function createCopaMaterial() {
   return materialCopa;
 }
 
+export function createBala(scene, aviaoInteiro) {
+  let materialBala = setDefaultMaterial("rgb(255,0,0)");
+  let balaGeometry = new THREE.BoxGeometry(5.0,5.0,5.0);
+  let bala = new THREE.Mesh(balaGeometry, materialBala);
+  bala.scale.set(1,1,5);
+  scene.add(bala);
+  bala.position.copy(aviaoInteiro.position);
+  bala.position.y += 6;
+  return bala;
+}
+
 export function gerarPlano(
   planos,
   scene,

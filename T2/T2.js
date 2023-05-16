@@ -25,6 +25,7 @@ import {
   loadGLBFileAviao,
   createTroncoMaterial,
   createCopaMaterial,
+  createBala,
 } from "./construtores.js";
 
 const windowHalfX = window.innerWidth / 2;
@@ -33,6 +34,8 @@ let clock = new THREE.Clock();
 let pauseAnimacao = false;
 let keyboard = new KeyboardState();
 let auxvelocidade;
+let temBala = false;
+let bala;
 document.addEventListener("mousemove", onDocumentMouseMove);
 window.addEventListener(
   "resize",
@@ -92,13 +95,18 @@ scene.add(targetObject);
 light.target = targetObject;
 
 let contador = 0;
+
 document.addEventListener("click", function (event) {
   // Check if the primary button is pressed
-  if (event.buttons === 0) {
+  if (event.buttons === 0 && pauseAnimacao == true) {
     pauseAnimacao = false;
     velocidade = 10;
     canvas.style.cursor = "none";
-    console.log("aaajajjajjjaaaaaaaaaa");
+  }
+  else
+  if (event.buttons === 0 ){
+    bala = createBala(scene, aviaoInteiro);
+    temBala = true;
   }
 });
 
@@ -234,6 +242,9 @@ function rotacaoMouse() {
     cameraHolder.position.z -= velocidade;
     targetObject.position.z -= velocidade;
     light.position.z -= velocidade;
+    if(temBala){
+      bala.position.z -= 3*velocidade;
+    }
   }
 }
 
