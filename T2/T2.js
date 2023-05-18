@@ -236,6 +236,15 @@ function atualizarObjetos() {
     gerarPlano(planos, scene, aviaoInteiro, materialTronco, materialCopa); // Geração de planos
   }
 
+  for (let index = 0; index < bala.length; index++) {
+       if(bala[index].position.z <= aviaoInteiro.position.z - 1000){
+            scene.remove(bala[index]);
+            bala.splice(index,1);
+            console.log(bala);
+            
+       }
+  }
+
   // while (true) {
   // if (aviaoInteiro.position.z % 500 === 0) {
   //   const plano = createGroundPlaneWired(2000, 10000);
@@ -282,6 +291,7 @@ function rotacaoMouse() {
     if(temBala){
       for(let i = 0; i < bala.length; i++)
       bala[i].position.z -= 3*velocidade;
+      console.log(bala);
     }
   }
 }
