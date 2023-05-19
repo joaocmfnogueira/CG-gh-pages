@@ -1,40 +1,26 @@
 import * as THREE from "three";
-import { OrbitControls } from "../build/jsm/controls/OrbitControls.js";
 import {
   initRenderer,
   initCamera,
-  initDefaultBasicLight,
   setDefaultMaterial,
-  InfoBox,
   onWindowResize,
   createGroundPlaneWired,
-  getMaxSize,
-  SecondaryBox,
-  createLightSphere,
 } from "../libs/util/util.js";
-import Grid from "../libs/util/grid.js";
-import { GLTFLoader } from "../build/jsm/loaders/GLTFLoader.js";
-import { OBJLoader } from "../build/jsm/loaders/OBJLoader.js";
-import { PLYLoader } from "../build/jsm/loaders/PLYLoader.js";
-import { MTLLoader } from "../build/jsm/loaders/MTLLoader.js";
 import KeyboardState from "../libs/util/KeyboardState.js";
 //metodos definidos no construtores
 import {
   initLight,
-  createTree,
   gerarPlano,
   loadGLBFileAviao,
   createTroncoMaterial,
   createCopaMaterial,
   createBala,
-  rayCaster,
   createAlvo,
 } from "./construtores.js";
 
 const windowHalfX = window.innerWidth / 2;
 const windowHalfY = window.innerHeight / 2;
 
-let clock = new THREE.Clock();
 let keyboard = new KeyboardState();
 // var infoBox = new SecondaryBox("");
 
