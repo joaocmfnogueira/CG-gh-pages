@@ -28,6 +28,7 @@ import {
   createCopaMaterial,
   createBala,
   rayCaster,
+  createAlvo,
 } from "./construtores.js";
 
 const windowHalfX = window.innerWidth / 2;
@@ -45,7 +46,7 @@ window.addEventListener(
   },
   false
 ); // Listen window size changes
-// window.addEventListener('mousemove', onMouseMove);
+window.addEventListener('mousemove', onMouseMove);
 
 // Variáveis do mouse
 let mouseX = 0;
@@ -116,7 +117,7 @@ document.addEventListener("click", function (event) {
   }
   else
   if (event.buttons === 0 ){
-    let auxbala = createBala(scene, aviaoInteiro);
+    let auxbala = createBala(scene, aviaoInteiro, cameraHolder, alvo);
     bala.push(auxbala);
     temBala = true;
   }
@@ -183,23 +184,31 @@ cube.position.z = -700;
 
 scene.add(cube);
 
-// // -- Create raycaster
-// let raycaster = new THREE.Raycaster();
+// -- Create raycaster
+let raycaster = new THREE.Raycaster();
 
-// // Enable layers to raycaster and camera (layer 0 is enabled by default)
-// raycaster.layers.enable( 0 );
-// camera.layers.enable( 0 );
+// Enable layers to raycaster and camera (layer 0 is enabled by default)
+raycaster.layers.enable( 0 );
+camera.layers.enable( 0 );
 
-// // Create list of plane objects 
-// let plane, planeGeometry, planeMaterial;
-//    planeGeometry = new THREE.PlaneGeometry(200, 200, 20, 20);
-//    planeMaterial = new THREE.MeshLambertMaterial();
-//    planeMaterial.side = THREE.DoubleSide;
-//    planeMaterial.transparent = true;
-//    planeMaterial.opacity = 0.8;
-//    plane = new THREE.Mesh(planeGeometry, planeMaterial);
-//    plane.position.set(0,-50,-100);
-//    camera.add(plane);
+// Create list of plane objects 
+let plane, planeGeometry, planeMaterial;
+   planeGeometry = new THREE.PlaneGeometry(1000, 1000, 20, 20);
+   planeMaterial = new THREE.MeshLambertMaterial();
+   planeMaterial.side = THREE.DoubleSide;
+   planeMaterial.transparent = true;
+   planeMaterial.opacity = 0.3;
+   plane = new THREE.Mesh(planeGeometry, planeMaterial);
+   plane.position.set(0,0,-150);
+   camera.add(plane);
+
+let alvo = createAlvo(scene);
+alvo.position.set(0,10,-50)
+alvo.renderOrder =999;
+alvo.material.depthTest = false;
+
+scene.add(alvo);
+
 
 
 // // Object to represent the intersection point
@@ -240,7 +249,7 @@ function atualizarObjetos() {
        if(bala[index].position.z <= aviaoInteiro.position.z - 1000){
             scene.remove(bala[index]);
             bala.splice(index,1);
-            console.log(bala);
+            //console.log(bala);
             
        }
   }
@@ -279,6 +288,8 @@ function rotacaoMouse() {
   if (!pauseAnimacao) {
     targetX = mouseX * -0.003;
     targetY = mouseY * -0.003;
+    alvo.position.x = 0.5 * mouseX;
+    alvo.position.y = 0.5 * -mouseY;
 
     aviaoInteiro.position.x = 0.1 * mouseX;
     aviaoInteiro.position.y = -0.1 * mouseY;
@@ -288,10 +299,12 @@ function rotacaoMouse() {
     cameraHolder.position.z -= velocidade;
     targetObject.position.z -= velocidade;
     light.position.z -= velocidade;
+    alvo.position.z -= velocidade;
     if(temBala){
       for(let i = 0; i < bala.length; i++)
-      bala[i].position.z -= 3*velocidade;
-      console.log(bala);
+      // bala[i].position.z -= 3*velocidade;
+      bala[i].translateZ(-8*velocidade);
+      //console.log(bala);
     }
   }
 }
@@ -322,42 +335,27 @@ function keyboardUpdate() {
 
   if (keyboard.pressed("esc")) {
     auxvelocidade = velocidade;
-    console.log(auxvelocidade);
+    //console.log(auxvelocidade);
     velocidade = 0;
     pauseAnimacao = true;
     canvas.style.cursor = "pointer";
   }
 }
 
-// function onMouseMove(event) 
-// {
-//    leftBox.changeMessage("Intersection: None");
-//    intersectionSphere.visible = false;
-//    // calculate pointer position in normalized device coordinates
-// 	// (-1 to +1) for both components
-//    let pointer = new THREE.Vector2();
-//    pointer.x =  (event.clientX / window.innerWidth) * 2 - 1;
-//    pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
+function onMouseMove(event) 
+{
+   // calculate pointer position in normalized device coordinates
+	// (-1 to +1) for both components
+   let pointer = new THREE.Vector2();
+   pointer.x =  (event.clientX / window.innerWidth) * 2 - 1;
+   pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
-//    // update the picking ray with the camera and pointer position
-//    raycaster.setFromCamera(pointer, camera);
-//    // calculate objects intersecting the picking ray
-//    let intersects = raycaster.intersectObjects(objects);
+   // update the picking ray with the camera and pointer position
+   raycaster.setFromCamera(pointer, camera);
+   
+   // calculate objects intersecting the picking ray
+   let intersects = raycaster.intersectObjects(alvo);
 
-//    // -- Find the selected objects ------------------------------
-//    if (intersects.length > 0) // Check if there is a intersection
-//    {      
-//       let point = intersects[0].point; // Pick the point where interception occurrs
-//       intersectionSphere.visible = true;
-//       intersectionSphere.position.set(point.x, point.y, point.z);
-
-//       for (let i = 0; i < objects.length; i++)
-//       {   
-//          if(objects[i] == intersects[0].object ) {
-//             clearSelected(); // Removes emissive for all layers 
-//             objects[i].material.emissive.setRGB(0.4, 0.4, 0.4);
-//             showInterceptionCoords(i, point);
-//          }
-//       }
-//    }
-// };
+   // -- Find the selected objects ------------------------------
+   
+};

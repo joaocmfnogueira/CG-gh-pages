@@ -85,14 +85,23 @@ export function createCopaMaterial() {
   return materialCopa;
 }
 
-export function createBala(scene, aviaoInteiro) {
+export function createBala(scene, aviaoInteiro, cameraHolder, alvo) {
   let materialBala = setDefaultMaterial("rgb(255,0,0)");
   let balaGeometry = new THREE.BoxGeometry(5.0,5.0,5.0);
   let bala = new THREE.Mesh(balaGeometry, materialBala);
+  let obj1 = new THREE.Vector3(alvo.position.x, alvo.position.y , alvo.position.z);
+  let obj2 = new THREE.Vector3(cameraHolder.position.x, cameraHolder.position.y , cameraHolder.position.z);
+  let direction = new THREE.Vector3();
+  direction.subVectors(obj2, obj1).normalize();
+  let quaternion = new THREE.Quaternion();
+  quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), direction);
+  bala.setRotationFromQuaternion(quaternion);
+
   bala.scale.set(1,1,5);
   scene.add(bala);
   bala.position.copy(aviaoInteiro.position);
   bala.position.y += 6;
+
   return bala;
 }
 
@@ -250,3 +259,12 @@ let intersectionSphere = new THREE.Mesh(
    new THREE.MeshPhongMaterial({color:"orange", shininess:"200"}));
 scene.add(intersectionSphere);
 }
+
+export function createAlvo(scene){
+  let geometry = new THREE.CircleGeometry( 5, 32 ); 
+  let material = new THREE.MeshBasicMaterial({ color: "rgb(255,0,0)" } ); 
+  material.transparent = true;
+  material.opacity = 0.6;
+  let circle = new THREE.Mesh( geometry, material ); 
+  return circle;
+  }
