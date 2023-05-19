@@ -87,10 +87,11 @@ export function createCopaMaterial() {
 
 export function createBala(scene, aviaoInteiro, cameraHolder, alvo) {
   let materialBala = setDefaultMaterial("rgb(255,0,0)");
+  let a = 0;
   let balaGeometry = new THREE.BoxGeometry(5.0,5.0,5.0);
   let bala = new THREE.Mesh(balaGeometry, materialBala);
   let obj1 = new THREE.Vector3(alvo.position.x, alvo.position.y , alvo.position.z);
-  let obj2 = new THREE.Vector3(cameraHolder.position.x, cameraHolder.position.y , cameraHolder.position.z);
+  let obj2 = new THREE.Vector3(cameraHolder.position.x, cameraHolder.position.y, cameraHolder.position.z);
   let direction = new THREE.Vector3();
   direction.subVectors(obj2, obj1).normalize();
   let quaternion = new THREE.Quaternion();
@@ -100,7 +101,7 @@ export function createBala(scene, aviaoInteiro, cameraHolder, alvo) {
   bala.scale.set(1,1,5);
   scene.add(bala);
   bala.position.copy(aviaoInteiro.position);
-  bala.position.y += 6;
+ bala.position.y += 10;
 
   return bala;
 }
@@ -268,3 +269,11 @@ export function createAlvo(scene){
   let circle = new THREE.Mesh( geometry, material ); 
   return circle;
   }
+
+//   export function RotationLook(h, v, speed) {
+//     aimTarget.parent.position.set(0, 0, 0);
+//     aimTarget.localPosition.set(h, v, 1);
+//     var targetRotation = new THREE.Quaternion();
+//     targetRotation.setFromRotationMatrix(new THREE.Matrix4().lookAt(aimTarget.position, aimTarget.parent.position, aimTarget.up));
+//     transform.quaternion.rotateTowards(targetRotation, speed * MathUtils.DEG2RAD * deltaTime);
+// }

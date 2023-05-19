@@ -114,6 +114,7 @@ document.addEventListener("click", function (event) {
     pauseAnimacao = false;
     velocidade = 10;
     canvas.style.cursor = "none";
+    alvo.material.opacity = 0.6;
   }
   else
   if (event.buttons === 0 ){
@@ -339,6 +340,7 @@ function keyboardUpdate() {
     velocidade = 0;
     pauseAnimacao = true;
     canvas.style.cursor = "pointer";
+    alvo.material.opacity = 0;
   }
 }
 
