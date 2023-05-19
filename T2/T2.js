@@ -16,6 +16,7 @@ import {
   createCopaMaterial,
   createBala,
   createAlvo,
+  fadeInPlano,
 } from "./construtores.js";
 
 const windowHalfX = window.innerWidth / 2;
@@ -40,7 +41,7 @@ let mouseY = 0;
 let targetX = 0;
 let targetY = 0;
 
-let velocidade = 5;
+let velocidade = 2;
 
 let pauseAnimacao = false;
 
@@ -105,6 +106,8 @@ document.addEventListener("click", function (event) {
 export const planos = [];
 for (let i = 0; i < 6; i++) {
   const plano = createGroundPlaneWired(2000, 200, 15, 2);
+  plano.material.color = new THREE.Color("rgb(0, 0, 43)");
+
   plano.position.z = aviaoInteiro.position.z - i * 200;
   gerarPlano(plano, scene, aviaoInteiro, materialTronco, materialCopa); // Geração de planos
 
@@ -127,6 +130,8 @@ for (let i = 0; i < 6; i++) {
 
   cube.add(wireframe);
   cube2.add(wireframe2);
+
+  cube.name = "cubo";
 
   plano.add(cube);
   plano.add(cube2);
@@ -179,7 +184,7 @@ planeMaterial.transparent = true;
 planeMaterial.opacity = 0.3;
 plane = new THREE.Mesh(planeGeometry, planeMaterial);
 plane.position.set(0, 0, -150);
-camera.add(plane);
+// camera.add(plane);
 
 let alvo = createAlvo(scene);
 alvo.position.set(0, 10, -50);
@@ -249,6 +254,7 @@ function render() {
   atualizarObjetos();
   requestAnimationFrame(render);
   keyboardUpdate();
+  fadeInPlano(planos);
 
   renderer.render(scene, camera);
 }

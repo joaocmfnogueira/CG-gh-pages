@@ -47,35 +47,39 @@ export function initLight(position, scene) {
 
 export function createTree(plane, materialTronco, materialCopa) {
   // Tronco da árvore
-  let aviaoInteiro = new THREE.Object3D();
+  let arvore = new THREE.Object3D();
+  arvore.name = "arvore";
   let troncoGeometry = new THREE.CylinderGeometry(2, 2, 15, 20);
   let tronco = new THREE.Mesh(troncoGeometry, materialTronco);
-  tronco.position.set(
+  arvore.position.set(
     -250 + Math.random() * 500.0,
     -125 + Math.random() * 375.0,
     7.5
   );
-  aviaoInteiro.add(tronco);
+  arvore.add(tronco);
   // Copa da árovore
-  let arvoreGeometry = new THREE.ConeGeometry(5, 20, 32);
-  let arvore = new THREE.Mesh(arvoreGeometry, materialCopa);
-  arvore.position.set(0.0, 7.5, 0);
-  tronco.add(arvore);
+  let copaGeometry = new THREE.ConeGeometry(5, 20, 32);
+  let copa = new THREE.Mesh(copaGeometry, materialCopa);
+  copa.position.set(0, 0, 10);
+  arvore.add(copa);
   tronco.rotateX(THREE.MathUtils.degToRad(90));
-  aviaoInteiro.traverse((o) => {
+  copa.rotateX(THREE.MathUtils.degToRad(90));
+
+  arvore.traverse((o) => {
     if (o.isMesh) {
       o.castShadow = true;
     }
   });
-  plane.add(aviaoInteiro);
+  plane.add(arvore);
 
-  return tronco;
+  return arvore;
 }
 
 export function createTroncoMaterial() {
   let materialTronco = setDefaultMaterial("rgb(150,75,0)");
   materialTronco.transparent = true;
   materialTronco.opacity = 0.1;
+  materialTronco.name = "tronco";
   return materialTronco;
 }
 
@@ -83,27 +87,35 @@ export function createCopaMaterial() {
   let materialCopa = setDefaultMaterial("rgb(0,128,0)");
   materialCopa.transparent = true;
   materialCopa.opacity = 0.1;
+  materialCopa.name = "copa";
   return materialCopa;
 }
 
 export function createBala(scene, aviaoInteiro, cameraHolder, alvo) {
   let materialBala = setDefaultMaterial("rgb(255,0,0)");
   let a = 0;
-  let balaGeometry = new THREE.BoxGeometry(5.0,5.0,5.0);
+  let balaGeometry = new THREE.BoxGeometry(5.0, 5.0, 5.0);
   let bala = new THREE.Mesh(balaGeometry, materialBala);
-  let obj1 = new THREE.Vector3(alvo.position.x, alvo.position.y , alvo.position.z);
-  let obj2 = new THREE.Vector3(cameraHolder.position.x, cameraHolder.position.y, cameraHolder.position.z);
+  let obj1 = new THREE.Vector3(
+    alvo.position.x,
+    alvo.position.y,
+    alvo.position.z
+  );
+  let obj2 = new THREE.Vector3(
+    cameraHolder.position.x,
+    cameraHolder.position.y,
+    cameraHolder.position.z
+  );
   let direction = new THREE.Vector3();
   direction.subVectors(obj2, obj1).normalize();
   let quaternion = new THREE.Quaternion();
   quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), direction);
   bala.setRotationFromQuaternion(quaternion);
 
-
-  bala.scale.set(1,1,5);
+  bala.scale.set(1, 1, 5);
   scene.add(bala);
   bala.position.copy(aviaoInteiro.position);
- bala.position.y += 10;
+  bala.position.y += 10;
   return bala;
 }
 
@@ -121,6 +133,10 @@ export function gerarPlano(
     const planoOld = planos.shift();
     scene.remove(planoOld);
     plano.position.z = aviaoInteiro.position.z - 1000;
+    plano.material.color = new THREE.Color("rgb(0, 0, 43)");
+
+    plano.name = "plano";
+
     planos.push(plano);
     scene.add(plano);
 
@@ -144,6 +160,9 @@ export function gerarPlano(
     cube.add(wireframe);
     cube2.add(wireframe2);
 
+    cube.name = "cubo";
+    cube2.name = "cubo";
+
     plano.add(cube);
     plano.add(cube2);
 
@@ -152,6 +171,8 @@ export function gerarPlano(
 
     cube2.position.x = -300;
     cube2.position.z = 100;
+  } else {
+    plano.material.color = new THREE.Color("rgb(0, 0, 43)");
   }
 
   let quantidade = 1 + Math.floor(Math.random() * 10);
@@ -206,6 +227,38 @@ export function loadGLBFileAviao(aviaoInteiro) {
   });
 }
 
+export function fadeInPlano(planos) {
+  planos.forEach((plano) => {
+    plano.material.color.b += 0.0015;
+
+    plano.children.forEach((object) => {
+      if (object.name === "cubo") {
+        object.material.color.b += 0.001;
+      } else if (object.name === "arvore") {
+        object.children.forEach((mesh) => {
+          mesh.material.opacity += 0.0;
+        });
+      }
+    });
+  });
+
+  // planos[5].children.forEach((object) => {
+  //   if (object.name === "arvore") {
+  //     object.children.forEach((mesh) => {
+  //       mesh.material.opacity = 0.2;
+  //     });
+  //   } else if (object.name === "torreta") {
+  //     object.traverse((node) => {
+  //       if (node.material) {
+  //         node.material.side = THREE.DoubleSide;
+  //         node.material.transparent = true;
+  //         node.material.opacity = 0.2;
+  //       }
+  //     });
+  //   }
+  // });
+}
+
 function loadGLBFileTorreta(plane) {
   var loader = new GLTFLoader();
   loader.load("torreta.glb", function (gltf) {
@@ -215,11 +268,10 @@ function loadGLBFileTorreta(plane) {
     obj.traverse(function (child) {
       if (child) {
         child.castShadow = true;
-        
       }
     });
     obj.traverse(function (node) {
-      if (node.material){ 
+      if (node.material) {
         node.material.side = THREE.DoubleSide;
         node.material.transparent = true;
         node.material.opacity = 1;
@@ -237,54 +289,50 @@ function loadGLBFileTorreta(plane) {
     obj.rotateX(THREE.MathUtils.degToRad(90));
     obj.rotateY(THREE.MathUtils.degToRad(270));
     let bbobj = new THREE.Box3().setFromObject(obj);
-    let bbhelper = createBBHelper(bbobj, 'white')  
-
-
+    // let bbhelper = createBBHelper(bbobj, "white");
   });
 }
 
-export function rayCaster(scene, camera){
-// -- Create raycaster
-let raycaster = new THREE.Raycaster();
+export function rayCaster(scene, camera) {
+  // -- Create raycaster
+  let raycaster = new THREE.Raycaster();
 
-// Enable layers to raycaster and camera (layer 0 is enabled by default)
-raycaster.layers.enable( 0 );
-camera.layers.enable( 0 );
+  // Enable layers to raycaster and camera (layer 0 is enabled by default)
+  raycaster.layers.enable(0);
+  camera.layers.enable(0);
 
-// Create list of plane objects 
-let plane, planeGeometry, planeMaterial;
-   planeGeometry = new THREE.PlaneGeometry(200, 200, 20, 20);
-   planeMaterial = new THREE.MeshLambertMaterial();
-   planeMaterial.side = THREE.DoubleSide;
-   planeMaterial.transparent = true;
-   planeMaterial.opacity = 0.8;
-   plane = new THREE.Mesh(planeGeometry, planeMaterial);
-   plane.position.set(0,-50,-100);
-   camera.add(plane);
+  // Create list of plane objects
+  let plane, planeGeometry, planeMaterial;
+  planeGeometry = new THREE.PlaneGeometry(200, 200, 20, 20);
+  planeMaterial = new THREE.MeshLambertMaterial();
+  planeMaterial.side = THREE.DoubleSide;
+  planeMaterial.transparent = true;
+  planeMaterial.opacity = 0.8;
+  plane = new THREE.Mesh(planeGeometry, planeMaterial);
+  plane.position.set(0, -50, -100);
+  camera.add(plane);
 
-
-// Object to represent the intersection point
-let intersectionSphere = new THREE.Mesh(
-   new THREE.SphereGeometry(10.2, 30, 30, 0, Math.PI * 2, 0, Math.PI),
-   new THREE.MeshPhongMaterial({color:"orange", shininess:"200"}));
-scene.add(intersectionSphere);
+  // Object to represent the intersection point
+  let intersectionSphere = new THREE.Mesh(
+    new THREE.SphereGeometry(10.2, 30, 30, 0, Math.PI * 2, 0, Math.PI),
+    new THREE.MeshPhongMaterial({ color: "orange", shininess: "200" })
+  );
+  scene.add(intersectionSphere);
 }
 
-export function createAlvo(scene){
-  let geometry = new THREE.CircleGeometry( 5, 32 ); 
-  let material = new THREE.MeshBasicMaterial({ color: "rgb(255,0,0)" } ); 
+export function createAlvo(scene) {
+  let geometry = new THREE.CircleGeometry(5, 32);
+  let material = new THREE.MeshBasicMaterial({ color: "rgb(255,0,0)" });
   material.transparent = true;
   material.opacity = 0.6;
-  let circle = new THREE.Mesh( geometry, material ); 
+  let circle = new THREE.Mesh(geometry, material);
   return circle;
-  }
-
-  function checkCollisions(object)
-{
-   let collision = asset.bb.intersectsBox(object);
-   if(collision) infoBox.changeMessage("Collision detected");
 }
 
+function checkCollisions(object) {
+  let collision = asset.bb.intersectsBox(object);
+  if (collision) infoBox.changeMessage("Collision detected");
+}
 
 //   export function RotationLook(h, v, speed) {
 //     aimTarget.parent.position.set(0, 0, 0);
