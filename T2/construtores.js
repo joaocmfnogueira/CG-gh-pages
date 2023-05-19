@@ -16,6 +16,7 @@ import { GLTFLoader } from "../build/jsm/loaders/GLTFLoader.js";
 import { OBJLoader } from "../build/jsm/loaders/OBJLoader.js";
 import { PLYLoader } from "../build/jsm/loaders/PLYLoader.js";
 import { MTLLoader } from "../build/jsm/loaders/MTLLoader.js";
+import { Vector3 } from "../build/three.module.js";
 
 export function initLight(position, scene) {
   const ambientLight = new THREE.HemisphereLight(
@@ -98,11 +99,11 @@ export function createBala(scene, aviaoInteiro, cameraHolder, alvo) {
   quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), direction);
   bala.setRotationFromQuaternion(quaternion);
 
+
   bala.scale.set(1,1,5);
   scene.add(bala);
   bala.position.copy(aviaoInteiro.position);
  bala.position.y += 10;
-
   return bala;
 }
 
@@ -214,10 +215,15 @@ function loadGLBFileTorreta(plane) {
     obj.traverse(function (child) {
       if (child) {
         child.castShadow = true;
+        
       }
     });
     obj.traverse(function (node) {
-      if (node.material) node.material.side = THREE.DoubleSide;
+      if (node.material){ 
+        node.material.side = THREE.DoubleSide;
+        node.material.transparent = true;
+        node.material.opacity = 1;
+      }
     });
     //obj.rotateZ(THREE.MathUtils.degToRad(0));
     obj.rotateY(THREE.MathUtils.degToRad(0));
@@ -230,7 +236,10 @@ function loadGLBFileTorreta(plane) {
     );
     obj.rotateX(THREE.MathUtils.degToRad(90));
     obj.rotateY(THREE.MathUtils.degToRad(270));
-    obj.castShadow = true;
+    let bbobj = new THREE.Box3().setFromObject(obj);
+    let bbhelper = createBBHelper(bbobj, 'white')  
+
+
   });
 }
 
@@ -269,6 +278,13 @@ export function createAlvo(scene){
   let circle = new THREE.Mesh( geometry, material ); 
   return circle;
   }
+
+  function checkCollisions(object)
+{
+   let collision = asset.bb.intersectsBox(object);
+   if(collision) infoBox.changeMessage("Collision detected");
+}
+
 
 //   export function RotationLook(h, v, speed) {
 //     aimTarget.parent.position.set(0, 0, 0);

@@ -38,6 +38,7 @@ let clock = new THREE.Clock();
 let keyboard = new KeyboardState();
 // var infoBox = new SecondaryBox("");
 
+
 document.addEventListener("mousemove", onDocumentMouseMove);
 window.addEventListener(
   "resize",
