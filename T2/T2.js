@@ -38,7 +38,6 @@ let clock = new THREE.Clock();
 let keyboard = new KeyboardState();
 // var infoBox = new SecondaryBox("");
 
-
 document.addEventListener("mousemove", onDocumentMouseMove);
 window.addEventListener(
   "resize",
@@ -47,7 +46,7 @@ window.addEventListener(
   },
   false
 ); // Listen window size changes
-window.addEventListener('mousemove', onMouseMove);
+window.addEventListener("mousemove", onMouseMove);
 
 // Variáveis do mouse
 let mouseX = 0;
@@ -55,12 +54,11 @@ let mouseY = 0;
 let targetX = 0;
 let targetY = 0;
 
-let velocidade = 10;
-let auxvelocidade;
+let velocidade = 5;
 
 let pauseAnimacao = false;
 
-// lista de balas e condicional auxiliar 
+// lista de balas e condicional auxiliar
 let temBala = false;
 let bala = [];
 
@@ -80,17 +78,14 @@ scene.add(light);
 // Materiais da Árvore
 // Material do tronco
 let materialTronco = createTroncoMaterial();
-let materialTronco2 = createTroncoMaterial();
 // Material da copa
 let materialCopa = createCopaMaterial();
-let materialCopa2 = createCopaMaterial();
 
 // Criação do avião
 let aviaoInteiro = new THREE.Object3D();
 aviaoInteiro.position.set(0, 60, 0);
 loadGLBFileAviao(aviaoInteiro);
 aviaoInteiro.scale.set(2, 2, 2);
-// aviaoInteiro.rotateY(THREE.MathUtils.degToRad(90));
 aviaoInteiro.rotateZ(THREE.MathUtils.degToRad(180));
 aviaoInteiro.castShadow = true;
 scene.add(aviaoInteiro);
@@ -107,8 +102,6 @@ let targetObject = new THREE.Object3D();
 scene.add(targetObject);
 light.target = targetObject;
 
-let contador = 0;
-
 document.addEventListener("click", function (event) {
   // Check if the primary button is pressed
   if (event.buttons === 0 && pauseAnimacao == true) {
@@ -116,9 +109,7 @@ document.addEventListener("click", function (event) {
     velocidade = 10;
     canvas.style.cursor = "none";
     alvo.material.opacity = 0.6;
-  }
-  else
-  if (event.buttons === 0 ){
+  } else if (event.buttons === 0) {
     let auxbala = createBala(scene, aviaoInteiro, cameraHolder, alvo);
     bala.push(auxbala);
     temBala = true;
@@ -190,34 +181,26 @@ scene.add(cube);
 let raycaster = new THREE.Raycaster();
 
 // Enable layers to raycaster and camera (layer 0 is enabled by default)
-raycaster.layers.enable( 0 );
-camera.layers.enable( 0 );
+raycaster.layers.enable(0);
+camera.layers.enable(0);
 
-// Create list of plane objects 
+// Create list of plane objects
 let plane, planeGeometry, planeMaterial;
-   planeGeometry = new THREE.PlaneGeometry(1000, 1000, 20, 20);
-   planeMaterial = new THREE.MeshLambertMaterial();
-   planeMaterial.side = THREE.DoubleSide;
-   planeMaterial.transparent = true;
-   planeMaterial.opacity = 0.3;
-   plane = new THREE.Mesh(planeGeometry, planeMaterial);
-   plane.position.set(0,0,-150);
-   camera.add(plane);
+planeGeometry = new THREE.PlaneGeometry(1000, 1000, 20, 20);
+planeMaterial = new THREE.MeshLambertMaterial();
+planeMaterial.side = THREE.DoubleSide;
+planeMaterial.transparent = true;
+planeMaterial.opacity = 0.3;
+plane = new THREE.Mesh(planeGeometry, planeMaterial);
+plane.position.set(0, 0, -150);
+camera.add(plane);
 
 let alvo = createAlvo(scene);
-alvo.position.set(0,10,-50)
-alvo.renderOrder =999;
+alvo.position.set(0, 10, -50);
+alvo.renderOrder = 999;
 alvo.material.depthTest = false;
 
 scene.add(alvo);
-
-
-
-// // Object to represent the intersection point
-// let intersectionSphere = new THREE.Mesh(
-//    new THREE.SphereGeometry(10.2, 30, 30, 0, Math.PI * 2, 0, Math.PI),
-//    new THREE.MeshPhongMaterial({color:"orange", shininess:"200"}));
-// scene.add(intersectionSphere);
 
 render();
 
@@ -232,57 +215,16 @@ function atualizarObjetos() {
   materialTronco.opacity = 1;
   materialCopa.opacity = 1;
 
-  // Dinâmica do ambiente - fade in
-  // if (contador == 1) {
-  //   materialTronco.opacity += 0.016;
-  //   materialCopa.opacity += 0.019;
-  // } else {
-  //   materialTronco2.opacity += 0.016;
-  //   materialCopa2.opacity += 0.019;
-  // }
-
   if (aviaoInteiro.position.z % 200 === 0) {
-    // materialTronco.opacity = 1;
-    // materialCopa.opacity = 1;
     gerarPlano(planos, scene, aviaoInteiro, materialTronco, materialCopa); // Geração de planos
   }
 
   for (let index = 0; index < bala.length; index++) {
-       if(bala[index].position.z <= aviaoInteiro.position.z - 1000){
-            scene.remove(bala[index]);
-            bala.splice(index,1);
-            //console.log(bala);
-            
-       }
+    if (bala[index].position.z <= aviaoInteiro.position.z - 1000) {
+      scene.remove(bala[index]);
+      bala.splice(index, 1);
+    }
   }
-
-  // while (true) {
-  // if (aviaoInteiro.position.z % 500 === 0) {
-  //   const plano = createGroundPlaneWired(2000, 10000);
-  //   scene.add(plano);
-  // }
-  // }
-
-  // Atualização dos planos
-  // if (aviaoInteiro.position.z % 500 === 0 && aviaoInteiro.position.z !== 0) {
-  //   materialTronco.opacity = 0.0001;
-  //   materialCopa.opacity = 0.3;
-  //   gerarPlano(plano, scene, aviaoInteiro, materialTronco, materialCopa); // Geração de planos
-
-  //   // if (contador == 0) {
-  //   //   // scene.getObjectByName("plano").removeFromParent();
-  //   //   materialTronco.opacity = 0.0001;
-  //   //   materialCopa.opacity = 0.3;
-  //   //   gerarPlano(plane, scene, aviaoInteiro, materialTronco, materialCopa); // Geração de planos
-  //   //   contador = 1;
-  //   // } else if (contador == 1) {
-  //   //   // scene.getObjectByName("plano2").removeFromParent();
-  //   //   // materialTronco2.opacity = 0.0001;
-  //   //   // materialCopa2.opacity = 0.3;
-  //   //   gerarPlano(plane2, scene, aviaoInteiro, materialTronco2, materialCopa2); // Geração de planos
-  //   //   contador = 0;
-  //   // }
-  // }
 }
 
 function rotacaoMouse() {
@@ -302,11 +244,8 @@ function rotacaoMouse() {
     targetObject.position.z -= velocidade;
     light.position.z -= velocidade;
     alvo.position.z -= velocidade;
-    if(temBala){
-      for(let i = 0; i < bala.length; i++)
-      // bala[i].position.z -= 3*velocidade;
-      bala[i].translateZ(-8*velocidade);
-      //console.log(bala);
+    if (temBala) {
+      for (let i = 0; i < bala.length; i++) bala[i].translateZ(-8 * velocidade);
     }
   }
 }
@@ -337,7 +276,6 @@ function keyboardUpdate() {
 
   if (keyboard.pressed("esc")) {
     auxvelocidade = velocidade;
-    //console.log(auxvelocidade);
     velocidade = 0;
     pauseAnimacao = true;
     canvas.style.cursor = "pointer";
@@ -345,20 +283,18 @@ function keyboardUpdate() {
   }
 }
 
-function onMouseMove(event) 
-{
-   // calculate pointer position in normalized device coordinates
-	// (-1 to +1) for both components
-   let pointer = new THREE.Vector2();
-   pointer.x =  (event.clientX / window.innerWidth) * 2 - 1;
-   pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
+function onMouseMove(event) {
+  // calculate pointer position in normalized device coordinates
+  // (-1 to +1) for both components
+  let pointer = new THREE.Vector2();
+  pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
+  pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
-   // update the picking ray with the camera and pointer position
-   raycaster.setFromCamera(pointer, camera);
-   
-   // calculate objects intersecting the picking ray
-   let intersects = raycaster.intersectObjects(alvo);
+  // update the picking ray with the camera and pointer position
+  raycaster.setFromCamera(pointer, camera);
 
-   // -- Find the selected objects ------------------------------
-   
-};
+  // calculate objects intersecting the picking ray
+  let intersects = raycaster.intersectObjects(alvo);
+
+  // -- Find the selected objects ------------------------------
+}
