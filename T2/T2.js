@@ -21,9 +21,10 @@ import {
 
 const windowHalfX = window.innerWidth / 2;
 const windowHalfY = window.innerHeight / 2;
+let auxvelocidade;
 
 let keyboard = new KeyboardState();
-// var infoBox = new SecondaryBox("");
+// let infoBox = new SecondaryBox("");
 
 document.addEventListener("mousemove", onDocumentMouseMove);
 window.addEventListener(
@@ -203,8 +204,8 @@ A partir daqui, tem definição das funções e metodos chamados no começo
 
 // Atualização dos materiais e planos
 function atualizarObjetos() {
-  materialTronco.opacity = 1;
-  materialCopa.opacity = 1;
+  materialTronco.opacity = 0.5;
+  materialCopa.opacity = 0.5;
 
   if (aviaoInteiro.position.z % 200 === 0) {
     gerarPlano(planos, scene, aviaoInteiro, materialTronco, materialCopa); // Geração de planos
@@ -254,7 +255,7 @@ function render() {
   atualizarObjetos();
   requestAnimationFrame(render);
   keyboardUpdate();
-  fadeInPlano(planos);
+  fadeInPlano(planos, cameraHolder);
 
   renderer.render(scene, camera);
 }

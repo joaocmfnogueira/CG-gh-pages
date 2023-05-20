@@ -116,6 +116,9 @@ export function createBala(scene, aviaoInteiro, cameraHolder, alvo) {
   scene.add(bala);
   bala.position.copy(aviaoInteiro.position);
   bala.position.y += 10;
+  let bbbala = new THREE.Box3().setFromObject(bala);
+  scene.add(bbbala);
+
   return bala;
 }
 
@@ -288,7 +291,11 @@ function loadGLBFileTorreta(plane) {
     );
     obj.rotateX(THREE.MathUtils.degToRad(90));
     obj.rotateY(THREE.MathUtils.degToRad(270));
-    let bbobj = new THREE.Box3().setFromObject(obj);
+    let bbtorreta = new THREE.Box3().setFromObject(obj);
+    let bbhelper2 =  new THREE.Box3Helper(bbtorreta,'yellow');
+
+    plane.add(bbtorreta);
+    plane.add(bbhelper2);
     // let bbhelper = createBBHelper(bbobj, "white");
   });
 }
@@ -329,9 +336,14 @@ export function createAlvo(scene) {
   return circle;
 }
 
-function checkCollisions(object) {
-  let collision = asset.bb.intersectsBox(object);
-  if (collision) infoBox.changeMessage("Collision detected");
+function checkCollisions(bala, torreta) {
+  let collision = torreta.intersectsBox(bala);
+  if (collision){
+    torreta.traverse(function (node) {
+      if (node.material) {
+        node.material.opacity = 0;
+      }});
+  } 
 }
 
 //   export function RotationLook(h, v, speed) {
