@@ -43,9 +43,9 @@ export function criarProjetil() {
     alvo.position.z
   );
   let obj2 = new THREE.Vector3(
-    cameraHolder.position.x,
-    cameraHolder.position.y,
-    cameraHolder.position.z
+    aviao.position.x,
+    aviao.position.y,
+    aviao.position.z
   );
   let direction = new THREE.Vector3();
   direction.subVectors(obj2, obj1).normalize();
@@ -63,7 +63,7 @@ export function criarProjetil() {
   return bala;
 }
 
-export function loadGLBFileAviao(aviaoInteiro) {
+export function loadGLBFileAviao() {
   var loader = new GLTFLoader();
   loader.load("src/assets/aviao.glb", function (gltf) {
     var obj = gltf.scene;
@@ -78,7 +78,7 @@ export function loadGLBFileAviao(aviaoInteiro) {
       if (node.material) node.material.side = THREE.DoubleSide;
     });
     obj.rotateY(THREE.MathUtils.degToRad(180));
-    aviaoInteiro.add(obj);
+    aviao.add(obj);
     obj.castShadow = true;
     obj.position.y = 5;
   });
