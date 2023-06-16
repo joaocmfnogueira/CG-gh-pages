@@ -23,6 +23,11 @@ export function atirarProjetil() {
 
   projeteis.push(projetil);
 
+  // for (let i = 0; i < projeteis.length; i++)
+  //   projeteis[i].translateZ(-8 * velocidade);
+}
+
+export function atualizarProjetil() {
   for (let i = 0; i < projeteis.length; i++)
     projeteis[i].translateZ(-8 * velocidade);
 }
@@ -46,10 +51,13 @@ export function atualizarObjetos() {
     criarPlano();
   }
 
-  projeteis.forEach((projetil) => {
-    if (projetil.position.z <= aviao.position.z - 1000) {
-      scene.remove(projetil);
-      projeteis.splice(index, 1);
-    }
-  });
+  // projeteis.forEach((projetil) => {
+  //   if (projetil.position.z <= aviao.position.z - 1000) {
+  //     scene.remove(projetil);
+  //     projeteis.splice(index, 1);
+  //   }
+  // });
+  if (projeteis.length) {
+    atualizarProjetil();
+  }
 }

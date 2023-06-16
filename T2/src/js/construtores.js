@@ -57,8 +57,8 @@ export function criarProjetil() {
   scene.add(bala);
   bala.position.copy(aviao.position);
   bala.position.y += 10;
-  let bbbala = new THREE.Box3().setFromObject(bala);
-  scene.add(bbbala);
+  // let bbbala = new THREE.Box3().setFromObject(bala);
+  // scene.add(bbbala);
 
   return bala;
 }
@@ -132,8 +132,8 @@ export function loadGLBFileTorreta(plane) {
     let bbtorreta = new THREE.Box3().setFromObject(obj);
     let bbhelper2 = new THREE.Box3Helper(bbtorreta, "yellow");
 
-    plane.add(bbtorreta);
-    plane.add(bbhelper2);
+    // plane.add(bbtorreta);
+    // plane.add(bbhelper2);
     // let bbhelper = createBBHelper(bbobj, "white");
   });
 }
