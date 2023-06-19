@@ -1,6 +1,6 @@
 import * as THREE from "three";
 
-import { alvo, aviao, projeteis } from "../../index.js";
+import { alvo, aviao, planos, projeteis } from "../../index.js";
 import { criarProjetil } from "./construtores.js";
 import { alternarCursor } from "./controls.js";
 // import { materialCopa, materialTronco } from "./materials.js";
@@ -59,5 +59,24 @@ export function atualizarObjetos() {
   // });
   if (projeteis.length) {
     atualizarProjetil();
+  }
+}
+
+export function fadePlanos() {
+  for (let i = 0; i < planos.length; i++) {
+    let opacidade = 1 - (planos[i].position.z - aviao.position.z) / -1000;
+
+    planos[i].material.transparent = true;
+    planos[i].material.opacity = opacidade;
+
+    planos[i].children[0].material.transparent = true;
+    planos[i].children[0].material.opacity = opacidade;
+    // planos[i].traverse(function (node) {
+    //   if (node.name === "lateralEsquerda" || node.name === "lateralDireita") {
+    //     node.material.transparent = true;
+    //     node.material.opacity = opacidade;
+    //     // arrumar transparencia, logica mais complexa
+    //   }
+    // });
   }
 }
