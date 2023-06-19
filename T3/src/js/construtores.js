@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import { GLTFLoader } from "../../../build/jsm/loaders/GLTFLoader.js";
-import { materialProjetil} from "./materials.js";
+import { materialProjetil } from "./materials.js";
 import { alvo, aviao, cameraHolder } from "../../index.js";
 import { scene } from "./scene.js";
 
@@ -83,21 +83,21 @@ export function loadGLBFileAviao() {
   });
 }
 
-export function fadeInPlano(planos) {
-  planos.forEach((plano) => {
-    plano.material.color.b += 0.0015;
+// export function fadeInPlano(planos) {
+//   planos.forEach((plano) => {
+//     plano.material.color.b += 0.0015;
 
-    // plano.children.forEach((object) => {
-    //   if (object.name === "cubo") {
-    //     object.material.color.b += 0.001;
-    //   } else if (object.name === "arvore") {
-    //     object.children.forEach((mesh) => {
-    //       mesh.material.opacity += 0.0;
-    //     });
-    //   }
-    // });
-  });
-}
+//     // plano.children.forEach((object) => {
+//     //   if (object.name === "cubo") {
+//     //     object.material.color.b += 0.001;
+//     //   } else if (object.name === "arvore") {
+//     //     object.children.forEach((mesh) => {
+//     //       mesh.material.opacity += 0.0;
+//     //     });
+//     //   }
+//     // });
+//   });
+// }
 
 export function loadGLBFileTorreta(plane) {
   var loader = new GLTFLoader();

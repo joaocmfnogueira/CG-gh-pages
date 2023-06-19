@@ -74,7 +74,6 @@ export function criarPlano(inicial = false, distancia) {
     const planoAntigo = planos.shift();
     scene.remove(planoAntigo);
   }
-  console.log(aviao.position.z);
 
   // criarArvoresAleatorias(plano);
   criarLateraisPlano(plano);
