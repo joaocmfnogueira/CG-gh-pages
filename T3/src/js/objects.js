@@ -49,7 +49,8 @@ export function criarAlvo() {
 
 export function criarPlanosIniciais() {
   const inicial = true;
-  for (let i = 0; i < 6; i++) {
+
+  for (let i = -1; i < 6; i++) {
     const distancia = i * 200;
     criarPlano(inicial, distancia);
   }
@@ -73,6 +74,7 @@ export function criarPlano(inicial = false, distancia) {
     const planoAntigo = planos.shift();
     scene.remove(planoAntigo);
   }
+  console.log(aviao.position.z);
 
   // criarArvoresAleatorias(plano);
   criarLateraisPlano(plano);
