@@ -33,10 +33,10 @@ export function initLight(position, scene) {
   mainLight.castShadow = true;
 
   const shadow = mainLight.shadow;
-  shadow.mapSize.width = 1024;
-  shadow.mapSize.height = 1024;
+  shadow.mapSize.width = 2048;
+  shadow.mapSize.height = 2048;
   shadow.camera.near = 0.1;
-  shadow.camera.far = 2500;
+  shadow.camera.far = 2000;
   shadow.camera.left = -240.0;
   shadow.camera.right = 240.0;
   shadow.camera.bottom = -240.0;
