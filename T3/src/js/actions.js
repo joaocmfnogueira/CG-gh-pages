@@ -80,3 +80,14 @@ export function fadePlanos() {
     // });
   }
 }
+
+export function checkCollisions(bala, torreta) {
+  let collision = torreta.intersectsBox(bala);
+  if (collision) {
+    torreta.traverse(function (node) {
+      if (node.material) {
+        node.material.opacity = 0;
+      }
+    });
+  }
+}

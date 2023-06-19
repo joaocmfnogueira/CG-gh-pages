@@ -183,3 +183,11 @@ function checkCollisions(bala, torreta) {
     });
   }
 }
+
+export function createBBHelper(bb, color)
+{
+   // Create a bounding box helper
+   let helper = new THREE.Box3Helper( bb, color );
+   scene.add( helper );
+   return helper;
+}
