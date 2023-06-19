@@ -164,7 +164,7 @@ export function rayCaster(scene, camera) {
   scene.add(intersectionSphere);
 }
 
-export function createAlvo(scene) {
+export function createAlvo() {
   let geometry = new THREE.CircleGeometry(5, 32);
   let material = new THREE.MeshBasicMaterial({ color: "rgb(255,0,0)" });
   material.transparent = true;
@@ -173,13 +173,10 @@ export function createAlvo(scene) {
   return circle;
 }
 
-function checkCollisions(bala, torreta) {
-  let collision = torreta.intersectsBox(bala);
-  if (collision) {
-    torreta.traverse(function (node) {
-      if (node.material) {
-        node.material.opacity = 0;
-      }
-    });
-  }
+export function createBBHelper(bb, color)
+{
+   // Create a bounding box helper
+   let helper = new THREE.Box3Helper( bb, color );
+   scene.add( helper );
+   return helper;
 }
