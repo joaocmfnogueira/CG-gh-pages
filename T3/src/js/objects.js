@@ -1,7 +1,6 @@
 import * as THREE from "three";
 import {
   createAlvo,
-  criarArvore,
   loadGLBFileAviao,
   loadGLBFileTorreta,
 } from "./construtores.js";
@@ -41,12 +40,12 @@ export function criarAlvo() {
   return alvo;
 }
 
-export function criarArvoresAleatorias(plano) {
-  let quantidade = 1 + Math.floor(Math.random() * 10);
-  for (let index = 0; index < quantidade; index++) {
-    criarArvore(plano);
-  }
-}
+// export function criarArvoresAleatorias(plano) {
+//   let quantidade = 1 + Math.floor(Math.random() * 10);
+//   for (let index = 0; index < quantidade; index++) {
+//     criarArvore(plano);
+//   }
+// }
 
 export function criarPlanosIniciais() {
   const inicial = true;
@@ -75,7 +74,7 @@ export function criarPlano(inicial = false, distancia) {
     scene.remove(planoAntigo);
   }
 
-  criarArvoresAleatorias(plano);
+  // criarArvoresAleatorias(plano);
   criarLateraisPlano(plano);
   loadGLBFileTorreta(plano);
 

@@ -3,7 +3,7 @@ import * as THREE from "three";
 import { alvo, aviao, projeteis } from "../../index.js";
 import { criarProjetil } from "./construtores.js";
 import { alternarCursor } from "./controls.js";
-import { materialCopa, materialTronco } from "./materials.js";
+// import { materialCopa, materialTronco } from "./materials.js";
 import { criarPlano } from "./objects.js";
 import { scene } from "./scene.js";
 
@@ -44,8 +44,8 @@ export function checarClique() {
 }
 
 export function atualizarObjetos() {
-  materialTronco.opacity = 0.5;
-  materialCopa.opacity = 0.5;
+  // materialTronco.opacity = 0.5;
+  // materialCopa.opacity = 0.5;
 
   if (aviao.position.z % 200 === 0) {
     criarPlano();

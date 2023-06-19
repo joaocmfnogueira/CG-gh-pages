@@ -1,38 +1,37 @@
 import * as THREE from "three";
 import { GLTFLoader } from "../../../build/jsm/loaders/GLTFLoader.js";
-import { materialCopa, materialProjetil, materialTronco } from "./materials.js";
-import { geometriaCopa, geometriaTronco } from "./geometries.js";
+import { materialProjetil} from "./materials.js";
 import { alvo, aviao, cameraHolder } from "../../index.js";
 import { scene } from "./scene.js";
 
-export function criarArvore(plano) {
-  const copa = new THREE.Mesh(geometriaCopa, materialCopa);
-  copa.rotateX(THREE.MathUtils.degToRad(90));
-  copa.position.set(0, 0, 10);
+// export function criarArvore(plano) {
+//   const copa = new THREE.Mesh(geometriaCopa, materialCopa);
+//   copa.rotateX(THREE.MathUtils.degToRad(90));
+//   copa.position.set(0, 0, 10);
 
-  const tronco = new THREE.Mesh(geometriaTronco, materialTronco);
-  tronco.rotateX(THREE.MathUtils.degToRad(90));
+//   const tronco = new THREE.Mesh(geometriaTronco, materialTronco);
+//   tronco.rotateX(THREE.MathUtils.degToRad(90));
 
-  const arvore = new THREE.Object3D();
-  arvore.name = "arvore";
-  arvore.position.set(
-    -250 + Math.random() * 500.0,
-    -125 + Math.random() * 375.0,
-    7.5
-  );
+//   const arvore = new THREE.Object3D();
+//   arvore.name = "arvore";
+//   arvore.position.set(
+//     -250 + Math.random() * 500.0,
+//     -125 + Math.random() * 375.0,
+//     7.5
+//   );
 
-  arvore.add(copa);
-  arvore.add(tronco);
-  plano.add(arvore);
+//   arvore.add(copa);
+//   arvore.add(tronco);
+//   plano.add(arvore);
 
-  arvore.traverse((o) => {
-    if (o.isMesh) {
-      o.castShadow = true;
-    }
-  });
+//   arvore.traverse((o) => {
+//     if (o.isMesh) {
+//       o.castShadow = true;
+//     }
+//   });
 
-  return arvore;
-}
+//   return arvore;
+// }
 
 export function criarProjetil() {
   let balaGeometry = new THREE.BoxGeometry(5.0, 5.0, 5.0);
@@ -88,15 +87,15 @@ export function fadeInPlano(planos) {
   planos.forEach((plano) => {
     plano.material.color.b += 0.0015;
 
-    plano.children.forEach((object) => {
-      if (object.name === "cubo") {
-        object.material.color.b += 0.001;
-      } else if (object.name === "arvore") {
-        object.children.forEach((mesh) => {
-          mesh.material.opacity += 0.0;
-        });
-      }
-    });
+    // plano.children.forEach((object) => {
+    //   if (object.name === "cubo") {
+    //     object.material.color.b += 0.001;
+    //   } else if (object.name === "arvore") {
+    //     object.children.forEach((mesh) => {
+    //       mesh.material.opacity += 0.0;
+    //     });
+    //   }
+    // });
   });
 }
 
