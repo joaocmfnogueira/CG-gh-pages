@@ -19,6 +19,9 @@ export const alvo = criarAlvo();
 export const planos = [];
 export const projeteis = [];
 
+const canvas = document.querySelector("canvas");
+canvas.style.cursor = "none";
+
 windowResize();
 clickListener();
 
