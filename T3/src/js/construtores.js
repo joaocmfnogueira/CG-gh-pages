@@ -165,11 +165,47 @@ export function rayCaster(scene, camera) {
 }
 
 export function createAlvo(scene) {
-  let geometry = new THREE.CircleGeometry(5, 32);
+  // let geometry = new THREE.CircleGeometry(5, 32);
+  // let material = new THREE.MeshBasicMaterial({ color: "rgb(255,0,0)" });
+  // material.transparent = true;
+  // material.opacity = 0.6;
+  // let circle = new THREE.Mesh(geometry, material);
+
+  let target = new THREE.Shape();
+
+  target.moveTo( 0,0 );
+  target.lineTo( 1, 0 );
+  target.lineTo( 1, 5 );
+  target.lineTo( 0, 5 );
+
+  let target2 = new THREE.Shape();
+
+  target2.moveTo( 0,0 );
+  target2.lineTo( 5, 0 );
+  target2.lineTo( 5, 1 );
+  target2.lineTo( 0, 1 );
+
+  
+  const geometry = new THREE.ShapeGeometry( target );
+
   let material = new THREE.MeshBasicMaterial({ color: "rgb(255,0,0)" });
   material.transparent = true;
   material.opacity = 0.6;
+
   let circle = new THREE.Mesh(geometry, material);
+
+
+  const geometry2 = new THREE.ShapeGeometry( target2 );
+
+  let material2 = new THREE.MeshBasicMaterial({ color: "rgb(255,0,0)" });
+  material2.transparent = true;
+  material2.opacity = 0.6;
+
+  let circle2 = new THREE.Mesh(geometry2, material2);
+  circle2.name = "parte2";
+
+  circle.add(circle2);
+  circle2.position.set(-2,2,0);
   return circle;
 }
 

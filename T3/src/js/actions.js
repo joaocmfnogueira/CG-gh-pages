@@ -40,6 +40,7 @@ export function checarClique() {
     atualizarVelocidade(2);
     alternarCursor();
     alvo.material.opacity = 0.6;
+    alvo.getObjectByName("parte2").material.opacity = 0.6;
   }
 }
 

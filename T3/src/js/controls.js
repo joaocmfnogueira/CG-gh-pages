@@ -25,6 +25,8 @@ export function keyboardUpdate() {
     atualizarVelocidade(0);
     alternarCursor();
     alvo.material.opacity = 0;
+    console.log(alvo.getObjectByName("parte2"));
+    alvo.getObjectByName("parte2").material.opacity = 0;
   }
 }
 
