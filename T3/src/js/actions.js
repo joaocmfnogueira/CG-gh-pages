@@ -41,6 +41,8 @@ export function checarClique() {
     alternarCursor();
     alvo.material.opacity = 0.6;
     alvo.getObjectByName("parte2").material.opacity = 0.6;
+    alvo.getObjectByName("parte3").material.opacity = 0.6;
+    alvo.getObjectByName("parte4").material.opacity = 0.6;
   }
 }
 

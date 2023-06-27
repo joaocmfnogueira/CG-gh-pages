@@ -171,42 +171,65 @@ export function createAlvo(scene) {
   // material.opacity = 0.6;
   // let circle = new THREE.Mesh(geometry, material);
 
-  let target = new THREE.Shape();
+  let targetShape = new THREE.Shape();
 
-  target.moveTo( 0,0 );
-  target.lineTo( 1, 0 );
-  target.lineTo( 1, 5 );
-  target.lineTo( 0, 5 );
+  targetShape.moveTo( 0,0 );
+  targetShape.lineTo( 1, 0 );
+  targetShape.lineTo( 1, 7 );
+  targetShape.lineTo( 0, 7 );
 
-  let target2 = new THREE.Shape();
+  let targetShape2 = new THREE.Shape();
 
-  target2.moveTo( 0,0 );
-  target2.lineTo( 5, 0 );
-  target2.lineTo( 5, 1 );
-  target2.lineTo( 0, 1 );
+  targetShape2.moveTo( 0,0 );
+  targetShape2.lineTo( 7, 0 );
+  targetShape2.lineTo( 7, 1 );
+  targetShape2.lineTo( 0, 1 );
 
-  
-  const geometry = new THREE.ShapeGeometry( target );
+  // const geometry = new THREE.ShapeGeometry( targetShape );
+  // let material = new THREE.MeshBasicMaterial({ color: "rgb(255,0,0)" });
+  // material.transparent = true;
+  // material.opacity = 0.6;
+  let mira = aux_create_mira(targetShape);
 
-  let material = new THREE.MeshBasicMaterial({ color: "rgb(255,0,0)" });
+  // const geometry2 = new THREE.ShapeGeometry( targetShape2 );
+  // let material2 = new THREE.MeshBasicMaterial({ color: "rgb(255,0,0)" });
+  // material2.transparent = true;
+  // material2.opacity = 0.6;
+  let mira2 = aux_create_mira(targetShape2);
+  mira2.name = "parte2";
+
+  // const geometry3 = new THREE.ShapeGeometry( targetShape );
+  // let material3 = new THREE.MeshBasicMaterial({ color: "rgb(255,0,0)" });
+  // material3.transparent = true;
+  // material3.opacity = 0.6;
+  let mira3 = aux_create_mira(targetShape);
+  mira3.name = "parte3";
+
+  // const geometry4 = new THREE.ShapeGeometry( targetShape2 );
+  // let material4 = new THREE.MeshBasicMaterial({ color: "rgb(255,0,0)" });
+  // material4.transparent = true;
+  // material4.opacity = 0.6;
+  let mira4 = aux_create_mira(targetShape2);
+  mira4.name = "parte4";
+
+  mira.add(mira2);
+  mira.add(mira3);
+  mira.add(mira4);
+
+  mira2.position.set(1,-1,0);
+  mira3.position.set(8,0,0);
+  mira4.position.set(1,7,0);
+
+  return mira;
+}
+
+function aux_create_mira(targetShape){
+  const geometry = new THREE.ShapeGeometry(targetShape);
+  let material = new THREE.MeshBasicMaterial({ color: "rgb(0,255,0)" });
   material.transparent = true;
   material.opacity = 0.6;
-
-  let circle = new THREE.Mesh(geometry, material);
-
-
-  const geometry2 = new THREE.ShapeGeometry( target2 );
-
-  let material2 = new THREE.MeshBasicMaterial({ color: "rgb(255,0,0)" });
-  material2.transparent = true;
-  material2.opacity = 0.6;
-
-  let circle2 = new THREE.Mesh(geometry2, material2);
-  circle2.name = "parte2";
-
-  circle.add(circle2);
-  circle2.position.set(-2,2,0);
-  return circle;
+  let mira = new THREE.Mesh(geometry, material);
+  return mira;
 }
 
 function checkCollisions(bala, torreta) {

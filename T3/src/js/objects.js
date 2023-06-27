@@ -37,6 +37,13 @@ export function criarAlvo() {
   alvo.position.set(0, 10, -50);
   alvo.renderOrder = 999;
   alvo.material.depthTest = false;
+
+  alvo.getObjectByName("parte2").renderOrder = 999;
+  alvo.getObjectByName("parte2").material.depthTest = false;
+  alvo.getObjectByName("parte3").renderOrder = 999;
+  alvo.getObjectByName("parte3").material.depthTest = false;
+  alvo.getObjectByName("parte4").renderOrder = 999;
+  alvo.getObjectByName("parte4").material.depthTest = false;
   return alvo;
 }
 
