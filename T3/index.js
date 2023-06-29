@@ -18,6 +18,7 @@ export const alvo = criarAlvo();
 
 export const planos = [];
 export const projeteis = [];
+export const torretas = [];
 
 const canvas = document.querySelector("canvas");
 canvas.style.cursor = "none";

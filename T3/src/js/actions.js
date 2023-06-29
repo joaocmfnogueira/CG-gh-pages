@@ -1,6 +1,6 @@
 import * as THREE from "three";
 
-import { alvo, aviao, planos, projeteis } from "../../index.js";
+import { alvo, aviao, planos, projeteis, torretas } from "../../index.js";
 import { criarProjetil } from "./construtores.js";
 import { alternarCursor } from "./controls.js";
 // import { materialCopa, materialTronco } from "./materials.js";
@@ -29,7 +29,7 @@ export function atirarProjetil() {
 
 export function atualizarProjetil() {
   for (let i = 0; i < projeteis.length; i++)
-    projeteis[i].translateZ(-8 * velocidade);
+    projeteis[i].object.translateZ(-8 * velocidade);
 }
 
 export function checarClique() {
@@ -62,6 +62,11 @@ export function atualizarObjetos() {
   // });
   if (projeteis.length) {
     atualizarProjetil();
+    for (let j = 0; j < projeteis.length; j++) {
+      for (let i = 0; i < torretas.length; i++) {
+        checkCollisions(projeteis[j], torretas[i]);
+      }
+    }
   }
 }
 
@@ -85,9 +90,9 @@ export function fadePlanos() {
 }
 
 export function checkCollisions(bala, torreta) {
-  let collision = torreta.intersectsBox(bala);
+  let collision = torreta.bb.intersectsBox(bala);
   if (collision) {
-    torreta.traverse(function (node) {
+    torreta.object.traverse(function (node) {
       if (node.material) {
         node.material.opacity = 0;
       }

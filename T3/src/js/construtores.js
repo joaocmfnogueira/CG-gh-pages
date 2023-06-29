@@ -5,12 +5,18 @@ import { alvo, aviao, cameraHolder } from "../../index.js";
 import { scene } from "./scene.js";
 
 export function criarProjetil() {
+  let assetBala = {
+    object: null,
+    loaded: false,
+    bb: new THREE.Box3()
+ }
+
   let balaGeometry = new THREE.BoxGeometry(5.0, 5.0, 5.0);
   let bala = new THREE.Mesh(balaGeometry, materialProjetil);
   let obj1 = new THREE.Vector3(
     alvo.position.x,
     alvo.position.y,
-    alvo.position.z
+    alvo.position.z - 20
   );
   let obj2 = new THREE.Vector3(
     aviao.position.x,
@@ -27,10 +33,11 @@ export function criarProjetil() {
   scene.add(bala);
   bala.position.copy(aviao.position);
   bala.position.y += 10;
-  // let bbbala = new THREE.Box3().setFromObject(bala);
+  let bbbala = new THREE.Box3().setFromObject(bala);
   // scene.add(bbbala);
-
-  return bala;
+    assetBala.bb = bbbala;
+    assetBala.object = bala;
+  return assetBala;
 }
 
 export function loadGLBFileAviao() {
@@ -128,6 +135,11 @@ function aux_create_mira(targetShape){
 
 export function loadGLBFileTorreta(plane) {
   var loader = new GLTFLoader();
+  let assetTorreta = {
+    object: null,
+    loaded: false,
+    bb: new THREE.Box3()
+ };
   loader.load("src/assets/torreta.glb", function (gltf) {
     var obj = gltf.scene;
     obj.name = "torreta";
@@ -148,13 +160,13 @@ export function loadGLBFileTorreta(plane) {
     obj.rotateY(THREE.MathUtils.degToRad(0));
 
     let bbtorreta = new THREE.Box3().setFromObject(obj);
-    let bbhelper2 = createBBHelper(bbtorreta, "yellow", plane);
-    bbhelper2.visible = true;
+    // let bbhelper2 = createBBHelper(bbtorreta, "yellow", plane);
+    // bbhelper2.visible = true;
 
     plane.add(obj);
     // console.log(obj);
     // console.log(bbhelper2);
-    console.log(bbtorreta);
+    // console.log(bbtorreta);
   
     obj.scale.set(10, 10, 10);
     obj.position.set(
@@ -164,28 +176,13 @@ export function loadGLBFileTorreta(plane) {
     );
     obj.rotateX(THREE.MathUtils.degToRad(90));
     obj.rotateY(THREE.MathUtils.degToRad(270));
+
+    obj = fixPosition(obj);
+    obj.updateMatrixWorld( true );
+    assetTorreta.object = gltf.scene;
     
   });
-}
-
-
-function checkCollisions(bala, torreta) {
-  let collision = torreta.bb.intersectsBox(bala);
-  if (collision) {
-    torreta.traverse(function (node) {
-      if (node.material) {
-        node.material.opacity = 0;
-      }
-    });
-  }
-}
-
-export function createBBHelper(bb, color, plane)
-{
-   // Create a bounding box helper
-   let helper = new THREE.Box3Helper( bb, color );
-   plane.add( helper );
-   return helper;
+  return assetTorreta;
 }
 
 function fixPosition(obj)
@@ -198,3 +195,33 @@ function fixPosition(obj)
     obj.translateY(-1*box.min.y);
   return obj;
 }
+
+// function checkCollisions(bala, torreta) {
+//   let collision = torreta.bb.intersectsBox(bala);
+//   if (collision) {
+//     torreta.traverse(function (node) {
+//       if (node.material) {
+//         node.material.opacity = 0;
+//       }
+//     });
+//   }
+// }
+
+// export function createBBHelper(bb, color, plane)
+// {
+//    // Create a bounding box helper
+//    let helper = new THREE.Box3Helper( bb, color );
+//    plane.add( helper );
+//    return helper;
+// }
+
+// function fixPosition(obj)
+// {
+//   // Fix position of the object over the ground plane
+//   var box = new THREE.Box3().setFromObject( obj );
+//   if(box.min.y > 0)
+//     obj.translateY(-box.min.y);
+//   else
+//     obj.translateY(-1*box.min.y);
+//   return obj;
+// }

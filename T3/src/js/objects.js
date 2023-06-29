@@ -5,7 +5,7 @@ import {
   loadGLBFileTorreta,
 } from "./construtores.js";
 import { light, scene } from "./scene.js";
-import { aviao, planos } from "../../index.js";
+import { aviao, planos, torretas } from "../../index.js";
 import { createGroundPlaneWired } from "../../../libs/util/util.js";
 import { materialLateralPlano } from "./materials.js";
 import {
@@ -84,8 +84,9 @@ export function criarPlano(inicial = false, distancia) {
 
   // criarArvoresAleatorias(plano);
   criarLateraisPlano(plano);
-  loadGLBFileTorreta(plano);
-
+  let torreta = loadGLBFileTorreta(plano);
+  
+  torretas.push(torreta);
   planos.push(plano);
   scene.add(plano);
 }

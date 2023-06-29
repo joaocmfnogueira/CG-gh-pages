@@ -102,15 +102,21 @@ function buildInterface()
 
 function updateAsset()
 {
+  
    if(asset.loaded)
    {
-      asset.object.rotateY(-0.01)
+    asset.object.translateY(0.001);
+    asset.object.rotateX(0.001);
+    asset.object.rotateY(0.001);
+    asset.object.rotateZ(0.001);
+      // asset.object.rotateY(-0.01)
       asset.bb.setFromObject(asset.object);
    }
 }
 
 function render()
 {
+  
    buildInterface()
    updateAsset();
    requestAnimationFrame(render);
