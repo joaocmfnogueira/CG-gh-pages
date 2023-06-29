@@ -2,6 +2,9 @@ import * as THREE from "three";
 import { alvo } from "../../index.js";
 import { camera, raycaster, renderer } from "./scene.js";
 import { checarClique } from "./actions.js";
+import { onWindowResize } from "../../../libs/util/util.js";
+
+
 
 export const windowHalfX = window.innerWidth / 2;
 export const windowHalfY = window.innerHeight / 2;
