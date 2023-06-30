@@ -25,12 +25,12 @@ export function criarCameraHolder() {
 
 export function criarSkyBox() {
   let texskybox = new THREE.CubeTextureLoader().load([
-    "src/assets/space.avif",
-    "src/assets/space.avif",
-    "src/assets/space.avif",
-    "src/assets/space.avif",
-    "src/assets/space.avif",
-    "src/assets/space.avif",
+    "src/assets/space3.jpg",
+    "src/assets/space3.jpg",
+    "src/assets/space3.jpg",
+    "src/assets/space3.jpg",
+    "src/assets/space3.jpg",
+    "src/assets/space3.jpg",
   ]);
   return texskybox;
 }
@@ -39,7 +39,7 @@ export function criarSkyBox() {
 export function criarAviao() {
   const aviao = new THREE.Object3D();
   loadGLBFileAviao(aviao);
-  aviao.position.set(0, 60, 0);
+  aviao.position.set(0, 80, 0);
   aviao.scale.set(2, 2, 2);
   aviao.rotateZ(THREE.MathUtils.degToRad(180));
   aviao.castShadow = true;
