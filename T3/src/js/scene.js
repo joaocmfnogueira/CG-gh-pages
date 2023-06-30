@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import { initRenderer, initCamera } from "../../../libs/util/util.js";
-import { alvo, aviao, cameraHolder, targetObject } from "../../index.js";
+import { alvo, aviao, cameraHolder, skybox, targetObject } from "../../index.js";
 
 export const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x87ceeb);
@@ -21,6 +21,7 @@ export function construirCena() {
   scene.add(targetObject);
   scene.add(aviao);
   scene.add(alvo);
+  scene.background = skybox;
 
   cameraHolder.add(camera);
 }

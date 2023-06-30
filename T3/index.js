@@ -7,6 +7,7 @@ import {
   criarCameraHolder,
   criarPlanosIniciais,
   criarTargetObject,
+  criarSkyBox,
 } from "./src/js/objects.js";
 import { atualizarObjetos, fadePlanos } from "./src/js/actions.js";
 import { keyboardUpdate, rotacaoMouse } from "./src/js/controls.js";
@@ -15,10 +16,13 @@ export const cameraHolder = criarCameraHolder();
 export const aviao = criarAviao();
 export const targetObject = criarTargetObject();
 export const alvo = criarAlvo();
+export const skybox = criarSkyBox();
+
 
 export const planos = [];
 export const projeteis = [];
 export const torretas = [];
+
 
 const canvas = document.querySelector("canvas");
 canvas.style.cursor = "none";

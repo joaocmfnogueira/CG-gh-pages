@@ -3,9 +3,10 @@ import {
   createAlvo,
   loadGLBFileAviao,
   loadGLBFileTorreta,
+  
 } from "./construtores.js";
 import { light, scene } from "./scene.js";
-import { aviao, planos, torretas } from "../../index.js";
+import { aviao, planos, torretas, skybox } from "../../index.js";
 import { createGroundPlaneWired } from "../../../libs/util/util.js";
 import { materialLateralPlano } from "./materials.js";
 import {
@@ -21,6 +22,19 @@ export function criarCameraHolder() {
   cameraHolder.position.set(0, 20, 30);
   return cameraHolder;
 }
+
+export function criarSkyBox() {
+  let texskybox = new THREE.CubeTextureLoader().load([
+    "src/assets/space.avif",
+    "src/assets/space.avif",
+    "src/assets/space.avif",
+    "src/assets/space.avif",
+    "src/assets/space.avif",
+    "src/assets/space.avif",
+  ]);
+  return texskybox;
+}
+
 
 export function criarAviao() {
   const aviao = new THREE.Object3D();
@@ -85,7 +99,9 @@ export function criarPlano(inicial = false, distancia) {
   // criarArvoresAleatorias(plano);
   criarLateraisPlano(plano);
   let torreta = loadGLBFileTorreta(plano);
-  
+  // let sphere = createSphere(plano);
+  // let bbSphere1 = new THREE.Box3().setFromObject(sphere);
+
   torretas.push(torreta);
   planos.push(plano);
   scene.add(plano);

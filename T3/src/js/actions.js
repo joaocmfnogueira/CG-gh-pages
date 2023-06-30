@@ -1,6 +1,6 @@
 import * as THREE from "three";
 
-import { alvo, aviao, planos, projeteis, torretas } from "../../index.js";
+import { alvo, aviao, planos, projeteis, torretas, skybox, cameraHolder } from "../../index.js";
 import { criarProjetil } from "./construtores.js";
 import { alternarCursor } from "./controls.js";
 // import { materialCopa, materialTronco } from "./materials.js";
@@ -47,12 +47,11 @@ export function checarClique() {
 }
 
 export function atualizarObjetos() {
-  // materialTronco.opacity = 0.5;
-  // materialCopa.opacity = 0.5;
-
   if (aviao.position.z % 200 === 0) {
     criarPlano();
   }
+  // skybox.position.z = cameraHolder.position.z;
+
 
   // projeteis.forEach((projetil) => {
   //   if (projetil.position.z <= aviao.position.z - 1000) {
@@ -62,11 +61,11 @@ export function atualizarObjetos() {
   // });
   if (projeteis.length) {
     atualizarProjetil();
-    for (let j = 0; j < projeteis.length; j++) {
-      for (let i = 0; i < torretas.length; i++) {
-        checkCollisions(projeteis[j], torretas[i]);
-      }
-    }
+    // for (let j = 0; j < projeteis.length; j++) {
+    //   for (let i = 0; i < torretas.length; i++) {
+    //     checkCollisions(projeteis[j], torretas[i]);
+    //   }
+    // }
   }
 }
 
@@ -90,12 +89,16 @@ export function fadePlanos() {
 }
 
 export function checkCollisions(bala, torreta) {
-  let collision = torreta.bb.intersectsBox(bala);
-  if (collision) {
+  // console.log(torreta.bb);
+  // console.log(bala.bb);
+  let collision = torreta.bb.intersectsBox(bala.bb);
+  
+    console.log("bateu");
     torreta.object.traverse(function (node) {
       if (node.material) {
         node.material.opacity = 0;
+
       }
     });
-  }
+  
 }

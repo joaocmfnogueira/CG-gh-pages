@@ -30,13 +30,16 @@ export function criarProjetil() {
   bala.setRotationFromQuaternion(quaternion);
 
   bala.scale.set(1, 1, 5);
-  scene.add(bala);
-  bala.position.copy(aviao.position);
-  bala.position.y += 10;
   let bbbala = new THREE.Box3().setFromObject(bala);
+  assetBala.bb = bbbala;
+  assetBala.object = bala;
+  
+  scene.add(assetBala.object);
+  assetBala.object.position.copy(aviao.position);
+  assetBala.object.position.y += 10;
+  
   // scene.add(bbbala);
-    assetBala.bb = bbbala;
-    assetBala.object = bala;
+    
   return assetBala;
 }
 
@@ -87,6 +90,20 @@ export function rayCaster(scene, camera) {
   );
   scene.add(intersectionSphere);
 }
+
+// export function createSphere(plane)
+// {
+//   let geometry = new THREE.SphereGeometry(10, 30, 30, 0, Math.PI * 2, 0, Math.PI);
+//   let objectMaterial
+  
+//   objectMaterial = new THREE.MeshPhongMaterial({color:"rgb(255,20,20)", shininess:"200"});
+
+
+//   var object = new THREE.Mesh(geometry, objectMaterial);
+//     object.castShadow = true;
+//     plane.add(object);
+//   return object;
+// }
 
 export function createAlvo() {
 
@@ -180,6 +197,7 @@ export function loadGLBFileTorreta(plane) {
     obj = fixPosition(obj);
     obj.updateMatrixWorld( true );
     assetTorreta.object = gltf.scene;
+    // assetTorreta.bb = bbtorreta;
     
   });
   return assetTorreta;
@@ -215,13 +233,3 @@ function fixPosition(obj)
 //    return helper;
 // }
 
-// function fixPosition(obj)
-// {
-//   // Fix position of the object over the ground plane
-//   var box = new THREE.Box3().setFromObject( obj );
-//   if(box.min.y > 0)
-//     obj.translateY(-box.min.y);
-//   else
-//     obj.translateY(-1*box.min.y);
-//   return obj;
-// }
