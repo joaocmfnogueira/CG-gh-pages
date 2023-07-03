@@ -71,8 +71,8 @@ render();
 
 function render() {
   // if(pressed){s
-    const delta = clock.getDelta();
-    if ( mixer !== undefined ) mixer.update( delta );
+    // const delta = clock.getDelta();
+    // if ( mixer !== undefined ) mixer.update( delta );
   atualizarObjetos();
   keyboardUpdate();
   rotacaoMouse();

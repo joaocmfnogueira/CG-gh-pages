@@ -28,8 +28,12 @@ export function atirarProjetil() {
 }
 
 export function atualizarProjetil() {
-  for (let i = 0; i < projeteis.length; i++)
-    projeteis[i].object.translateZ(-8 * velocidade);
+  for (let i = 0; i < projeteis.length; i++) {
+    projeteis[i].object.translateZ(-3 * velocidade);
+    projeteis[i].bb.setFromObject(projeteis[i].object);
+    projeteis[i].object.setRotationFromQuaternion(projeteis[i].direction);
+    // console.log(projeteis[i].direction);
+  }
 }
 
 export function checarClique() {
@@ -61,11 +65,11 @@ export function atualizarObjetos() {
   // });
   if (projeteis.length) {
     atualizarProjetil();
-    // for (let j = 0; j < projeteis.length; j++) {
-    //   for (let i = 0; i < torretas.length; i++) {
-    //     checkCollisions(projeteis[j], torretas[i]);
-    //   }
-    // }
+    for (let j = 0; j < projeteis.length; j++) {
+      for (let i = 0; i < torretas.length; i++) {
+        checkCollisions(projeteis[j], torretas[i]);
+      }
+    }
   }
 }
 
@@ -92,7 +96,7 @@ export function checkCollisions(bala, torreta) {
   // console.log(torreta.bb);
   // console.log(bala.bb);
   let collision = torreta.bb.intersectsBox(bala.bb);
-  
+  if (collision) {
     console.log("bateu");
     torreta.object.traverse(function (node) {
       if (node.material) {
@@ -100,5 +104,5 @@ export function checkCollisions(bala, torreta) {
 
       }
     });
-  
+  }
 }

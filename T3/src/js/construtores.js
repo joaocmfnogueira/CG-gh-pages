@@ -8,7 +8,8 @@ export function criarProjetil() {
   let assetBala = {
     object: null,
     loaded: false,
-    bb: new THREE.Box3()
+    bb: new THREE.Box3(),
+    direction: null
  }
 
   let balaGeometry = new THREE.BoxGeometry(5.0, 5.0, 5.0);
@@ -37,6 +38,9 @@ export function criarProjetil() {
   scene.add(assetBala.object);
   assetBala.object.position.copy(aviao.position);
   assetBala.object.position.y += 10;
+  let helper = new THREE.Box3Helper( bbbala, "yellow" );
+  scene.add( helper );
+  assetBala.direction = quaternion;
   
   // scene.add(bbbala);
     
@@ -173,17 +177,10 @@ export function loadGLBFileTorreta(plane) {
         node.material.opacity = 1;
       }
     });
-    //obj.rotateZ(THREE.MathUtils.degToRad(0));
+
     obj.rotateY(THREE.MathUtils.degToRad(0));
 
-    let bbtorreta = new THREE.Box3().setFromObject(obj);
-    // let bbhelper2 = createBBHelper(bbtorreta, "yellow", plane);
-    // bbhelper2.visible = true;
-
     plane.add(obj);
-    // console.log(obj);
-    // console.log(bbhelper2);
-    // console.log(bbtorreta);
   
     obj.scale.set(10, 10, 10);
     obj.position.set(
@@ -193,11 +190,20 @@ export function loadGLBFileTorreta(plane) {
     );
     obj.rotateX(THREE.MathUtils.degToRad(90));
     obj.rotateY(THREE.MathUtils.degToRad(270));
-
+    let bbtorreta = new THREE.Box3().setFromObject(obj);
     obj = fixPosition(obj);
     obj.updateMatrixWorld( true );
+    assetTorreta.bb = bbtorreta;
     assetTorreta.object = gltf.scene;
-    // assetTorreta.bb = bbtorreta;
+    let helper = new THREE.Box3Helper( bbtorreta, "yellow" );
+    scene.add( helper );
+    helper.position.z = assetTorreta.object.position.z;
+    helper.position.y = assetTorreta.object.position.y;
+    helper.position.x = assetTorreta.object.position.x;
+    
+    // console.log(assetTorreta.object.position)
+    // console.log(helper.position);
+      
     
   });
   return assetTorreta;
@@ -214,22 +220,11 @@ function fixPosition(obj)
   return obj;
 }
 
-// function checkCollisions(bala, torreta) {
-//   let collision = torreta.bb.intersectsBox(bala);
-//   if (collision) {
-//     torreta.traverse(function (node) {
-//       if (node.material) {
-//         node.material.opacity = 0;
-//       }
-//     });
-//   }
-// }
-
-// export function createBBHelper(bb, color, plane)
-// {
-//    // Create a bounding box helper
-//    let helper = new THREE.Box3Helper( bb, color );
-//    plane.add( helper );
-//    return helper;
-// }
+export function createBBHelper(bb, color, plane)
+{
+   // Create a bounding box helper
+   let helper = new THREE.Box3Helper( bb, color );
+   plane.add( helper );
+   return helper;
+}
 
