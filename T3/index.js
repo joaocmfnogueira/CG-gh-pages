@@ -25,25 +25,39 @@ export const planos = [];
 export const projeteis = [];
 export const torretas = [];
 
+// let pressed = false;
+
 let mixer, audioLoader, audioPath, r2d2, time = 0;
 let clock = new THREE.Clock();
 
 const canvas = document.querySelector("canvas");
 canvas.style.cursor = "none";
 
-const loadingManager = new THREE.LoadingManager( () => {
-  let loadingScreen = document.getElementById( 'loading-screen' );
-  console.log(loadingScreen);
-  loadingScreen.transition = 0;
-  loadingScreen.style.setProperty('--speed1', '0');  
-  loadingScreen.style.setProperty('--speed2', '0');  
-  loadingScreen.style.setProperty('--speed3', '0');      
+// const startButton = document.getElementById( 'startButton' );
+// 			startButton.addEventListener( 'click', function () {
 
-  let button  = document.getElementById("myBtn")
-  button.style.backgroundColor = 'Red';
-  button.innerHTML = 'Click to Enter';
-  button.addEventListener("click", onButtonPressed);
-});
+// 				Ammo().then( function () {
+
+// 					init();
+// 					animate();
+
+// 				} );
+
+// 			} );
+
+// const loadingManager = new THREE.LoadingManager( () => {
+//   let loadingScreen = document.getElementById( 'loading-screen' );
+//   console.log(loadingScreen);
+//   loadingScreen.transition = 0;
+//   loadingScreen.style.setProperty('--speed1', '0');  
+//   loadingScreen.style.setProperty('--speed2', '0');  
+//   loadingScreen.style.setProperty('--speed3', '0');      
+
+//   let button  = document.getElementById("myBtn")
+//   button.style.backgroundColor = 'Red';
+//   button.innerHTML = 'Click to Enter';
+//   button.addEventListener("click", onButtonPressed);
+// });
 
 windowResize();
 clickListener();
@@ -51,12 +65,13 @@ clickListener();
 construirCena();
 criarPlanosIniciais();
 
-loadAudio(loadingManager, '../assets/sounds/imperial.mp3');
+// loadAudio(loadingManager, '../assets/sounds/imperial.mp3');
 
 render();
 
 function render() {
-  const delta = clock.getDelta();
+  // if(pressed){s
+    const delta = clock.getDelta();
     if ( mixer !== undefined ) mixer.update( delta );
   atualizarObjetos();
   keyboardUpdate();
@@ -66,30 +81,33 @@ function render() {
   requestAnimationFrame(render);
 
   renderer.render(scene, camera);
+  // }
+
+  
 }
 
 
-function onButtonPressed() {
-  const loadingScreen = document.getElementById( 'loading-screen' );
-  loadingScreen.transition = 0;
-  loadingScreen.classList.add( 'fade-out' );
-  loadingScreen.addEventListener( 'transitionend', (e) => {
-    const element = e.target;
-    element.remove();  
-  });  
-  // Config and play the loaded audio
-  let sound = new THREE.Audio( new THREE.AudioListener() );
-  audioLoader.load( audioPath, function( buffer ) {
-    sound.setBuffer( buffer );
-    sound.setLoop( true );
-    sound.play(); 
-  });
-}
+// function onButtonPressed() {
+//   const loadingScreen = document.getElementById( 'loading-screen' );
+//   loadingScreen.transition = 0;
+//   loadingScreen.classList.add( 'fade-out' );
+//   loadingScreen.addEventListener( 'transitionend', (e) => {
+//     const element = e.target;
+//     element.remove();  
+//   });  
+//   // Config and play the loaded audio
+//   let sound = new THREE.Audio( new THREE.AudioListener() );
+//   audioLoader.load( audioPath, function( buffer ) {
+//     sound.setBuffer( buffer );
+//     sound.setLoop( true );
+//     sound.play(); 
+//   });
+// }
 
 
-function loadAudio(manager, audio)
-{
-  // Create ambient sound
-  audioLoader = new THREE.AudioLoader(manager);
-  audioPath = audio;
-}
+// function loadAudio(manager, audio)
+// {
+//   // Create ambient sound
+//   audioLoader = new THREE.AudioLoader(manager);
+//   audioPath = audio;
+// }
