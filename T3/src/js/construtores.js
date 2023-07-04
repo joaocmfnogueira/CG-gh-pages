@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { GLTFLoader } from "../../../build/jsm/loaders/GLTFLoader.js";
 import { materialProjetil } from "./materials.js";
-import { alvo, aviao, cameraHolder } from "../../index.js";
+import { alvo, aviao, cameraHolder, torretas } from "../../index.js";
 import { scene } from "./scene.js";
 
 export function criarProjetil() {
@@ -23,6 +23,49 @@ export function criarProjetil() {
     aviao.position.x,
     aviao.position.y,
     aviao.position.z
+  );
+  let direction = new THREE.Vector3();
+  direction.subVectors(obj2, obj1).normalize();
+  let quaternion = new THREE.Quaternion();
+  quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), direction);
+  bala.setRotationFromQuaternion(quaternion);
+
+  bala.scale.set(1, 1, 5);
+  let bbbala = new THREE.Box3().setFromObject(bala);
+  assetBala.bb = bbbala;
+  assetBala.object = bala;
+  
+  scene.add(assetBala.object);
+  assetBala.object.position.copy(aviao.position);
+  assetBala.object.position.y += 10;
+  let helper = new THREE.Box3Helper( bbbala, "yellow" );
+  scene.add( helper );
+  assetBala.direction = quaternion;
+  
+  // scene.add(bbbala);
+    
+  return assetBala;
+}
+
+export function criarProjetilTorreta(indice) {
+  let assetBala = {
+    object: null,
+    loaded: false,
+    bb: new THREE.Box3(),
+    direction: null
+ }
+
+  let balaGeometry = new THREE.BoxGeometry(5.0, 5.0, 5.0);
+  let bala = new THREE.Mesh(balaGeometry, materialProjetil);
+  let obj1 = new THREE.Vector3(
+    aviao.position.x,
+    aviao.position.y,
+    aviao.position.z - 20
+  );
+  let obj2 = new THREE.Vector3(
+    torretas[indice].object.position.x,
+    torretas[indice].object.position.y,
+    torretas[indice].object.position.z
   );
   let direction = new THREE.Vector3();
   direction.subVectors(obj2, obj1).normalize();
@@ -152,7 +195,6 @@ function aux_create_mira(targetShape){
   let mira = new THREE.Mesh(geometry, material);
   return mira;
 }
-
 
 export function loadGLBFileTorreta(plane) {
   var loader = new GLTFLoader();

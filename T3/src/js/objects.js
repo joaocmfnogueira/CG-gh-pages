@@ -35,7 +35,6 @@ export function criarSkyBox() {
   return texskybox;
 }
 
-
 export function criarAviao() {
   const aviao = new THREE.Object3D();
   loadGLBFileAviao(aviao);
@@ -60,13 +59,6 @@ export function criarAlvo() {
   alvo.getObjectByName("parte4").material.depthTest = false;
   return alvo;
 }
-
-// export function criarArvoresAleatorias(plano) {
-//   let quantidade = 1 + Math.floor(Math.random() * 10);
-//   for (let index = 0; index < quantidade; index++) {
-//     criarArvore(plano);
-//   }
-// }
 
 export function criarPlanosIniciais() {
   const inicial = true;

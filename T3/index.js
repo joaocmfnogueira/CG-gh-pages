@@ -23,6 +23,7 @@ export const skybox = criarSkyBox();
 
 export const planos = [];
 export const projeteis = [];
+export const projeteisTorreta = [];
 export const torretas = [];
 
 // let pressed = false;
