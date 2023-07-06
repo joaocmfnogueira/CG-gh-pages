@@ -3,7 +3,6 @@ import {
   createAlvo,
   loadGLBFileAviao,
   loadGLBFileTorreta,
-  
 } from "./construtores.js";
 import { light, scene } from "./scene.js";
 import { aviao, planos, torretas, skybox } from "../../index.js";
@@ -35,7 +34,6 @@ export function criarSkyBox() {
   return texskybox;
 }
 
-
 export function criarAviao() {
   const aviao = new THREE.Object3D();
   loadGLBFileAviao(aviao);
@@ -48,7 +46,7 @@ export function criarAviao() {
 
 export function criarAlvo() {
   const alvo = createAlvo(scene);
-  alvo.position.set(0, 10, -50);
+  alvo.position.set(0, 0, 0);
   alvo.renderOrder = 999;
   alvo.material.depthTest = false;
 
