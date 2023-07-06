@@ -1,10 +1,8 @@
 import * as THREE from "three";
-import { alvo } from "../../index.js";
+import { alvo, planos } from "../../index.js";
 import { camera, raycaster, renderer } from "./scene.js";
 import { checarClique } from "./actions.js";
 import { onWindowResize } from "../../../libs/util/util.js";
-
-
 
 export const windowHalfX = window.innerWidth / 2;
 export const windowHalfY = window.innerHeight / 2;
@@ -46,3 +44,24 @@ function onMouseMove(event) {
 
   // -- Find the selected objects ------------------------------
 }
+
+document.addEventListener("mousemove", (event) => {
+  // Calculate normalized device coordinates (NDC) from mouse position
+  let mouse = new THREE.Vector2();
+  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+  mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+  let raycaster = new THREE.Raycaster();
+  raycaster.setFromCamera(mouse, camera);
+  raycaster.far = 800;
+
+  let intersects = [];
+  for (let i = 0; i < planos.length; i++) {
+    let plane = planos[i];
+    let planeIntersects = raycaster.intersectObject(plane, true);
+    intersects.push(...planeIntersects);
+  }
+  if (intersects.length > 0) {
+    alvo.position.copy(intersects[0].point);
+  }
+});
