@@ -120,7 +120,7 @@ export function checkCollisions(bala, torreta) {
   // console.log(bala.bb);
   let collision = torreta.bb.intersectsBox(bala.bb);
   if (collision) {
-    console.log("bateu");
+    // console.log("bateu");
     torreta.object.traverse(function (node) {
       if (node.material) {
         node.material.opacity = 0;

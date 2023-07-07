@@ -1,5 +1,5 @@
 import KeyboardState from "../../../libs/util/KeyboardState.js";
-import { alvo, aviao, cameraHolder, targetObject } from "../../index.js";
+import { alvo, aviao, cameraHolder, targetObject, sound } from "../../index.js";
 import {
   animacao,
   alternarAnimacao,
@@ -29,6 +29,16 @@ export function keyboardUpdate() {
     alvo.getObjectByName("parte2").material.opacity = 0;
     alvo.getObjectByName("parte3").material.opacity = 0;
     alvo.getObjectByName("parte4").material.opacity = 0;
+  }
+
+
+  if (keyboard.up("S") && !sound.isPlaying) {
+    // console.log("AAAAAA");
+    sound.play()
+  }
+  else if(keyboard.up("S") && sound.isPlaying){
+    // console.log("BBBBBBBB");
+    sound.stop();
   }
 }
 

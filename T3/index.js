@@ -25,16 +25,25 @@ export const projeteis = [];
 export const projeteisTorreta = [];
 export const torretas = [];
 
-// let pressed = false;
-
-let mixer, audioLoader, audioPath, time = 0;
-let clock = new THREE.Clock();
-
 const canvas = document.querySelector("canvas");
 canvas.style.cursor = "none";
 
 
-// loadAudio('../assets/sounds/imperial.mp3');
+let listener = new THREE.AudioListener();
+camera.add(listener);
+
+// create a global audio source
+export const sound = new THREE.Audio(listener);
+
+// // Create ambient sound
+// let audioLoader = new THREE.AudioLoader();
+// audioLoader.load('../assets/sounds/sampleMusic.mp3', function (buffer) {
+//   sound.setBuffer(buffer);
+//   sound.setLoop(true);
+//   sound.setVolume(0.5);
+//   //sound.play(); // Will play 
+// });
+
 TelaInicio();
 windowResize();
 clickListener();
@@ -59,37 +68,38 @@ function render() {
   renderer.render(scene, camera);
   // }
 
-  
+
 }
 
-function TelaInicio(){
-  // let loadingScreen = document.getElementById( 'loading-screen' );
-  // // loadingScreen.transition = 0;
-  // // loadingScreen.style.setProperty('--speed1', '0');  
-  // // loadingScreen.style.setProperty('--speed2', '0');  
-  // // loadingScreen.style.setProperty('--speed3', '0');      
-  console.log("aaa");
-  let button  = document.getElementById("myBtn");
+function TelaInicio() {
+  let loadingScreen = document.getElementById('loading-screen');
+  loadingScreen.transition = 0;
+  loadingScreen.style.setProperty('--speed1', '0');
+  loadingScreen.style.setProperty('--speed2', '0');
+  loadingScreen.style.setProperty('--speed3', '0');
+  let button = document.getElementById("myBtn");
   button.style.backgroundColor = 'Red';
   button.innerHTML = 'Click to Enter';
   button.addEventListener("click", onButtonPressed);
 }
 
 function onButtonPressed() {
-  const loadingScreen = document.getElementById( 'loading-screen' );
+  const loadingScreen = document.getElementById('loading-screen');
   loadingScreen.transition = 0;
-  loadingScreen.classList.add( 'fade-out' );
-  loadingScreen.addEventListener( 'transitionend', (e) => {
+  loadingScreen.classList.add('fade-out');
+  loadingScreen.addEventListener('transitionend', (e) => {
     const element = e.target;
-    element.remove();  
-  });  
-  // Config and play the loaded audio
-  // let sound = new THREE.Audio( new THREE.AudioListener() );
-  // audioLoader.load( audioPath, function( buffer ) {
-  //   sound.setBuffer( buffer );
-  //   sound.setLoop( true );
-  //   sound.play(); 
-  // });
+    element.remove();
+  });
+  let audioLoader = new THREE.AudioLoader();
+  audioLoader.load('../assets/sounds/sampleMusic.mp3', function (buffer) {
+    sound.setBuffer(buffer);
+    sound.setLoop(true);
+    sound.setVolume(0.5);
+    sound.play(); // Will play 
+  });
+
+
 }
 
 // function loadAudio(audio)
