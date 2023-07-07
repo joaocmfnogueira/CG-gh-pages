@@ -1,6 +1,6 @@
 import * as THREE from "three";
 
-import { alvo, aviao, planos, projeteis, torretas, projeteisTorreta, skybox, cameraHolder } from "../../index.js";
+import { alvo, aviao, planos, projeteis, torretas, projeteisTorreta, skybox, cameraHolder, listener} from "../../index.js";
 import { criarProjetil, criarProjetilTorreta } from "./construtores.js";
 import { alternarCursor } from "./controls.js";
 // import { materialCopa, materialTronco } from "./materials.js";
@@ -21,6 +21,15 @@ export function atualizarVelocidade(valor) {
 export function atirarProjetil() {
   const projetil = criarProjetil();
   projeteis.push(projetil);
+  const soundTiro = new THREE.Audio(listener);
+  let audioLoader2 = new THREE.AudioLoader();
+  audioLoader2.load('src/assets/tiro_sound.wav', function (buffer) {
+    soundTiro.setBuffer(buffer);
+    // soundTiro.setLoop(true);
+    soundTiro.setVolume(1.0);
+    soundTiro.play(); // Will play 
+  });
+  // soundTiro.play();
 }
 
 export function atirarProjetilTorretas() {
@@ -52,6 +61,7 @@ export function atualizarProjetilTorreta() {
 export function checarClique() {
   if (animacao) {
     atirarProjetil();
+    
   } else {
     alternarAnimacao();
     atualizarVelocidade(2);
@@ -127,5 +137,14 @@ export function checkCollisions(bala, torreta) {
 
       }
     });
+    const soundExplosao = new THREE.Audio(listener);
+    let audioLoader3 = new THREE.AudioLoader();
+    audioLoader3.load('src/assets/explosao.wav', function (buffer) {
+    soundExplosao.setBuffer(buffer);
+    // soundTiro.setLoop(true);
+    soundExplosao.setVolume(0.5);
+    soundExplosao.play(); // Will play 
+  });
+    // soundExplosao.play();
   }
 }

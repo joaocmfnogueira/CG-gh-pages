@@ -29,11 +29,13 @@ const canvas = document.querySelector("canvas");
 canvas.style.cursor = "none";
 
 
-let listener = new THREE.AudioListener();
+export const listener = new THREE.AudioListener();
 camera.add(listener);
 
 // create a global audio source
 export const sound = new THREE.Audio(listener);
+// export const soundExplosao = new THREE.Audio(listener);
+// export const soundTiro = new THREE.Audio(listener);
 
 // // Create ambient sound
 // let audioLoader = new THREE.AudioLoader();
@@ -91,20 +93,25 @@ function onButtonPressed() {
     const element = e.target;
     element.remove();
   });
-  let audioLoader = new THREE.AudioLoader();
-  audioLoader.load('../assets/sounds/sampleMusic.mp3', function (buffer) {
+  let audioLoader1 = new THREE.AudioLoader();
+  audioLoader1.load('../assets/sounds/sampleMusic.mp3', function (buffer) {
     sound.setBuffer(buffer);
     sound.setLoop(true);
     sound.setVolume(0.5);
     sound.play(); // Will play 
   });
-
-
+  // let audioLoader2 = new THREE.AudioLoader();
+  // audioLoader2.load('./src/assets/tiro_sound.wav', function (buffer) {
+  //   soundTiro.setBuffer(buffer);
+  //   // soundTiro.setLoop(true);
+  //   soundTiro.setVolume(0.5);
+  //   // soundTiro.play(); // Will play 
+  // });
+  // let audioLoader3 = new THREE.AudioLoader();
+  // audioLoader3.load('./src/assets/explosao.wav', function (buffer) {
+  //   soundExplosao.setBuffer(buffer);
+  //   // soundTiro.setLoop(true);
+  //   soundExplosao.setVolume(0.5);
+  //   // soundTiro.play(); // Will play 
+  // });
 }
-
-// function loadAudio(audio)
-// {
-//   // Create ambient sound
-//   // audioLoader = new THREE.AudioLoader(manager);
-//   audioPath = audio;
-// }
