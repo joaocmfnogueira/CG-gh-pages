@@ -105,13 +105,13 @@ export function rotacaoMouse() {
       new THREE.Vector3(
         targetPosition.x,
         targetPosition.y,
-        aviao.position.z + 500
+        aviao.position.z + 150
       )
     );
 
     aviao.position.lerp(
       new THREE.Vector3(targetPosition.x, targetPosition.y, aviao.position.z),
-      0.1
+      0.08
     );
 
     cameraHolder.position.z -= velocidade;

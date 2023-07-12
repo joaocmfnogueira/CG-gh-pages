@@ -52,7 +52,7 @@ export function criarProjetil() {
     object: null,
     loaded: false,
     bb: new THREE.Box3(),
-    direction: null,
+    // direction: null,
   };
 
   let balaGeometry = new THREE.BoxGeometry(5.0, 5.0, 5.0);
@@ -77,7 +77,7 @@ export function criarProjetil() {
   assetBala.object.position.y += 10;
   let helper = new THREE.Box3Helper(bbbala, "yellow");
   scene.add(helper);
-  assetBala.direction = quaternion;
+  // assetBala.direction = quaternion;
 
   return assetBala;
 }

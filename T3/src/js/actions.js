@@ -1,6 +1,6 @@
 import * as THREE from "three";
 
-import { alvo, aviao, planos, projeteis, torretas, projeteisTorreta, skybox, cameraHolder, listener} from "../../index.js";
+import { alvo, aviao, planos, projeteis, torretas, projeteisTorreta, skybox, cameraHolder, listener } from "../../index.js";
 import { criarProjetil, criarProjetilTorreta } from "./construtores.js";
 import { alternarCursor } from "./controls.js";
 // import { materialCopa, materialTronco } from "./materials.js";
@@ -33,18 +33,28 @@ export function atirarProjetil() {
 }
 
 export function atirarProjetilTorretas() {
-  if(torretas.length){
+  if (torretas.length) {
     let aleatorio = Math.floor(Math.random() * torretas.length);
     console.log(aleatorio);
     const projetilTorreta = criarProjetilTorreta(aleatorio);
-    projeteisTorreta.push(projetilTorreta);}
+    projeteisTorreta.push(projetilTorreta);
+    const soundTiro = new THREE.Audio(listener);
+    let audioLoader2 = new THREE.AudioLoader();
+    audioLoader2.load('src/assets/tiro_sound.wav', function (buffer) {
+      soundTiro.setBuffer(buffer);
+      // soundTiro.setLoop(true);
+      soundTiro.setVolume(1.0);
+      soundTiro.play(); // Will play 
+    });
+  }
 }
 
 export function atualizarProjetil() {
   for (let i = 0; i < projeteis.length; i++) {
+    // projeteis[i].object.position.addScaledVector(projeteis[i].direction)
     projeteis[i].object.translateZ(-3 * velocidade);
     projeteis[i].bb.setFromObject(projeteis[i].object);
-    projeteis[i].object.setRotationFromQuaternion(projeteis[i].direction);
+    // projeteis[i].object.setRotationFromQuaternion(projeteis[i].direction);
     // console.log(projeteis[i].direction);
   }
 }
@@ -61,7 +71,7 @@ export function atualizarProjetilTorreta() {
 export function checarClique() {
   if (animacao) {
     atirarProjetil();
-    
+
   } else {
     alternarAnimacao();
     atualizarVelocidade(2);
@@ -79,7 +89,7 @@ export function atualizarObjetos() {
   }
   //  console.log(aviao.position.z);
   //  console.log(torretas.length);
-  
+
   // if ((aviao.position.z % 200) && torretas.length && aviao.position.z > 400){
   //   // console.log(torretas.length);
   //   // console.log(torretas[2].object);
@@ -96,6 +106,7 @@ export function atualizarObjetos() {
   //     projeteis.splice(index, 1);
   //   }
   // });
+  
   if (projeteis.length) {
     atualizarProjetil();
     for (let j = 0; j < projeteis.length; j++) {
@@ -105,6 +116,7 @@ export function atualizarObjetos() {
     }
   }
 }
+
 
 export function fadePlanos() {
   for (let i = 0; i < planos.length; i++) {
@@ -140,11 +152,11 @@ export function checkCollisions(bala, torreta) {
     const soundExplosao = new THREE.Audio(listener);
     let audioLoader3 = new THREE.AudioLoader();
     audioLoader3.load('src/assets/explosao.wav', function (buffer) {
-    soundExplosao.setBuffer(buffer);
-    // soundTiro.setLoop(true);
-    soundExplosao.setVolume(0.5);
-    soundExplosao.play(); // Will play 
-  });
+      soundExplosao.setBuffer(buffer);
+      // soundTiro.setLoop(true);
+      soundExplosao.setVolume(0.5);
+      soundExplosao.play(); // Will play 
+    });
     // soundExplosao.play();
   }
 }
