@@ -12,6 +12,12 @@ import {
 import { atualizarObjetos, fadePlanos } from "./src/js/actions.js";
 import { keyboardUpdate, rotacaoMouse } from "./src/js/controls.js";
 import * as THREE from "three";
+import {
+  animacao,
+  alternarAnimacao,
+  atualizarVelocidade,
+  velocidade,
+} from "./src/js/actions.js";
 
 export const cameraHolder = criarCameraHolder();
 export const aviao = criarAviao();
@@ -24,6 +30,7 @@ export const planos = [];
 export const projeteis = [];
 export const projeteisTorreta = [];
 export const torretas = [];
+export const valor = 0;
 
 const canvas = document.querySelector("canvas");
 canvas.style.cursor = "none";
@@ -37,22 +44,7 @@ export const sound = new THREE.Audio(listener);
 
 TelaInicio();
 windowResize();
-clickListener();
 
-construirCena();
-criarPlanosIniciais();
-
-
-render();
-
-function render() {
-  atualizarObjetos();
-  keyboardUpdate();
-  rotacaoMouse();
-  fadePlanos();
-  requestAnimationFrame(render);
-  renderer.render(scene, camera);
-}
 
 function TelaInicio() {
   let loadingScreen = document.getElementById('loading-screen');
@@ -81,5 +73,23 @@ function onButtonPressed() {
     sound.setVolume(0.5);
     sound.play(); // Will play 
   });
+
+
+  clickListener();
+
+  construirCena();
+  criarPlanosIniciais();
+
+
+  render();
+
+  function render() {
+    atualizarObjetos();
+    keyboardUpdate();
+    rotacaoMouse();
+    fadePlanos();
+    requestAnimationFrame(render);
+    renderer.render(scene, camera);
+  }
 
 }

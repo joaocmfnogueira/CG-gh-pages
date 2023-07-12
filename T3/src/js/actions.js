@@ -34,9 +34,9 @@ export function atirarProjetil() {
 
 export function atirarProjetilTorretas() {
   if (torretas.length) {
-    let aleatorio = Math.floor(Math.random() * torretas.length);
-    console.log(aleatorio);
-    const projetilTorreta = criarProjetilTorreta(aleatorio);
+    // let aleatorio = Math.floor(Math.random() * torretas.length);
+    // console.log(aleatorio);
+    const projetilTorreta = criarProjetilTorreta();
     projeteisTorreta.push(projetilTorreta);
     const soundTiro = new THREE.Audio(listener);
     let audioLoader2 = new THREE.AudioLoader();
@@ -87,6 +87,12 @@ export function atualizarObjetos() {
   if (aviao.position.z % 200 === 0) {
     criarPlano();
   }
+
+  if(aviao.position.z % 400 === 0 && aviao.position.z < -300)
+  {
+    atirarProjetilTorretas();
+    console.log("cadencia");
+  }
   //  console.log(aviao.position.z);
   //  console.log(torretas.length);
 
@@ -114,6 +120,15 @@ export function atualizarObjetos() {
         checkCollisions(projeteis[j], torretas[i]);
       }
     }
+  }
+
+  if (projeteisTorreta.length) {
+    atualizarProjetilTorreta();
+    // for (let j = 0; j < projeteis.length; j++) {
+    //   for (let i = 0; i < torretas.length; i++) {
+    //     checkCollisions(projeteis[j], torretas[i]);
+    //   }
+    // }
   }
 }
 

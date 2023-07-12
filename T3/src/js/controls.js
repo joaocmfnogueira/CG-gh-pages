@@ -96,10 +96,9 @@ export function rotacaoMouse() {
 
     targetQuaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), direction);
 
-    aviao.quaternion.slerp(targetQuaternion, 0.1);
+    
 
-    aviao.rotation.x = targetY * Math.PI * 0.1;
-    aviao.rotation.y = targetX * Math.PI * 0.1;
+    
 
     aviao.lookAt(
       new THREE.Vector3(
@@ -108,6 +107,11 @@ export function rotacaoMouse() {
         aviao.position.z + 150
       )
     );
+
+    aviao.rotation.x = targetY * Math.PI * 0.1;
+    aviao.rotation.y = targetX * Math.PI * 0.1;
+
+    aviao.quaternion.slerp(targetQuaternion, 0.1);
 
     aviao.position.lerp(
       new THREE.Vector3(targetPosition.x, targetPosition.y, aviao.position.z),

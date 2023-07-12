@@ -64,7 +64,7 @@ export function criarPlanosIniciais() {
 
   for (let i = -1; i < 6; i++) {
     const distancia = i * 200;
-    criarPlano(inicial, distancia);
+    criarPlano(inicial, distancia, false);
   }
 }
 
@@ -74,7 +74,7 @@ export function criarTargetObject() {
   return targetObject;
 }
 
-export function criarPlano(inicial = false, distancia) {
+export function criarPlano(inicial = false, distancia, temTorreta = true) {
   const plano = createGroundPlaneWired(2000, 200, 15, 2);
   plano.material.color = new THREE.Color("rgb(0, 0, 43)");
   plano.name = "plano";
@@ -89,11 +89,15 @@ export function criarPlano(inicial = false, distancia) {
 
   // criarArvoresAleatorias(plano);
   criarLateraisPlano(plano);
-  let torreta = loadGLBFileTorreta(plano);
+  if(temTorreta){
+    let torreta = loadGLBFileTorreta(plano);
+    torretas.push(torreta);
+  }
+    
   // let sphere = createSphere(plano);
   // let bbSphere1 = new THREE.Box3().setFromObject(sphere);
 
-  torretas.push(torreta);
+
   planos.push(plano);
   scene.add(plano);
 }

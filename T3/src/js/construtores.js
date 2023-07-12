@@ -82,7 +82,7 @@ export function criarProjetil() {
   return assetBala;
 }
 
-export function criarProjetilTorreta(indice) {
+export function criarProjetilTorreta() {
   let assetBala = {
     object: null,
     loaded: false,
@@ -98,9 +98,9 @@ export function criarProjetilTorreta(indice) {
     aviao.position.z - 20
   );
   let obj2 = new THREE.Vector3(
-    torretas[indice].object.position.x,
-    torretas[indice].object.position.y,
-    torretas[indice].object.position.z
+    0,
+    0,
+    aviao.position.z - 400
   );
   let direction = new THREE.Vector3();
   direction.subVectors(obj2, obj1).normalize();
@@ -114,7 +114,7 @@ export function criarProjetilTorreta(indice) {
   assetBala.object = bala;
   
   scene.add(assetBala.object);
-  assetBala.object.position.copy(aviao.position);
+  assetBala.object.position.set(0, 0 , aviao.position.z - 400);
   assetBala.object.position.y += 10;
   let helper = new THREE.Box3Helper( bbbala, "yellow" );
   scene.add( helper );
@@ -127,6 +127,11 @@ export function criarProjetilTorreta(indice) {
 
 export function loadGLBFileAviao() {
   var loader = new GLTFLoader();
+  let assetAviao = {
+    object: null,
+    loaded: false,
+    bb: new THREE.Box3(),
+  };
   loader.load("src/assets/aviao.glb", function (gltf) {
     var obj = gltf.scene;
     obj.name = "aviao";
@@ -144,6 +149,18 @@ export function loadGLBFileAviao() {
     obj.castShadow = true;
     obj.position.y = 5;
   });
+
+
+  // let bbtorreta = new THREE.Box3().setFromObject(obj);
+  //   obj = fixPosition(obj);
+  //   obj.updateMatrixWorld(true);
+  //   assetTorreta.bb = bbtorreta;
+  //   assetTorreta.object = gltf.scene;
+  //   let helper = new THREE.Box3Helper(bbtorreta, "yellow");
+  //   scene.add(helper);
+  //   helper.position.z = assetTorreta.object.position.z;
+  //   helper.position.y = assetTorreta.object.position.y;
+  //   helper.position.x = assetTorreta.object.position.x;
 }
 
 export function rayCaster(scene, camera) {
@@ -259,9 +276,7 @@ export function loadGLBFileTorreta(plane) {
 
     obj.scale.set(10, 10, 10);
     obj.position.set(
-      -250 + Math.random() * 500.0,
-      -125 + Math.random() * 375.0,
-      1.5
+      0,0,0
     );
     obj.rotateX(THREE.MathUtils.degToRad(90));
     obj.rotateY(THREE.MathUtils.degToRad(270));
